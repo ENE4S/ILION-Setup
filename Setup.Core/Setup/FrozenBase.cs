@@ -27,10 +27,13 @@ public sealed class FrozenBase(HttpClient http, string dataDirectory, BaseManife
     public IEnumerable<BaseFile> Select(ISet<string> groups, bool withCore = true) => manifest.Files.Where(f => withCore && Group(f) == "core" || groups.Contains(Group(f)));
 
     /// <summary>Deja en «staging» todos los archivos elegidos, verificados. Usa caché y paquetes locales antes que la red.</summary>
-    public async Task<string[]> PrepareAsync(string staging, ISet<string> groups, IEnumerable<string> localFolders, IProgress<ModProgress>? progress, CancellationToken token, bool withCore = true)
+    public Task<string[]> PrepareAsync(string staging, ISet<string> groups, IEnumerable<string> localFolders, IProgress<ModProgress>? progress, CancellationToken token, bool withCore = true) =>
+        PrepareFilesAsync(staging, [.. Select(groups, withCore)], localFolders, progress, token);
+
+    /// <summary>Deja en «staging» exactamente estos archivos de la base, verificados (caché, paquete local o su origen oficial).</summary>
+    public async Task<string[]> PrepareFilesAsync(string staging, BaseFile[] files, IEnumerable<string> localFolders, IProgress<ModProgress>? progress, CancellationToken token)
     {
         Directory.CreateDirectory(Cache);
-        var files = Select(groups, withCore).ToArray();
         var sources = new List<string>();
         var locals = localFolders.Where(Directory.Exists).ToArray();
         var pending = new List<BaseFile>();

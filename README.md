@@ -4,9 +4,9 @@ Instalador de **OptiScaler ILION** para Windows x64: instala ILION, su base exac
 
 ## ⬇ Descargar
 
-**[Descargar ILION Setup 0.3.1 (ILION-Setup-0.3.1.exe, 63 MB)](https://github.com/ENE4S/ILION-Setup/releases/download/setup-v0.3.1/ILION-Setup-0.3.1.exe)**
+**[Descargar ILION Setup (ILION-Setup.exe)](https://github.com/ENE4S/ILION-Setup/releases/latest/download/ILION-Setup.exe)** · siempre la última versión
 
-Todas las versiones: [Releases](https://github.com/ENE4S/ILION-Setup/releases) · Motor ILION: [ENE4S/Optiscaler-ILION](https://github.com/ENE4S/Optiscaler-ILION)
+Notas de cada versión: [Releases](https://github.com/ENE4S/ILION-Setup/releases) · Motor ILION: [ENE4S/Optiscaler-ILION](https://github.com/ENE4S/Optiscaler-ILION)
 
 ## Qué hace
 
@@ -15,7 +15,7 @@ Todas las versiones: [Releases](https://github.com/ENE4S/ILION-Setup/releases) �
   - Descarga ILION de su publicación oficial y la base congelada de OptiScaler desde sus fuentes oficiales.
   - Añade las variantes de ILION y los mods que marques.
 - **Actualizar ILION:** sustituye solo la DLL del motor. «Buscar versión nueva de ILION» consulta la versión aprobada en GitHub.
-- **Verificar y reparar:** compara cada archivo con su huella SHA-256 y repone lo que falta. Lo que cambiaste tú solo se sustituye si lo confirmas. También permite añadir mods y restaurar o desinstalar.
+- **Verificar y reparar:** compara cada archivo con su huella SHA-256 y repone lo que falta. Lo que cambiaste tú solo se sustituye si lo confirmas. También permite añadir mods, deshacer cualquier cambio de Setup (quitar mods, deshacer una reparación) y desinstalar ILION.
 - **Seguridad**
   - Cada archivo se comprueba por SHA-256 antes de copiarlo.
   - Antes de escribir se guarda una copia de lo que se sustituye: todo es restaurable.

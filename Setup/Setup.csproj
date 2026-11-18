@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>ILION.Setup</AssemblyName>
     <RootNamespace>Ilion.Setup.App</RootNamespace>
-    <Version>0.3.1</Version>
+    <Version>0.3.4</Version>
     <ApplicationIcon>Assets\sputnik.ico</ApplicationIcon>
     <Product>ILION Setup</Product>
     <Platforms>x64</Platforms>

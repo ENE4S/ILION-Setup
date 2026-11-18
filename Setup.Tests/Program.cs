@@ -21,6 +21,41 @@ var catalog = Manifests.Parse<Catalog>(catalogJson);
 Manifests.PublicKey = File.ReadAllText(Path.Combine(fuente, "Setup", "Assets", "clave-publica.txt")).Trim();
 var referenceBefore = Snap(reference);
 
+// Diagnóstico: Setup.Tests <lab> <paquete> --reparar <carpeta-de-datos> → instala como un usuario, cambia archivos de la base y prueba «Sustituir lo distinto»
+if (Array.IndexOf(args, "--reparar") is var ri and > 0)
+{
+    var rData = Path.GetFullPath(args[ri + 1]);
+    var rEngine = new SetupEngine(rData, new HttpClient(), baseManifest, catalog);
+    var rRoot = Path.Combine(lab, "JuegoReparar");
+    if (Directory.Exists(rRoot)) { foreach (var f in Directory.EnumerateFiles(rRoot, "*", SearchOption.AllDirectories)) File.SetAttributes(f, FileAttributes.Normal); Directory.Delete(rRoot, true); }
+    var rDir = Directory.CreateDirectory(Path.Combine(rRoot, "bin", "x64")).FullName;
+    var rExe = Path.Combine(rDir, "JuegoReparar.exe");
+    File.Copy(Path.Combine(reference, "OptiScaler", "plugins", "OptiPatcher.asi"), rExe);
+    var rManual = new ManualSource(Path.Combine(rData, "manual-reparar.json")); rManual.Add(rExe);
+    var rGame = rManual.Scan().Games.Single(x => x.Executable == rExe);
+    var rArch = Gpu.Load(File.OpenRead(Path.Combine(fuente, "Setup", "Assets", "arquitecturas.json"))).Arquitecturas.Single(a => a.Id == "rdna3");
+    var inst = await rEngine.NewInstallAsync(rGame, rDir, rEngine.RemoteEngine, "dxgi.dll", new HashSet<string> { "streamline", "variantes" }, [], rArch, [reference], null, default);
+    Console.WriteLine($"Instalación: {(inst.Error ?? "correcta")}");
+    // Diferencias típicas: un plugin de otra versión, una variante de FSR 4 cambiada, un archivo de Streamline y uno de la base
+    foreach (var rel in new[] { @"OptiScaler\plugins\OptiPatcher.asi", @"ILION\Escaladores\FSR4\Lossy\amd_fidelityfx_upscaler_dx12.dll", @"OptiScaler\streamline\sl.common.dll", @"OptiScaler\libxess.dll" })
+        File.AppendAllText(Path.Combine(rDir, rel), "x");
+    File.Delete(Path.Combine(rDir, @"OptiScaler\libxell.dll"));
+    if (args.Contains("--solo-lectura")) foreach (var rel in new[] { @"OptiScaler\libxess.dll", @"OptiScaler\streamline\sl.common.dll" })
+        File.SetAttributes(Path.Combine(rDir, rel), FileAttributes.ReadOnly); // como los que salen de algunos .rar/.7z o de copias antiguas
+    var before = rEngine.Verify(rGame, rDir, OptiScalerDetection.Inspect(rRoot, rExe));
+    Console.WriteLine($"Antes: {before.Count(i => i.Area == "Base" && i.State == Level.Warn)} distintos, {before.Count(i => i.Area == "Base" && i.Detail == "Falta.")} faltan");
+    foreach (var replace in new[] { false, true })
+        try
+        {
+            var op = await rEngine.RepairBaseAsync(rGame, rDir, replace, [reference], null, default);
+            Console.WriteLine($"Reparar (sustituir distinto: {replace}): {op?.Label ?? "nada que hacer"}");
+        }
+        catch (Exception e) { Console.WriteLine($"EXCEPCIÓN ({replace}): {e.GetType().FullName}: {e.Message}\n{e.StackTrace}"); }
+    var after = rEngine.Verify(rGame, rDir, OptiScalerDetection.Inspect(rRoot, rExe));
+    Console.WriteLine($"Después: {after.Count(i => i.Area == "Base" && i.State != Level.Ok)} sin corregir: {string.Join(", ", after.Where(i => i.Area == "Base" && i.State != Level.Ok).Select(i => i.What))}");
+    return 0;
+}
+
 // Diagnóstico: Setup.Tests <lab> <paquete> --lote <carpeta-de-datos> id1,id2,…  → instala esos mods en un juego del laboratorio e imprime cada fallo
 if (Array.IndexOf(args, "--lote") is var li and > 0)
 {

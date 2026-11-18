@@ -281,7 +281,7 @@ public sealed class SetupEngine
         var staging = Path.Combine(Data, "Staging", Guid.NewGuid().ToString("N"));
         try
         {
-            await Frozen.PrepareAsync(staging, groups, localFolders, progress, token);
+            await Frozen.PrepareFilesAsync(staging, [.. targets.Select(c => c.File)], localFolders, progress, token);
             var writes = targets.Select(c => new PlannedWrite(c.File.Destination, Path.Combine(staging, c.File.Destination), c.ActualSha256)).ToList();
             return Operations.Apply(GameId(game), exeDir, "Reparar base", $"Reparar base congelada ({writes.Count} archivos)", writes, "base congelada", Base.Date);
         }

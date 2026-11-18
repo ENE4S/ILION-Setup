@@ -206,7 +206,7 @@ public sealed class OperationEngine(string dataDirectory)
             {
                 var target = PathGuard.Resolve(root, writes[i].RelativePath);
                 if (writes[i].SourceFile is { } source1) Write(source1, target, entries[i].InstalledSha256!);
-                else if (File.Exists(target)) File.Delete(target);
+                else if (File.Exists(target)) { MakeWritable(target); File.Delete(target); }
             }
         }
         catch (Exception error)
@@ -308,7 +308,7 @@ public sealed class OperationEngine(string dataDirectory)
             var current = File.Exists(target) ? ComponentUpdateService.Sha256(target) : null;
             if (current == entry.OriginalSha256) continue;
             if (current is not null && current != entry.InstalledSha256) continue; // cambio ajeno: no se pisa
-            if (entry.OriginalSha256 is null) { File.Delete(target); continue; }
+            if (entry.OriginalSha256 is null) { MakeWritable(target); File.Delete(target); continue; }
             Directory.CreateDirectory(Path.GetDirectoryName(target)!);
             Write(entry.BackupFile!, target, entry.OriginalSha256);
         }
@@ -318,11 +318,22 @@ public sealed class OperationEngine(string dataDirectory)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(target)!);
         var staging = target + ".ilion-new";
+        MakeWritable(staging);
         File.Copy(source, staging, overwrite: true);
+        MakeWritable(staging); // una copia de un archivo de solo lectura también lo sería
         if (ComponentUpdateService.Sha256(staging) != expectedSha) { File.Delete(staging); throw new IOException("Copia intermedia corrupta."); }
+        MakeWritable(target);  // archivos de solo lectura (copiados de .rar/.7z antiguos): se pueden sustituir igual, con su respaldo
         try { File.Move(staging, target, overwrite: true); }
         catch { File.Delete(staging); throw; }
         if (ComponentUpdateService.Sha256(target) != expectedSha) throw new IOException("Verificación posterior fallida.");
+    }
+
+    /// <summary>Quita el atributo de solo lectura (si lo tiene) para poder sustituir o retirar el archivo.</summary>
+    private static void MakeWritable(string path)
+    {
+        if (!File.Exists(path)) return;
+        var attributes = File.GetAttributes(path);
+        if ((attributes & FileAttributes.ReadOnly) != 0) File.SetAttributes(path, attributes & ~FileAttributes.ReadOnly);
     }
 
     private void Save(OperationManifest op)

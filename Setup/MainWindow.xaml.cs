@@ -47,7 +47,8 @@ public partial class MainWindow : Window
         var d = Array.IndexOf(args, "--datos");
         data = Path.GetFullPath(d > 0 && d + 1 < args.Length ? args[d + 1] : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ILION.Setup"));
         Directory.CreateDirectory(data);
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/0.3");
+        App.LogFile = Path.Combine(data, "ilion-setup.log");
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/0.3.4");
         Manifests.PublicKey = Resource("clave-publica.txt").Trim();
         engine = LoadManifests();
         using (var s = Application.GetResourceStream(new Uri("pack://application:,,,/Assets/arquitecturas.json"))!.Stream) table = Gpu.Load(s);
@@ -110,7 +111,7 @@ public partial class MainWindow : Window
     private async Task CheckNewerMods()
     {
         using var noRedirect = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(10) };
-        noRedirect.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/0.3");
+        noRedirect.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/0.3.4");
         foreach (var repo in engine.Catalog.Mods.Where(m => m.Recipe is not null && m.Version is not null).GroupBy(m => SetupEngine.RecipeFor(m)!.Repository))
         {
             if (repo.Key.StartsWith("ENE4S/", StringComparison.OrdinalIgnoreCase)) continue;
@@ -173,6 +174,7 @@ public partial class MainWindow : Window
         Work(false);
         _ = CheckNewerMods().ContinueWith(_ => Dispatcher.Invoke(() => { if (newerTags.Count > 0 && ModeNew.IsChecked == true && !busy) ShowMode(); }));
         Say($"{games.Length} juegos detectados · GPU {GpuArch.Text}.");
+        ApplyLaunchRequest();
         ShowMode();
         await CaptureIfRequested();
     }
@@ -232,6 +234,7 @@ public partial class MainWindow : Window
         if (ModeNew.IsChecked == true) RenderNew();
         else if (ModeUpdate.IsChecked == true) RenderUpdate();
         else RenderVerify();
+        Dispatcher.BeginInvoke(WriteStatus, System.Windows.Threading.DispatcherPriority.Background);
     }
 
     // ---------------------------------------------------------------- Piezas de la página
@@ -533,24 +536,12 @@ public partial class MainWindow : Window
     {
         if (busy || game is null || exeDir is null || engineSource is not { Problem: null } src) return;
         var chosen = modChecks.Where(c => c.Box.IsChecked == true).Select(c => c.Item).ToList();
-        var requests = new List<BatchRequest>();
-        foreach (var item in chosen)
-        {
-            string? p = null;
-            if (item.Recipe!.ProxyNames.Length > 0)
-            {
-                p = ModInstaller.ProxyChoices(item.Recipe, exeDir).Where(c => c.Free && !c.Name.Equals(proxy, StringComparison.OrdinalIgnoreCase)).Select(c => c.Name).FirstOrDefault();
-                if (p is null) { Confirm.Info(this, item.Entry.Name, "Todos los nombres de carga que admite ya están ocupados en la carpeta del juego.", error: true); return; }
-            }
-            requests.Add(new(item.Recipe, p));
-        }
+        if (Requests(chosen, exeDir, proxy) is not { } requests) return;
         var notes = new List<string> { "La instalación puede tardar varios minutos. Se descargarán, verificarán y prepararán los componentes seleccionados. Mantén la aplicación abierta hasta finalizar." };
         if (!src.Approved) notes.Add($"La DLL de ILION elegida ({src.Version}) no es la aprobada para esta base: compatibilidad no verificada.");
         foreach (var i in ModBatch.Analyze(requests, exeDir)) notes.Add((i.Blocking ? "No se instala " : "") + i.Mod + ": " + i.Message);
         foreach (var r in requests.Where(r => r.Proxy is not null)) notes.Add($"{r.Mod.Name} se carga como {r.Proxy}.");
-        var nrMods = requests.Where(r => r.Mod.Name.Contains("NR", StringComparison.Ordinal) || r.Mod.Name.Contains("Neural", StringComparison.OrdinalIgnoreCase)).Select(r => r.Mod.Name).ToList();
-        if (withVariants && gpu?.Arch?.Id is "rdna3" or "rdna4") nrMods.Add("runtime NR de lmxxf");
-        if (nrMods.Count > 0) notes.Add($"IMPORTANTE ({string.Join(", ", nrMods)}): DLSS Neural Rendering necesita el archivo oficial de NVIDIA, que debes tener descargado previamente. Setup no lo descarga ni lo incluye.");
+        if (NrWarning([.. requests.Select(r => r.Mod.Name), .. withVariants && gpu?.Arch?.Id is "rdna3" or "rdna4" ? ["runtime NR de lmxxf"] : Array.Empty<string>()]) is { } nr) notes.Add(nr);
         if (dlss4Folder is not null) notes.Add("DLSS 4 Modelo K se copia desde tu carpeta local (instalación local).");
         notes.Add("Antes de escribir se guarda una copia de todo lo que se sustituya; ningún archivo del juego se sobrescribe. Todo se puede restaurar desde «Verificar y reparar».");
         var lines = new List<(string, string)> { ("Juego", game.Name), ("Carpeta", exeDir), ("Base", $"OptiScaler f6f75dd (+ FidelityFX 2.4.0{(withStreamline ? ", Streamline 2.14.1" : "")})"),
@@ -571,7 +562,7 @@ public partial class MainWindow : Window
         var roots = games.Select(x => x.Root).Concat(engineCandidates.Where(Directory.Exists)).ToArray();
         NewInstallResult result;
         try { result = await Task.Run(() => engine.NewInstallAsync(g, dir, src, proxy, groups, requests, gpu?.Arch, roots, progress, token)); }
-        catch (Exception e) when (e is not OutOfMemoryException) { result = new(null, null, [], ModBatch.Friendly(e), false); }
+        catch (Exception e) when (e is not OutOfMemoryException) { LogError($"Instalación nueva {g.Name}", e); result = new(null, null, [], ModBatch.Friendly(e), false); }
         finally { busy = false; writing = false; }
         Log($"Instalación nueva {g.Name}: motor {(result.Engine is null ? "no" : result.Engine.Version)}; mods {string.Join(", ", result.Mods?.Installed ?? [])}; error {result.Error}; base {string.Join(" | ", result.BaseSources)}");
         var installed = new List<string>();
@@ -582,7 +573,7 @@ public partial class MainWindow : Window
         failed.AddRange(result.Mods?.Failed ?? []);
         if (result.Engine is not null && dlss4Folder is { } d4)
             try { var op = await Task.Run(() => engine.InstallDlss4Local(g, dir, d4)); installed.Add(op.Label); }
-            catch (Exception e) when (e is IOException or InvalidDataException or InvalidOperationException or UnauthorizedAccessException) { failed.Add(("DLSS 4 Modelo K (local)", ModBatch.Friendly(e))); }
+            catch (Exception e) when (e is not OutOfMemoryException) { LogError("DLSS 4 Modelo K", e); failed.Add(("DLSS 4 Modelo K (local)", ModBatch.Friendly(e))); }
         lock (gameInfo) gameInfo.Remove(SetupEngine.GameId(g));
         if (failed.Count > 0) Log($"Instalación nueva {g.Name}: fallos {string.Join(" | ", failed.Select(f => f.Item1 + ": " + f.Item2))}");
         window.Retry += () => { if (result.Engine is null) _ = RunNew(g, dir, src, requests); else _ = RunMods(g, dir, [.. requests.Where(r => failed.Any(f => f.Item1 == r.Mod.Name))]); };
@@ -607,7 +598,7 @@ public partial class MainWindow : Window
             var roots = games.Select(x => x.Root).Concat(engineSource?.PackageFolder is { } pf ? [pf] : []).Where(r => !r.Equals(g.Root, StringComparison.OrdinalIgnoreCase)).ToArray();
             result = await Task.Run(() => ModBatch.RunAsync(installer, engine.Operations, engine.Updates, SetupEngine.GameId(g), dir, requests, roots, progress, token));
         }
-        catch (Exception e) when (e is not OutOfMemoryException) { result = new("", [], [("Mods", ModBatch.Friendly(e))], [], [], []); }
+        catch (Exception e) when (e is not OutOfMemoryException) { LogError($"Mods {g.Name}", e); result = new("", [], [("Mods", ModBatch.Friendly(e))], [], [], []); }
         finally { busy = false; writing = false; }
         Log($"Mods {g.Name}: {string.Join(", ", result.Installed)}; fallos {string.Join(" | ", result.Failed.Select(f => f.Mod + ": " + f.Error))}");
         window.Retry += () => _ = RunMods(g, dir, [.. requests.Where(r => result.Failed.Any(f => f.Mod == r.Mod.Name))]);
@@ -667,7 +658,7 @@ public partial class MainWindow : Window
         {
             busy = true; Say($"Descargando ILION {src.Version} de su publicación oficial…", Level.Info);
             try { src = await Task.Run(() => engine.DownloadEngineAsync(engineCandidates.Where(Directory.Exists), null, CancellationToken.None)); }
-            catch (Exception e) when (e is HttpRequestException or IOException or InvalidDataException) { Confirm.Info(this, "Actualizar ILION", ModBatch.Friendly(e), error: true); return; }
+            catch (Exception e) when (e is not OutOfMemoryException) { LogError("Descargar ILION", e); Confirm.Info(this, "Actualizar ILION", ModBatch.Friendly(e), error: true); return; }
             finally { busy = false; }
         }
         var (ok, notes) = engine.CheckUpdate(info.ExeDir, info.Opti, src);
@@ -682,7 +673,7 @@ public partial class MainWindow : Window
             lock (gameInfo) gameInfo.Remove(SetupEngine.GameId(g));
             Say($"ILION actualizado en {g.Name}: {op.Label}.");
         }
-        catch (Exception e) when (e is IOException or InvalidOperationException or UnauthorizedAccessException) { Confirm.Info(this, "Actualizar ILION", ModBatch.Friendly(e), error: true); }
+        catch (Exception e) when (e is not OutOfMemoryException) { LogError("Actualizar ILION", e); Confirm.Info(this, "Actualizar ILION", ModBatch.Friendly(e), error: true); }
         finally { busy = false; }
         ShowMode();
     }
@@ -698,7 +689,7 @@ public partial class MainWindow : Window
         var row = new WrapPanel();
         row.Children.Add(Combo(withOpti, GameLabel, verifyGame, g => { verifyGame = g; RememberGame(g); verifyItems = null; ShowMode(); }));
         row.Children.Add(new Border { Width = 10 });
-        row.Children.Add(Key("Verificar", () => { if (verifyGame is not null) { lock (gameInfo) gameInfo.Remove(SetupEngine.GameId(verifyGame)); var i = Info(verifyGame); verifyItems = engine.Verify(verifyGame, i.ExeDir, i.Opti); ShowMode(); } return Task.CompletedTask; }, 150, primary: true));
+        row.Children.Add(Key("Verificar", () => { if (verifyGame is not null) { RunVerify(verifyGame); ShowMode(); } return Task.CompletedTask; }, 150, primary: true));
         box.Children.Add(row);
         Page.Children.Add(Section("JUEGO", box, $"{withOpti.Length} juegos con OptiScaler"));
         if (verifyGame is null) { Watermark("Elige un juego y pulsa «Verificar»."); return; }
@@ -735,12 +726,12 @@ public partial class MainWindow : Window
             var dialog = new OpenFolderDialog { Title = "Carpeta Modelo_K de tu copia de ILION" };
             if (dialog.ShowDialog(this) != true) return Task.CompletedTask;
             try { var op = engine.InstallDlss4Local(verifyGame, info.ExeDir, dialog.FolderName); Log(op.Label); Say($"{op.Label} en {verifyGame.Name}."); }
-            catch (Exception e) when (e is IOException or InvalidDataException or InvalidOperationException or UnauthorizedAccessException) { Confirm.Info(this, "DLSS 4 Modelo K", ModBatch.Friendly(e), error: true); }
+            catch (Exception e) when (e is not OutOfMemoryException) { LogError("DLSS 4 Modelo K", e); Confirm.Info(this, "DLSS 4 Modelo K", ModBatch.Friendly(e), error: true); }
             verifyItems = null; ShowMode(); return Task.CompletedTask;
         }, 300));
         Page.Children.Add(Section("REPARAR", repair));
         Page.Children.Add(Section("AÑADIR MODS", AddModsBox(verifyGame, info.ExeDir, info.Api), "Los que aún no están instalados en este juego"));
-        Page.Children.Add(Section("RESTAURAR", RestoreBox(verifyGame, info.ExeDir)));
+        Page.Children.Add(Section("DESHACER CAMBIOS", RestoreBox(verifyGame, info.ExeDir)));
     }
 
     /// <summary>Mods del catálogo que este juego aún no tiene: se marcan y se instalan sobre la instalación de ILION existente.</summary>
@@ -758,21 +749,10 @@ public partial class MainWindow : Window
         }
         var go = Key("Instalar seleccionados", () =>
         {
-            var requests = new List<BatchRequest>();
-            foreach (var (c, i) in checks.Where(x => x.Box.IsChecked == true))
-            {
-                string? p = null;
-                if (i.Recipe!.ProxyNames.Length > 0)
-                {
-                    p = ModInstaller.ProxyChoices(i.Recipe, dir).Where(x => x.Free).Select(x => x.Name).FirstOrDefault();
-                    if (p is null) { Confirm.Info(this, i.Entry.Name, "Todos los nombres de carga que admite ya están ocupados en la carpeta del juego.", error: true); return Task.CompletedTask; }
-                }
-                requests.Add(new(i.Recipe, p));
-            }
-            if (requests.Count == 0) return Task.CompletedTask;
+            if (Requests([.. checks.Where(x => x.Box.IsChecked == true).Select(x => x.Item)], dir, null) is not { Count: > 0 } requests) return Task.CompletedTask;
             var notes = new List<string> { "La instalación puede tardar varios minutos. Se descargarán, verificarán y prepararán los componentes seleccionados. Mantén la aplicación abierta hasta finalizar." };
             foreach (var issue in ModBatch.Analyze(requests, dir)) notes.Add((issue.Blocking ? "No se instala " : "") + issue.Mod + ": " + issue.Message);
-            if (requests.Any(r => r.Mod.Name.Contains("NR", StringComparison.Ordinal))) notes.Add("IMPORTANTE: DLSS Neural Rendering necesita el archivo oficial de NVIDIA, que debes tener descargado previamente. Setup no lo descarga ni lo incluye.");
+            if (NrWarning(requests.Select(r => r.Mod.Name)) is { } nr) notes.Add(nr);
             if (!Confirm.Ask(this, "Añadir mods", [("Juego", g.Name), ("Mods", string.Join(", ", requests.Select(r => r.Mod.Name)))], string.Join("\n\n", notes), "Instalar")) return Task.CompletedTask;
             return RunMods(g, dir, requests).ContinueWith(_ => Dispatcher.Invoke(() => { verifyItems = null; ShowMode(); }));
         }, 240, primary: true);
@@ -781,76 +761,138 @@ public partial class MainWindow : Window
         return box;
     }
 
+    /// <summary>Los mods elegidos, cada uno con un nombre de carga libre si lo necesita (distinto del de ILION). Null si no cabe alguno.</summary>
+    private List<BatchRequest>? Requests(IEnumerable<CatalogItem> chosen, string dir, string? ilionProxy)
+    {
+        var requests = new List<BatchRequest>();
+        foreach (var item in chosen)
+        {
+            string? p = null;
+            if (item.Recipe!.ProxyNames.Length > 0)
+            {
+                p = ModInstaller.ProxyChoices(item.Recipe, dir).Where(c => c.Free && !c.Name.Equals(ilionProxy, StringComparison.OrdinalIgnoreCase)).Select(c => c.Name).FirstOrDefault();
+                if (p is null) { Confirm.Info(this, item.Entry.Name, "Todos los nombres de carga que admite ya están ocupados en la carpeta del juego.", error: true); return null; }
+            }
+            requests.Add(new(item.Recipe, p));
+        }
+        return requests;
+    }
+
+    /// <summary>Aviso único para lo que usa DLSS Neural Rendering: el archivo oficial de NVIDIA lo pone el usuario.</summary>
+    private static string? NrWarning(IEnumerable<string> names)
+    {
+        var nr = names.Where(n => n.Contains("NR", StringComparison.Ordinal) || n.Contains("Neural", StringComparison.OrdinalIgnoreCase)).ToArray();
+        return nr.Length == 0 ? null : $"IMPORTANTE ({string.Join(", ", nr)}): DLSS Neural Rendering necesita el archivo oficial de NVIDIA, que debes tener descargado previamente. Setup no lo descarga ni lo incluye.";
+    }
+
     private async Task RepairBase(LibraryGame g, string dir, bool replaceDifferent)
     {
         if (replaceDifferent && !Confirm.Ask(this, "Sustituir lo distinto", [("Juego", g.Name)],
             "Los archivos de la base que no son los congelados se cambian por los congelados. Si los actualizaste tú a propósito, perderías ese cambio (queda una copia y se puede restaurar).", "Sustituir", danger: true)) return;
         busy = true;
         var window = InstallProgress.Open(this, 1, () => false); progressWindow = window;
+        var progress = new Progress<ModProgress>(window.Update); // creado aquí, en la ventana: informa siempre en el hilo de la interfaz
         try
         {
             var locals = engineCandidates.Where(Directory.Exists).ToArray();
-            var op = await Task.Run(() => engine.RepairBaseAsync(g, dir, replaceDifferent, locals, new Progress<ModProgress>(window.Update), CancellationToken.None));
-            window.Finish(new BatchResult("", op is null ? [] : [op.Label], [], [], [], []));
+            var op = await Task.Run(() => engine.RepairBaseAsync(g, dir, replaceDifferent, locals, progress, CancellationToken.None));
+            Log($"Reparar base {g.Name} ({(replaceDifferent ? "sustituir lo distinto" : "reponer lo que falta")}): {op?.Label ?? "nada que reparar"}");
+            window.Finish(new BatchResult("", op is null ? ["No había nada que reparar"] : [op.Label], [], [], [], []));
         }
-        catch (Exception e) when (e is HttpRequestException or IOException or InvalidDataException or InvalidOperationException)
-        { window.Finish(new BatchResult("", [], [("Reparar base", ModBatch.Friendly(e))], [], [], [])); }
+        catch (Exception e) when (e is not OutOfMemoryException)
+        {
+            LogError($"Reparar base {g.Name}", e);
+            window.Finish(new BatchResult("", [], [("Reparar base", ModBatch.Friendly(e))], [], [], []));
+        }
         finally { busy = false; }
         verifyItems = null; lock (gameInfo) gameInfo.Remove(SetupEngine.GameId(g)); ShowMode();
     }
 
-    /// <summary>Operaciones de Setup en este juego: lotes de mods (restaurar el lote o un mod), reparaciones y el motor.</summary>
+    /// <summary>Cambios que Setup hizo en este juego, cada uno deshacible: los mods instalados de una vez, las reparaciones,
+    /// el cambio de la DLL y DLSS 4 local; y la instalación de ILION, que se retira con «Desinstalar ILION».</summary>
     private StackPanel RestoreBox(LibraryGame g, string dir)
     {
         var box = new StackPanel();
         var id = SetupEngine.GameId(g);
-        var ops = engine.Operations.All(id).Where(o => o.Completed).ToArray();
-        if (ops.Length == 0 && engine.Installer.Installed(id) is null) { box.Children.Add(Note("Setup no ha hecho cambios restaurables en este juego.", null, 12.5)); return box; }
-        foreach (var batch in ops.Where(o => o.Batch is not null).GroupBy(o => o.Batch!))
+        // La instalación y la desinstalación de ILION tienen su propio registro: se gestionan solo con «Desinstalar ILION»
+        var ops = engine.Operations.All(id).Where(o => o.Completed && o.Kind is not ("Instalación" or "Desinstalación" or "Desinstalación completa")).ToArray();
+        var install = engine.Installer.Installed(id);
+        if (ops.Length == 0 && install is null) { box.Children.Add(Note("Setup no ha hecho cambios en este juego que se puedan deshacer.", null, 12.5)); return box; }
+        var intro = Note("Cada cambio de Setup se puede deshacer: vuelve lo que había justo antes de ese cambio. Si un cambio posterior tocó los mismos archivos, deshaz primero ese. Tus partidas, tu OptiScaler.ini y los archivos que cambiaste tú no se tocan.", null, 12.5);
+        intro.Margin = new Thickness(0, 0, 0, 12); box.Children.Add(intro);
+
+        void Row(string title, string? detail, string? blocked, Button button)
         {
-            var row = new DockPanel { Margin = new Thickness(0, 0, 0, 6) };
-            var key = Key("Restaurar lote", async () =>
-            {
-                if (!Confirm.Ask(this, "Restaurar lote", [("Operaciones", string.Join(", ", batch.Select(o => o.Label)))], "Se quita todo lo que instaló ese lote y vuelve lo que había antes. Si algún archivo cambió después, no se toca nada.", "Restaurar")) return;
-                try { var done = await Task.Run(() => ModBatch.RestoreBatch(engine.Operations, id, batch.Key)); Say("Restaurado: " + string.Join(", ", done)); }
-                catch (Exception e) when (e is IOException or InvalidOperationException) { Confirm.Info(this, "Restaurar", e.Message, error: true); }
-                verifyItems = null; ShowMode();
-            }, 170);
-            DockPanel.SetDock(key, Dock.Right); row.Children.Add(key);
-            row.Children.Add(Note($"Lote {batch.First().When:dd/MM/yyyy HH:mm}: {string.Join(", ", batch.Select(o => o.Label))}", null, 12.5));
+            var row = new DockPanel { Margin = new Thickness(0, 0, 0, 10) };
+            button.IsEnabled = blocked is null; button.VerticalAlignment = VerticalAlignment.Top;
+            DockPanel.SetDock(button, Dock.Right); row.Children.Add(button);
+            var text = new StackPanel { Margin = new Thickness(0, 0, 12, 0) };
+            var head = Ui.Text(title, "T.Label"); head.TextWrapping = TextWrapping.Wrap; text.Children.Add(head);
+            if (detail is not null) text.Children.Add(Note(detail, null, 12));
+            if (blocked is not null) text.Children.Add(Note(blocked, Level.Warn, 12));
+            row.Children.Add(text);
             box.Children.Add(row);
         }
-        foreach (var op in ops.Where(o => o.Batch is null))
+        async Task Undo(string what, Func<string> work)
         {
-            var row = new DockPanel { Margin = new Thickness(0, 0, 0, 6) };
+            try { var done = await Task.Run(work); Log($"Deshacer en {g.Name}: {done}"); Say($"Deshecho: {done}."); }
+            catch (Exception e) when (e is not OutOfMemoryException) { LogError("Deshacer", e); Confirm.Info(this, what, ModBatch.Friendly(e), error: true); }
+            lock (gameInfo) gameInfo.Remove(id); verifyItems = null; ShowMode();
+        }
+
+        // Mods instalados de una vez (un «lote»): se quitan juntos, con los archivos oficiales que se pusieron para ellos
+        foreach (var batch in ops.Where(o => o.Batch is not null).GroupBy(o => o.Batch!).OrderByDescending(b => b.Max(o => o.When)))
+        {
+            var mods = batch.Where(o => o.Kind == ModBatch.Kind).ToArray();
+            var when = batch.Min(o => o.When);
+            var blocked = batch.Select(o => engine.Operations.CanRestore(o)).FirstOrDefault(w => w is not null);
+            var names = string.Join(", ", mods.Select(o => o.Label));
+            var title = $"Mods instalados el {when:dd/MM/yyyy} a las {when:HH:mm} ({mods.Length})";
+            Row(title, names, blocked is null ? null : "Antes hay que deshacer un cambio posterior sobre los mismos archivos.",
+                Key("Quitar estos mods", async () =>
+                {
+                    if (!Confirm.Ask(this, "Quitar estos mods", [("Juego", g.Name), ("Mods", names)],
+                        "Se quitan los archivos que pusieron estos mods y vuelve lo que había antes de instalarlos. ILION y los demás cambios se quedan. Si algún archivo lo cambiaste tú después, no se toca.", "Quitar")) return;
+                    await Undo("Quitar estos mods", () => string.Join(", ", ModBatch.RestoreBatch(engine.Operations, id, batch.Key)));
+                }, 190));
+        }
+
+        // Cambios sueltos: reparaciones, cambio de la DLL de ILION, DLSS 4 local…
+        foreach (var op in ops.Where(o => o.Batch is null).OrderByDescending(o => o.When))
+        {
+            var title = op.Kind switch
+            {
+                "Reparar base" => $"Reparación de la base ({op.Entries.Length} {(op.Entries.Length == 1 ? "archivo" : "archivos")})",
+                "DLL base" => "Cambio de la DLL de ILION",
+                "DLSS 4 local" => "DLSS 4 Modelo K (instalación local)",
+                ModBatch.Kind => $"Mod: {op.Label}",
+                _ => op.Label,
+            };
             var why = engine.Operations.CanRestore(op);
-            var key = Key("Restaurar", async () =>
-            {
-                if (!Confirm.Ask(this, "Restaurar", [("Operación", op.Label)], "Vuelve lo que había antes de esta operación.", "Restaurar")) return;
-                try { await Task.Run(() => engine.Operations.Restore(op)); Say("Restaurado: " + op.Label); }
-                catch (Exception e) when (e is IOException or InvalidOperationException) { Confirm.Info(this, "Restaurar", e.Message, error: true); }
-                verifyItems = null; ShowMode();
-            }, 130, tip: why);
-            key.IsEnabled = why is null;
-            DockPanel.SetDock(key, Dock.Right); row.Children.Add(key);
-            row.Children.Add(Note($"{op.When:dd/MM/yyyy HH:mm} · {op.Label}", null, 12.5));
-            box.Children.Add(row);
+            Row($"{title} · {op.When:dd/MM/yyyy HH:mm}", op.Kind == "DLL base" ? op.Label : null,
+                why is null ? null : "Antes hay que deshacer un cambio posterior sobre los mismos archivos.",
+                Key("Deshacer", async () =>
+                {
+                    if (!Confirm.Ask(this, "Deshacer", [("Juego", g.Name), ("Cambio", title)], "Vuelve lo que había justo antes de este cambio. Lo demás se queda como está.", "Deshacer")) return;
+                    await Undo("Deshacer", () => { engine.Operations.Restore(op); return title; });
+                }, 150));
         }
-        if (engine.Installer.Installed(id) is { } install)
+
+        // ILION en sí: el motor y su base
+        if (install is not null)
         {
-            var row = new DockPanel { Margin = new Thickness(0, 6, 0, 0) };
+            var bin = Path.Combine(install.Directory, install.Proxy);
+            var version = File.Exists(bin) ? OptiScalerInstaller.PublicVersion(bin) ?? install.Version : install.Version;
             var key = Key("Desinstalar ILION", async () =>
             {
                 if (!Confirm.Ask(this, "Desinstalar ILION", [("Juego", g.Name), ("Archivos", install.Files.Length.ToString())],
-                    "Se retira solo lo que instaló Setup y no ha cambiado; tu OptiScaler.ini se conserva. Queda una copia restaurable.", "Desinstalar", danger: true)) return;
-                try { var removed = await Task.Run(() => engine.Installer.Uninstall(id, keepIni: true)); Say($"ILION desinstalado ({removed.Length} archivos retirados)."); }
-                catch (Exception e) when (e is IOException or InvalidOperationException) { Confirm.Info(this, "Desinstalar", e.Message, error: true); }
-                lock (gameInfo) gameInfo.Remove(id); verifyItems = null; ShowMode();
+                    "Se retira solo lo que instaló Setup y no ha cambiado; tu OptiScaler.ini se conserva. Queda una copia por si quieres volver atrás.", "Desinstalar", danger: true)) return;
+                await Undo("Desinstalar ILION", () => $"ILION desinstalado ({engine.Installer.Uninstall(id, keepIni: true).Length} archivos retirados)");
             }, 200);
             key.Style = Ui.S("Btn.Danger");
-            DockPanel.SetDock(key, Dock.Right); row.Children.Add(key);
-            row.Children.Add(Note($"Instalación de Setup: OptiScaler ILION {install.Version} como {install.Proxy}, {install.Files.Length} archivos ({install.When:dd/MM/yyyy}).", null, 12.5));
-            box.Children.Add(row);
+            var sep = new Border { BorderBrush = Ui.B("B.Line"), BorderThickness = new Thickness(0, 1, 0, 0), Margin = new Thickness(0, 4, 0, 10) };
+            box.Children.Add(sep);
+            Row($"ILION {version} (instalado el {install.When:dd/MM/yyyy})", $"El motor y su base: {install.Files.Length} archivos, cargado como {install.Proxy}.", null, key);
         }
         return box;
     }
@@ -860,4 +902,7 @@ public partial class MainWindow : Window
     {
         try { File.AppendAllText(Path.Combine(data, "ilion-setup.log"), $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {line}{Environment.NewLine}"); } catch (IOException) { }
     }
+
+    /// <summary>Error con todo su detalle (tipo, mensaje y pila) en ilion-setup.log: lo que hace falta para diagnosticar un fallo de un usuario.</summary>
+    private void LogError(string action, Exception e) => Log($"ERROR {action}: {e}");
 }
