@@ -2,7 +2,11 @@
 
 Instalador de **OptiScaler ILION** para Windows x64: instala ILION, su base exacta de OptiScaler, sus variantes y los mods compatibles con tu GPU, y lo deja todo verificado y restaurable.
 
-**Descarga:** [última versión](https://github.com/ENE4S/ILION-Setup/releases/latest) · Motor ILION: [ENE4S/Optiscaler-ILION](https://github.com/ENE4S/Optiscaler-ILION)
+## ⬇ Descargar
+
+**[Descargar ILION Setup 0.3.1 (ILION-Setup-0.3.1.exe, 63 MB)](https://github.com/ENE4S/ILION-Setup/releases/download/setup-v0.3.1/ILION-Setup-0.3.1.exe)**
+
+Todas las versiones: [Releases](https://github.com/ENE4S/ILION-Setup/releases) · Motor ILION: [ENE4S/Optiscaler-ILION](https://github.com/ENE4S/Optiscaler-ILION)
 
 ## Qué hace
 
