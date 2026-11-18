@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Núcleo autónomo de ILION Setup. Central/ = copia de los módulos verificados de ILION CENTRAL-01
+       (rama central-mods-multiple, commit 27ec821); se mantienen aquí, Central no se toca. -->
+  <ItemGroup>
+    <PackageReference Include="SharpCompress" Version="0.50.8" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>ILION.Setup</AssemblyName>
+    <RootNamespace>Ilion.Setup.App</RootNamespace>
+    <Version>0.3.1</Version>
+    <ApplicationIcon>Assets\sputnik.ico</ApplicationIcon>
+    <Product>ILION Setup</Product>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="..\Setup.Core\Setup.Core.csproj" /></ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\RussoOne-Regular.ttf" />
+    <Resource Include="Assets\catalogo.json" />
+    <Resource Include="Assets\arquitecturas.json" />
+    <Resource Include="..\Manifiestos\base-congelada.json" Link="Assets\base-congelada.json" />
+    <Resource Include="Assets\clave-publica.txt" />
+    <Resource Include="Assets\sputnik.ico" />
+  </ItemGroup>
+</Project>

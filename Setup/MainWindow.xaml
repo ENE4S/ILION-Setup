@@ -1,0 +1,63 @@
+<Window x:Class="Ilion.Setup.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ILION SETUP" Icon="pack://application:,,,/Assets/sputnik.ico" Width="1180" Height="820" MinWidth="980" MinHeight="640"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
+        Background="{StaticResource B.Bg}" Foreground="{StaticResource B.Text}" FontFamily="{StaticResource F.Ui}">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="58" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+    <Border BorderBrush="{StaticResource B.Line}" BorderThickness="1.5">
+        <Grid x:Name="Root">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="58"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="34"/>
+            </Grid.RowDefinitions>
+
+            <!-- Barra de título en óxido, como SPUTNIK -->
+            <Border Grid.Row="0" Background="{StaticResource B.Rust}">
+                <DockPanel LastChildFill="False">
+                    <ContentControl x:Name="Emblem" DockPanel.Dock="Left" Margin="14,0,0,0" VerticalAlignment="Center" Focusable="False"/>
+                    <TextBlock DockPanel.Dock="Left" Text="ILION SETUP" Style="{StaticResource T.Brand}" FontSize="30" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                    <Button DockPanel.Dock="Right" Style="{StaticResource Btn.Caption}" Click="Close_Click" Margin="0,0,10,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Cerrar">
+                        <Path Data="M 0,0 L 12,12 M 12,0 L 0,12" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="2.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" Width="12" Height="12"/>
+                    </Button>
+                    <Button DockPanel.Dock="Right" Style="{StaticResource Btn.Caption}" Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Minimizar">
+                        <Path Data="M 0,6 L 12,6" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="2.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" Width="12" Height="12"/>
+                    </Button>
+                    <Border DockPanel.Dock="Right" Background="#33000000" Padding="14,6" Margin="0,0,16,0" VerticalAlignment="Center">
+                        <StackPanel>
+                            <TextBlock x:Name="GpuName" Style="{StaticResource T.Label}" FontSize="13" Text="Detectando GPU…" Foreground="{StaticResource B.Yellow}"/>
+                            <TextBlock x:Name="GpuArch" Style="{StaticResource T.Note}" FontSize="12" Foreground="{StaticResource B.Text}" Opacity="0.75"/>
+                        </StackPanel>
+                    </Border>
+                </DockPanel>
+            </Border>
+
+            <!-- Tres modos -->
+            <UniformGrid Grid.Row="1" Columns="3" Margin="16,14,16,4">
+                <RadioButton x:Name="ModeNew" Style="{StaticResource Mode}" Content="Instalación nueva" IsChecked="True" Checked="Mode_Checked" Margin="0,0,6,0"/>
+                <RadioButton x:Name="ModeUpdate" Style="{StaticResource Mode}" Content="Actualizar ILION" Checked="Mode_Checked" Margin="3,0,3,0"/>
+                <RadioButton x:Name="ModeVerify" Style="{StaticResource Mode}" Content="Verificar y reparar" Checked="Mode_Checked" Margin="6,0,0,0"/>
+            </UniformGrid>
+
+            <ScrollViewer Grid.Row="2" x:Name="Scroll" VerticalScrollBarVisibility="Auto" Padding="16,8,10,12">
+                <StackPanel x:Name="Page" Margin="0,0,6,0"/>
+            </ScrollViewer>
+
+            <!-- Barra de estado con piloto -->
+            <Border Grid.Row="3" Background="{StaticResource B.Panel}" BorderBrush="{StaticResource B.Line}" BorderThickness="0,1.5,0,0">
+                <DockPanel Margin="16,0">
+                    <Grid Width="26" Margin="0,0,6,0" VerticalAlignment="Center">
+                        <Ellipse x:Name="StatusLamp" Width="9" Height="9" Fill="{StaticResource B.Ok}" HorizontalAlignment="Center"/>
+                        <ContentControl x:Name="StatusSpin" Visibility="Collapsed" Focusable="False" HorizontalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock x:Name="BaseInfo" DockPanel.Dock="Right" Style="{StaticResource T.Note}" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="Status" Style="{StaticResource T.Value}" FontSize="13" VerticalAlignment="Center" Cursor="Hand"/>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

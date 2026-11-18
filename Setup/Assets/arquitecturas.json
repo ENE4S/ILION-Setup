@@ -1,0 +1,458 @@
+{
+  "version": 2,
+  "nota": "Compatibilidad por arquitectura (revisada con el usuario 2026-11-12). Fuentes: código de ILION (IlionCommunity.h), correcciones del usuario, README de cada mod en GitHub, RHI y la wiki de OptiScaler. Estados: si = funciona; no = se oculta; con:X = funciona con X; ? = sin datos (se muestra marcado). Claves: id de arquitectura (los mismos que ILION), grupo rtx, marca (amd, nvidia, intel) o *. Gana la más concreta. d4r no está aquí: va en el paquete de ILION y solo se instala en AMD RDNA 3 / RDNA 4.",
+  "arquitecturas": [
+    {
+      "id": "rdna4",
+      "marca": "amd",
+      "nombre": "RDNA 4",
+      "ejemplos": "RX 9000"
+    },
+    {
+      "id": "rdna3",
+      "marca": "amd",
+      "nombre": "RDNA 3",
+      "ejemplos": "RX 7000"
+    },
+    {
+      "id": "rdna2",
+      "marca": "amd",
+      "nombre": "RDNA 2",
+      "ejemplos": "RX 6000"
+    },
+    {
+      "id": "amd_apu",
+      "marca": "amd",
+      "nombre": "APU / bajo consumo",
+      "ejemplos": "Radeon 780M · Z1 · Steam Deck"
+    },
+    {
+      "id": "amd_old",
+      "marca": "amd",
+      "nombre": "RDNA 1 o anterior",
+      "ejemplos": "RX 5000 · Vega · RX 400/500"
+    },
+    {
+      "id": "rtx50",
+      "marca": "nvidia",
+      "nombre": "RTX 50",
+      "ejemplos": "RTX 5050 – 5090"
+    },
+    {
+      "id": "rtx40",
+      "marca": "nvidia",
+      "nombre": "RTX 40",
+      "ejemplos": "RTX 4060 – 4090"
+    },
+    {
+      "id": "rtx30",
+      "marca": "nvidia",
+      "nombre": "RTX 30",
+      "ejemplos": "RTX 3050 – 3090 Ti"
+    },
+    {
+      "id": "rtx20",
+      "marca": "nvidia",
+      "nombre": "RTX 20",
+      "ejemplos": "RTX 2060 – 2080 Ti"
+    },
+    {
+      "id": "nv_gtx",
+      "marca": "nvidia",
+      "nombre": "GTX (sin DLSS)",
+      "ejemplos": "GTX 10 / GTX 16"
+    },
+    {
+      "id": "arc_b",
+      "marca": "intel",
+      "nombre": "Arc B",
+      "ejemplos": "Arc B570 / B580"
+    },
+    {
+      "id": "arc_a",
+      "marca": "intel",
+      "nombre": "Arc A",
+      "ejemplos": "Arc A380 – A770"
+    },
+    {
+      "id": "intel_xe2",
+      "marca": "intel",
+      "nombre": "Xe2 integrada",
+      "ejemplos": "Arc 130V / 140V"
+    },
+    {
+      "id": "intel_other",
+      "marca": "intel",
+      "nombre": "Intel sin XMX",
+      "ejemplos": "UHD / Iris Xe"
+    }
+  ],
+  "reglas": [
+    {
+      "seccion": "Upscalers",
+      "clave": "*Upscaler",
+      "valor": "dlss",
+      "estados": {
+        "rtx": "si",
+        "nv_gtx": "no",
+        "rdna3": "con:d4r",
+        "rdna4": "con:d4r",
+        "amd": "no",
+        "intel": "no"
+      },
+      "fuente": "ILION: DLSS nativo solo en RTX; d4r en RDNA 3 y RDNA 4 (usuario)"
+    },
+    {
+      "seccion": "Upscalers",
+      "clave": "*Upscaler",
+      "valor": "xess",
+      "estados": {
+        "*": "si"
+      },
+      "fuente": "ILION: cualquier GPU (XMX en Arc)"
+    },
+    {
+      "seccion": "Upscalers",
+      "clave": "*Upscaler",
+      "valor": "ffx",
+      "estados": {
+        "*": "si"
+      },
+      "fuente": "ILION: FSR 3.1 en cualquier GPU; FSR 4 según el modelo"
+    },
+    {
+      "seccion": "Upscalers",
+      "clave": "*Upscaler",
+      "valor": "fsr22",
+      "estados": {
+        "*": "si"
+      },
+      "fuente": "ILION"
+    },
+    {
+      "seccion": "Upscalers",
+      "clave": "*Upscaler",
+      "valor": "fsr21",
+      "estados": {
+        "*": "si"
+      },
+      "fuente": "ILION"
+    },
+    {
+      "seccion": "FSR",
+      "clave": "Fsr4SrVariant",
+      "valor": "FSR4/AMD driver",
+      "estados": {
+        "amd": "si",
+        "*": "no"
+      },
+      "fuente": "El FSR 4 del driver es de AMD: fuera de AMD no existe (usuario)"
+    },
+    {
+      "seccion": "FSR",
+      "clave": "Fsr4ForceModel",
+      "valor": "1",
+      "estados": {
+        "rdna4": "si",
+        "*": "no"
+      },
+      "fuente": "FP8 solo en RDNA 4 (usuario, INI)"
+    },
+    {
+      "seccion": "FSR",
+      "clave": "Fsr4ForceModel",
+      "valor": "2",
+      "estados": {
+        "rdna4": "si",
+        "rdna3": "si",
+        "amd_apu": "?",
+        "*": "no"
+      },
+      "fuente": "Usuario: INT8 de RDNA 3 en RDNA 3 y RDNA 4, no en RDNA 2"
+    },
+    {
+      "seccion": "FSR",
+      "clave": "Fsr4ForceModel",
+      "valor": "3",
+      "estados": {
+        "rdna2": "si",
+        "rdna3": "si",
+        "rdna4": "si",
+        "amd_apu": "si",
+        "*": "no"
+      },
+      "fuente": "Usuario: el INT8 de RDNA 2 se puede elegir en RDNA 2, 3 y 4"
+    },
+    {
+      "seccion": "FSR",
+      "clave": "Fsr4ForceModel",
+      "valor": "4",
+      "estados": {
+        "rdna2": "si",
+        "rdna3": "si",
+        "rdna4": "si",
+        "amd_apu": "si",
+        "*": "no"
+      },
+      "fuente": "Usuario: INT8 Lite oficial, con versión RDNA 2"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGOutput",
+      "valor": "dlssg",
+      "estados": {
+        "rtx50": "si",
+        "rtx40": "si",
+        "rtx30": "con:DLSS for SM86",
+        "rtx20": "con:DLSS for SM86",
+        "nv_gtx": "con:un reemplazo",
+        "amd": "con:un reemplazo",
+        "intel": "con:un reemplazo"
+      },
+      "fuente": "ILION, RHI, README dlssg_for_sm86 y MFG-Unlocker"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGOutput",
+      "valor": "xefg",
+      "estados": {
+        "intel_other": "?",
+        "*": "si"
+      },
+      "fuente": "ILION (XeSS SDK: Shader Model 6.4); XeMFG hasta ×6 en NVIDIA y AMD, experimental en Arc (MFG-Unlocker)"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGOutput",
+      "valor": "fsrfg",
+      "estados": {
+        "amd": "si",
+        "nvidia": "si",
+        "intel": "?"
+      },
+      "fuente": "ILION"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "None",
+      "estados": {
+        "rtx50": "si",
+        "rtx40": "si",
+        "rtx30": "con:DLSS for SM86",
+        "rtx20": "con:DLSS for SM86",
+        "*": "no"
+      },
+      "fuente": "ILION; README dlssg_for_sm86 (RTX 20/30, DX12, driver R580+)"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "XeMFG XMX",
+      "estados": {
+        "*": "si"
+      },
+      "fuente": "README realdody: modelo XMX portado, cualquier GPU, solo DX12; Tensor Cores opcionales en RTX 20–50; usuario"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "DLSSG-XeFG",
+      "estados": {
+        "*": "si"
+      },
+      "fuente": "README FakeMichau: cualquier GPU (XMX en Arc), DX12 y Vulkan; ILION 1.4.1.2"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "Apex Neural Rendering FG",
+      "estados": {
+        "*": "?"
+      },
+      "fuente": "Addon ANR FG (beta): programas dp4a, coopmat, XMX y portables; sin tabla de GPU publicada"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "HelixSR",
+      "estados": {
+        "amd": "con:HelixSR 2.0.0",
+        "nvidia": "no",
+        "intel": "?"
+      },
+      "fuente": "ILION; README HelixSR 3.x sin FG propio; probado por el usuario en RDNA 3"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "Nukems",
+      "estados": {
+        "nv_gtx": "no",
+        "*": "si"
+      },
+      "fuente": "ILION; README Nukem"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "Arturs",
+      "estados": {
+        "*": "si"
+      },
+      "fuente": "README DLSS Enabler: cualquier GPU DX12"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "FFX",
+      "estados": {
+        "amd": "si",
+        "*": "?"
+      },
+      "fuente": "ILION (experimental en AMD, DX12)"
+    },
+    {
+      "seccion": "FrameGen",
+      "clave": "FGNvngxReplacement",
+      "valor": "Combo",
+      "estados": {
+        "amd": "si",
+        "*": "?"
+      },
+      "fuente": "ILION (experimental en AMD, DX12)"
+    },
+    {
+      "seccion": "fakenvapi",
+      "clave": "UseFakenvapi",
+      "valor": "true",
+      "estados": {
+        "nvidia": "no",
+        "*": "si"
+      },
+      "fuente": "INI: fakenvapi sustituye a nvapi (Anti-Lag 2 / XeLL); en NVIDIA no hace falta"
+    }
+  ],
+  "mods": [
+    {
+      "repo": "dashdogy/MFG-Unlocker",
+      "nombre": "MFG-Unlocker (Universal MFG Unlocker)",
+      "para": [
+        "*"
+      ],
+      "que": "XeMFG hasta ×6 en NVIDIA, AMD e Intel (Arc experimental), DX12 y Vulkan. En RTX 20/30/40 también DLSS MFG hasta ×6 y Dynamic MFG. No se instala junto a MFG Unlock.",
+      "fuente": "README y docs/compatibility de dashdogy"
+    },
+    {
+      "repo": "realdody/dlssg-to-xefg-xmx",
+      "nombre": "XeMFG XMX",
+      "para": [
+        "*"
+      ],
+      "que": "Sustituye DLSS FG por XeFG con el modelo XMX portado, hasta ×6, en cualquier GPU. Solo DX12; necesita la libxess_fg 1.3.4 de Intel en su carpeta.",
+      "fuente": "README realdody"
+    },
+    {
+      "repo": "FakeMichau/dlssg-to-xefg",
+      "nombre": "DLSSG-XeFG (FakeMichau)",
+      "para": [
+        "*"
+      ],
+      "que": "El original de XeFG por DLSS FG, hasta ×6, en DX12 y Vulkan. Distinto de XeMFG XMX (modelo XMX portado) y de MFG-Unlocker. Necesita ILION 1.4.1.2 y la libxess_fg de Intel (1.3.1 o 1.3.4).",
+      "fuente": "README FakeMichau; ILION 1.4.1.2 (Nvngx_FakeMichau.cpp)"
+    },
+    {
+      "repo": "apex-compute/ANR",
+      "nombre": "Apex Neural Rendering FG (ANR)",
+      "para": [
+        "*"
+      ],
+      "que": "Generación de fotogramas neuronal de Apex Compute, hasta ×6, como reemplazo de DLSS FG (DX12, beta). No es el Neural Rendering de escalado. Necesita ILION 1.4.1.1.",
+      "fuente": "README del addon ANR FG; ILION 1.4.1.1 (Nvngx_ApexFg.cpp)"
+    },
+    {
+      "repo": "sdli1995/dlssg_for_sm86",
+      "nombre": "DLSS for SM86",
+      "para": [
+        "rtx20",
+        "rtx30"
+      ],
+      "que": "DLSS Frame Generation de NVIDIA hasta ×6 y DLSS SR INT8 en RTX 20/30. DX12, driver R580 o superior. Se bloquea si está MFG Unlock.",
+      "fuente": "README sdli1995; RHI"
+    },
+    {
+      "repo": "SilyNoMeta/rtx-encore",
+      "nombre": "RTX Encore",
+      "para": [
+        "rtx20",
+        "rtx30",
+        "rtx40"
+      ],
+      "que": "DLSS MFG ×2–×6, XeFG hasta ×6 y Neural Rendering en RTX 20/30/40, también en juegos sin DLSS. DX11, DX12 y Vulkan.",
+      "fuente": "README SilyNoMeta"
+    },
+    {
+      "repo": "mavismmg/MFGAdaUnlock-RenoDx",
+      "nombre": "MFG Unlock",
+      "para": [
+        "rtx20",
+        "rtx30",
+        "rtx40",
+        "rtx50"
+      ],
+      "que": "DLSS MFG en RTX 40 y DLSS FG en RTX 20/30; XeMFG en RTX 20–50. Necesita ReShade. No se instala junto a MFG-Unlocker.",
+      "fuente": "README mavismmg; RHI"
+    },
+    {
+      "repo": "artur-graniszewski/DLSS-Enabler",
+      "nombre": "Multi Frame Generation Enabler (Artur)",
+      "para": [
+        "*"
+      ],
+      "que": "La DLL de DLSS Enabler que usa ILION (dlss-enabler-headless.dll): FG y MFG en GPU sin DLSS FG nativo. DX12.",
+      "fuente": "README Artur"
+    },
+    {
+      "repo": "lonewolf0622/HelixSR",
+      "nombre": "HelixSR",
+      "para": [
+        "amd",
+        "nv_gtx",
+        "intel"
+      ],
+      "que": "HelixSR 1.9 para GPU antiguas, HLX FSR 4 (FSR 4 Lite sobre HelixSR) y FG Lite de la 2.0.0 (solo AMD). Sin Tensor Cores ni FP8: RDNA 1/2/3, GTX, Arc.",
+      "fuente": "README HelixSR (tabla GPUs)"
+    },
+    {
+      "repo": "WizardsForgeGames/FSR4All",
+      "nombre": "FSR4All",
+      "para": [
+        "nvidia",
+        "intel"
+      ],
+      "que": "FSR 4 como DLL D3D12 en GPU que no son AMD. Probado solo en RTX 4090.",
+      "fuente": "README FSR4All"
+    },
+    {
+      "repo": "danielblnc/DLSS-NR-on-AMD",
+      "nombre": "Runtime NR de danielblnc",
+      "para": [
+        "rdna4",
+        "rdna3",
+        "rdna2"
+      ],
+      "que": "Neural Rendering de DLSS 5 en AMD (runtime 0.6.0 de danielblnc que usa ILION). RX 9000 y 7000; RX 6000 en pruebas.",
+      "fuente": "README danielblnc"
+    },
+    {
+      "repo": "lmxxf/dlss5-on-amd-9070xt-porting",
+      "nombre": "Runtime NR de lmxxf",
+      "para": [
+        "rdna4",
+        "rdna3"
+      ],
+      "que": "Neural Rendering de DLSS 5 (runtime de lmxxf que usa ILION). RX 9000 completo; en RX 7000, modo Fast.",
+      "fuente": "README lmxxf"
+    }
+  ]
+}

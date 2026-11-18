@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Herramientas de quien publica: generar la clave de manifiestos y firmar manifiestos. No va con Setup. -->
+  <PropertyGroup><OutputType>Exe</OutputType></PropertyGroup>
+  <ItemGroup><ProjectReference Include="..\Setup.Core\Setup.Core.csproj" /></ItemGroup>
+</Project>
