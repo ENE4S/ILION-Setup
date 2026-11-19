@@ -232,7 +232,7 @@ public sealed partial class OptiScalerInstaller(HttpClient http, string dataDire
     public async Task<OptiPackage> PrepareOfficialAsync(IProgress<string>? progress, CancellationToken token)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, "https://api.github.com/repos/optiscaler/OptiScaler/releases?per_page=10");
-        request.Headers.UserAgent.ParseAdd("ILION-Setup/0.1");
+        request.Headers.UserAgent.ParseAdd("ILION-Setup/" + Ilion.Setup.SetupEngine.SetupVersion);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
         using var response = await http.SendAsync(request, token);
         response.EnsureSuccessStatusCode();

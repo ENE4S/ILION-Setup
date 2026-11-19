@@ -8,7 +8,7 @@ namespace Ilion.Client;
 
 /// <summary>Archivo oficial que un mod necesita y que su publicación no trae.</summary>
 /// <param name="Relative">Destino, relativo a la carpeta del ejecutable.</param>
-/// <param name="What">Nombre legible («XeFG 1.3.4 de Intel»).</param>
+/// <param name="What">Nombre legible («XeFG de Intel para XeMFG XMX»).</param>
 /// <param name="Vendor">Fabricante («Intel», «NVIDIA»).</param>
 /// <param name="Why">Para qué la necesita el mod.</param>
 public sealed record ModDependency(string Relative, string What, string Vendor, string Why)
@@ -29,6 +29,12 @@ public sealed record ModDependency(string Relative, string What, string Vendor, 
     public bool WarnOnly { get; init; }
     /// <summary>Otras rutas (relativas al ejecutable) donde una copia válida también sirve al mod.</summary>
     public string[] AlsoAccept { get; init; } = [];
+    /// <summary>Versión a partir de la cual ya no vale (excluida). Null = sin techo.</summary>
+    public string? BelowVersion { get; init; }
+    /// <summary>Buscar primero en los juegos del PC (una copia mejor que la oficial) y solo después el origen oficial.</summary>
+    public bool PreferGames { get; init; }
+    /// <summary>Rutas del propio juego (relativas al ejecutable) de donde copiarla si valen: sin descarga.</summary>
+    public string[] CopyFrom { get; init; } = [];
 }
 
 /// <summary>Estado de un archivo necesario en la carpeta del juego.</summary>
@@ -64,6 +70,12 @@ public static class ModRequirements
                 var version = ComponentUpdateService.VersionOf(path);
                 if (VersionUtil.Compare(version, min) < 0)
                     return $"{Path.GetFileName(path)} es la {VersionUtil.Display(version)}; hace falta la {min} o superior ({dep.What}).";
+            }
+            if (dep.BelowVersion is { } below)
+            {
+                var version = ComponentUpdateService.VersionOf(path);
+                if (VersionUtil.Compare(version, below) >= 0)
+                    return $"{Path.GetFileName(path)} es la {VersionUtil.Display(version)}; hace falta una anterior a la {below} ({dep.What}).";
             }
             if (dep.Signer is { } signer && (ComponentClassifier.SignerOf(path) is not { } s || !s.Contains(signer, StringComparison.OrdinalIgnoreCase)))
                 return $"{Path.GetFileName(path)} no lleva la firma de {dep.Vendor}: no se da por buena.";
@@ -148,6 +160,24 @@ public static class DependencyResolver
         {
             var state = ModRequirements.Evaluate(dep, exeDir);
             if (state.Ok) continue;
+            var target = Path.Combine(exeDir, dep.Relative);
+            async Task<bool> FromGames()
+            {
+                var copy = await Task.Run(() => ModRequirements.FindLocalCopy(dep, gameRoots, target, token), token);
+                if (copy is null) return false;
+                items.Add(new(dep.Relative, copy));
+                sources.Add($"{Path.GetFileName(dep.Relative)} {VersionUtil.Display(ComponentUpdateService.VersionOf(copy))} · copia firmada por {dep.Vendor} encontrada en {copy}");
+                return true;
+            }
+            if (dep.SearchGames && dep.PreferGames && await FromGames()) continue;
+            // Una copia válida en el propio juego (p. ej. la de OptiScaler): sin descarga
+            var local = dep.CopyFrom.Select(r => Path.Combine(exeDir, r)).FirstOrDefault(p => File.Exists(p) && ModRequirements.Problem(dep, p) is null);
+            if (local is not null)
+            {
+                items.Add(new(dep.Relative, local));
+                sources.Add($"{Path.GetFileName(dep.Relative)} {VersionUtil.Display(ComponentUpdateService.VersionOf(local))} · copia firmada por {dep.Vendor} de {Path.GetRelativePath(exeDir, local)} del propio juego");
+                continue;
+            }
             if (dep.Official is { } recipe && updates is not null)
             {
                 try
@@ -165,17 +195,7 @@ public static class DependencyResolver
                     state = state with { Message = state.Message + $" No se pudo descargar de {recipe.Repository}: {error.Message}" };
                 }
             }
-            if (dep.SearchGames)
-            {
-                var target = Path.Combine(exeDir, dep.Relative);
-                var copy = await Task.Run(() => ModRequirements.FindLocalCopy(dep, gameRoots, target, token), token);
-                if (copy is not null)
-                {
-                    items.Add(new(dep.Relative, copy));
-                    sources.Add($"{Path.GetFileName(dep.Relative)} {VersionUtil.Display(ComponentUpdateService.VersionOf(copy))} · copia firmada por {dep.Vendor} encontrada en {copy}");
-                    continue;
-                }
-            }
+            if (dep.SearchGames && !dep.PreferGames && await FromGames()) continue;
             pending.Add(state);
         }
         return new([.. items], [.. sources], [.. pending]);

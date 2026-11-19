@@ -11,8 +11,9 @@ namespace Ilion.Client;
 /// <summary>Estado de la instalación para la ventana de progreso. Fraction/Done/Total son null cuando no se conocen (no se inventan).</summary>
 public sealed record ModProgress(string Mod, string Stage, double? Fraction, long? Done, long? Total, int Completed, int Count, string Message, string? Detail = null);
 
-/// <summary>Un mod pedido, con el nombre de carga elegido si es un mod proxy.</summary>
-public sealed record BatchRequest(InstallableMod Mod, string? Proxy = null);
+/// <summary>Un mod pedido, con el nombre de carga elegido si es un mod proxy. Updating = sustituye una versión anterior del mismo mod
+/// (un mod proxy conserva su nombre de carga aunque ya exista: es el suyo).</summary>
+public sealed record BatchRequest(InstallableMod Mod, string? Proxy = null, bool Updating = false);
 
 /// <summary>Algo que comprobar antes de instalar. Blocking = ese mod no se instala.</summary>
 public sealed record BatchIssue(string Mod, string Message, bool Blocking);
@@ -24,6 +25,8 @@ public static class ModBatch
 {
     public const string Kind = "Instalar mod";
     public const string DependencyKind = "Instalar dependencias";
+    /// <summary>Al actualizar un mod: retirada (restaurable) de lo que solo tenía la versión anterior. Va en el mismo lote que la versión nueva.</summary>
+    public const string RetireKind = "Retirar versión anterior";
 
     /// <summary>Comprobaciones antes de descargar nada: repetidos, mods incompatibles ya presentes, nombres de carga repetidos e
     /// implementaciones que ILION usa de una en una.</summary>
@@ -78,7 +81,7 @@ public static class ModBatch
                         download = await Task.Run(() => installer.PrepareAsync(mod, download, build, token), token);
                     }
                     Report(mod.Name, "Preparando", null, "Comprobando qué archivos van y dónde");
-                    var plan = ModInstaller.Plan(mod, download, exeDir, request.Proxy);
+                    var plan = ModInstaller.Plan(mod, download, exeDir, request.Proxy, request.Updating);
                     prepared.Add((request, download, plan));
                 }
                 catch (Exception error) when (error is not OperationCanceledException && IsExpected(error))
@@ -133,7 +136,7 @@ public static class ModBatch
                 foreach (var p in prepared)
                 {
                     Report(p.Request.Mod.Name, "Instalando", null, $"Copiando {p.Plan.Length} archivos al juego");
-                    applied.Add(installer.Install(gameId, exeDir, p.Request.Mod, p.Download, p.Request.Proxy, null, batch));
+                    applied.Add(installer.Install(gameId, exeDir, p.Request.Mod, p.Download, p.Request.Proxy, null, batch, p.Request.Updating));
                     installed.Add(p.Request.Mod.Name);
                     progress?.Report(new(p.Request.Mod.Name, "Finalizando", 1, null, null, installed.Count, count, "Instalado"));
                 }

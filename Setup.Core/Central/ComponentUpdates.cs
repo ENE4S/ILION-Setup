@@ -311,7 +311,7 @@ public sealed class ComponentUpdateService(HttpClient http, string dataDirectory
         lock (responses)
             if (responses.TryGetValue(url, out var hit) && DateTime.UtcNow - hit.When < TimeSpan.FromMinutes(15)) return JsonDocument.Parse(hit.Body);
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.UserAgent.ParseAdd("ILION-Setup/0.1");
+        request.Headers.UserAgent.ParseAdd("ILION-Setup/" + Ilion.Setup.SetupEngine.SetupVersion);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
         using var response = await http.SendAsync(request, token);
         if ((int)response.StatusCode == 403) throw new HttpRequestException("GitHub limitó las consultas (60/h sin token). Reintenta más tarde.");

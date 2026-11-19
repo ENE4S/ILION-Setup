@@ -27,6 +27,8 @@
                     <Button DockPanel.Dock="Right" Style="{StaticResource Btn.Caption}" Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Minimizar">
                         <Path Data="M 0,6 L 12,6" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="2.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" Width="12" Height="12"/>
                     </Button>
+                    <ComboBox x:Name="LanguagePick" DockPanel.Dock="Right" Width="70" Height="30" FontSize="12.5" Margin="0,0,14,0" VerticalAlignment="Center"
+                              WindowChrome.IsHitTestVisibleInChrome="True" SelectionChanged="Language_Changed" ToolTip="Idioma"/>
                     <Border DockPanel.Dock="Right" Background="#33000000" Padding="14,6" Margin="0,0,16,0" VerticalAlignment="Center">
                         <StackPanel>
                             <TextBlock x:Name="GpuName" Style="{StaticResource T.Label}" FontSize="13" Text="Detectando GPU…" Foreground="{StaticResource B.Yellow}"/>

@@ -9,7 +9,9 @@ namespace Ilion.Setup;
 public static class RemoteManifests
 {
     public const string BaseUrl = "https://raw.githubusercontent.com/ENE4S/Optiscaler-ILION/setup-manifiestos/";
-    public static readonly string[] Names = ["base-congelada.json", "catalogo.json"];
+    /// <summary>catalogo.json es el de la 0.3.x (formato 1) y se sigue publicando para quien no actualiza; catalogo-2.json (formato 2,
+    /// recetas por datos) solo lo lee Setup 0.4 o posterior. Así un mod nuevo nunca rompe un Setup antiguo.</summary>
+    public static readonly string[] Names = ["base-congelada.json", "catalogo.json", "catalogo-2.json"];
 
     /// <summary>Descarga los manifiestos y sus firmas; guarda en «carpeta» solo los que verifican. Devuelve qué pasó con cada uno.</summary>
     public static async Task<string[]> RefreshAsync(HttpClient http, string folder, CancellationToken token, string baseUrl = BaseUrl)
@@ -35,7 +37,9 @@ public static class RemoteManifests
             catch (Exception e) when (e is HttpRequestException or TaskCanceledException or IOException)
             {
                 if (token.IsCancellationRequested) throw;
-                notes.Add($"{name}: sin conexión con GitHub ({(e as HttpRequestException)?.StatusCode?.ToString() ?? e.GetType().Name}); se usa el que ya había.");
+                notes.Add((e as HttpRequestException)?.StatusCode == HttpStatusCode.NotFound
+                    ? $"{name}: aún no publicado; se usa el integrado."
+                    : $"{name}: sin conexión con GitHub ({(e as HttpRequestException)?.StatusCode?.ToString() ?? e.GetType().Name}); se usa el que ya había.");
             }
         }
         return [.. notes];

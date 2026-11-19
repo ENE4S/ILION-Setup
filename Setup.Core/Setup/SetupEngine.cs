@@ -18,6 +18,12 @@ public sealed record EngineSource(string? PackageFolder, string Dll, string Vers
 
 public sealed record NewInstallResult(OptiInstallManifest? Engine, BatchResult? Mods, string[] BaseSources, string? Error, bool Cancelled);
 
+/// <summary>Un mod instalado por Setup cuya versión (la de su registro) no es la aprobada ahora en el catálogo.</summary>
+public sealed record ModUpdate(CatalogEntry Entry, InstallableMod Recipe, string Installed, string Approved, OperationManifest Last);
+
+/// <summary>Resultado de actualizar un mod: lo que cambió, lo que se retiró de la versión anterior y lo que se dejó por haberlo cambiado el usuario.</summary>
+public sealed record ModUpdateResult(bool Ok, string Message, string[] Removed, string[] KeptModified, bool RolledBack, BatchResult? Batch);
+
 public sealed record VerifyItem(string Area, string What, Level State, string Detail, Func<Task>? Repair = null);
 
 public enum Level { Ok, Warn, Error, Info }
@@ -41,22 +47,48 @@ public sealed class SetupEngine
         Operations = new OperationEngine(data);
         Installer = new OptiScalerInstaller(http, data);
         Updates = new ComponentUpdateService(http, data);
+        // Lo que instala Setup como ILION y su base: ninguna receta descrita por datos puede sustituirlo
+        foreach (var f in baseManifest.Files) ModInstaller.ProtectedFiles.Add(f.Destination);
+        foreach (var p in OptiScalerInstaller.Proxies) ModInstaller.ProtectedFiles.Add(p);
     }
 
     public static string GameId(LibraryGame g) =>
         g.Platform + "_" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(g.Platform + "\n" + g.Id + "\n" + g.Root)))[..12];
 
     // ---------------------------------------------------------------- Catálogo
-    /// <summary>Receta con la versión aprobada fijada (etiqueta y SHA-256 del paquete).</summary>
+    /// <summary>Versión de este Setup (la pone la aplicación al arrancar): las entradas con «setupMinimo» más alto no se ofrecen.</summary>
+    public static string SetupVersion { get; set; } = "0.4.0";
+
+    /// <summary>Por qué una entrada del catálogo no se puede instalar con esta versión de Setup (null = se puede o es solo informativa).</summary>
+    public static string? Unusable(CatalogEntry e)
+    {
+        if (e.MinSetup is { } min && VersionUtil.Compare(SetupVersion, min) < 0) return $"Necesita ILION Setup {min} o posterior.";
+        if (e.Definition is { } d) return Recipes.Validate(e, d) is { } bad ? $"Receta del catálogo no válida ({bad})." : null;
+        if (e.Recipe is { } name && !ModInstaller.Known.Any(r => r.Name == name)) return "Esta versión de Setup no trae su receta: actualiza ILION Setup.";
+        return null;
+    }
+
+    /// <summary>Receta con la versión aprobada fijada (etiqueta y SHA-256 del paquete): una receta integrada (por nombre) o descrita
+    /// por datos en el catálogo (formato 2). Null si la entrada es informativa o esta versión de Setup no puede usarla. Nunca lanza:
+    /// un catálogo más nuevo que este Setup no debe impedir que arranque (en la 0.3.x, un nombre de receta desconocido lo cerraba).</summary>
     public static InstallableMod? RecipeFor(CatalogEntry e)
     {
-        if (e.Recipe is null) return null;
-        var known = ModInstaller.Known.FirstOrDefault(r => r.Name == e.Recipe) ?? throw new InvalidDataException($"El catálogo pide una receta que esta versión de Setup no trae: {e.Recipe}.");
-        var recipe = known with { Name = e.Name, Tag = e.Version ?? known.Tag, ApprovedSha256 = e.Sha256, ApprovedAsset = e.Asset };
+        if (Unusable(e) is not null) return null;
+        InstallableMod recipe;
+        if (e.Definition is { } data) recipe = Recipes.Build(e, data);
+        else if (e.Recipe is null) return null;
+        else
+        {
+            var known = ModInstaller.Known.First(r => r.Name == e.Recipe);
+            recipe = known with { Name = e.Name, Tag = e.Version ?? known.Tag, ApprovedSha256 = e.Sha256, ApprovedAsset = e.Asset };
+        }
         // Dos versiones del mismo mod (MFG-Unlocker 1.7.0 y 1.7.1) se distinguen por su carpeta de versión
         if (recipe.Marker.Contains("{any}") && e.Version is { } v) recipe = recipe with { Marker = recipe.Marker.Replace("{any}", v) };
         return recipe;
     }
+
+    /// <summary>Recetas instalables del catálogo actual.</summary>
+    public InstallableMod[] Installable() => [.. Catalog.Mods.Select(RecipeFor).OfType<InstallableMod>()];
 
     /// <summary>El catálogo para un juego y una GPU: compatibilidad fundada en la tabla de cada mod y la API del juego.</summary>
     public CatalogItem[] Resolve(GpuArch? arch, string? api, string? ilionVersion)
@@ -64,7 +96,7 @@ public sealed class SetupEngine
         return [.. Catalog.Mods.Select(e =>
         {
             var recipe = RecipeFor(e);
-            if (recipe is null) return new CatalogItem(e, null, Compat.Informative, null, false);
+            if (recipe is null) return new CatalogItem(e, null, Compat.Informative, Unusable(e), false);
             string? why = null; var compat = Compat.Compatible;
             if (arch is not null && !Gpu.Fits(e.Archs, arch)) { compat = Compat.Incompatible; why = $"No está pensado para {Gpu.BrandName(arch.Marca)} {arch.Nombre} (según su autor y la tabla de ILION)."; }
             else if (recipe.Dx12Only && api is "Vulkan" or "DirectX 11") { compat = Compat.Incompatible; why = $"Solo DirectX 12; el juego parece {api}."; }
@@ -257,11 +289,14 @@ public sealed class SetupEngine
         foreach (var c in Frozen.Verify(exeDir, groups).Where(c => c.File.Destination != "OptiScaler.ini"))
             items.Add(new("Base", c.File.Destination, c.State == BaseState.Ok ? Level.Ok : c.State == BaseState.Missing ? Level.Error : Level.Warn,
                 c.State == BaseState.Ok ? "Idéntico a la base congelada." : c.State == BaseState.Missing ? "Falta." : "Distinto de la base congelada (¿actualizado a mano?)."));
-        var installedMods = Catalog.Mods.Select(RecipeFor).OfType<InstallableMod>().Where(r => ModInstaller.Installed(r, exeDir)).ToArray();
+        var installedMods = Installable().Where(r => ModInstaller.Installed(r, exeDir)).ToArray();
+        var updates = ModUpdates(game, exeDir).ToDictionary(u => u.Recipe.Key);
         foreach (var r in installedMods)
         {
             var missing = ModRequirements.Missing(r, exeDir);
-            items.Add(new("Mods", r.Name, missing.Length == 0 ? Level.Ok : Level.Error, missing.Length == 0 ? "Completo." : string.Join(" · ", missing.Select(m => m.Message))));
+            var update = updates.TryGetValue(r.Key, out var u) ? $" Versión aprobada distinta: {u.Installed} → {u.Approved} (abajo, «Actualizaciones de mods»)." : "";
+            items.Add(new("Mods", r.Name, missing.Length > 0 ? Level.Error : update.Length > 0 ? Level.Warn : Level.Ok,
+                (missing.Length == 0 ? "Completo." : string.Join(" · ", missing.Select(m => m.Message))) + update));
         }
         foreach (var slot in installedMods.Where(r => r.Slot is not null).GroupBy(r => r.Slot).Where(g => g.Count() > 1))
             items.Add(new("Notas", $"Varias opciones de {slot.Key}", Level.Info, $"{string.Join(", ", slot.Select(r => r.Short ?? r.Name))}. Conviven sin problema: ILION usa la que elijas en su menú."));
@@ -270,6 +305,85 @@ public sealed class SetupEngine
                 items.Add(new("Conflictos", r.Name, Level.Error, $"No funciona junto a {string.Join(", ", clash)}."));
         if (!File.Exists(Path.Combine(exeDir, "OptiScaler.ini"))) items.Add(new("Configuración", "OptiScaler.ini", Level.Warn, "No hay configuración: ILION usará sus valores por defecto."));
         return [.. items];
+    }
+
+    // ---------------------------------------------------------------- Actualizar mods
+    /// <summary>Mods instalados en este juego cuya versión no es la aprobada ahora. La versión instalada sale del registro de la
+    /// operación con la que Setup lo instaló. Sin registro no se ofrece nada: ese archivo puede venir dentro del paquete de ILION
+    /// (runtime NR de lmxxf, HelixSR del paquete) o haberlo puesto el usuario, y «actualizarlo» pisaría algo que Setup no instaló.</summary>
+    public ModUpdate[] ModUpdates(LibraryGame game, string exeDir)
+    {
+        var id = GameId(game);
+        var list = new List<ModUpdate>();
+        foreach (var e in Catalog.Mods)
+        {
+            if (RecipeFor(e) is not { } r || r.Tag is not { } approved || !ModInstaller.Installed(r, exeDir)) continue;
+            var last = ModBatch.LastInstall(Operations, id, r);
+            if (last is null || last.Tag.Equals(approved, StringComparison.OrdinalIgnoreCase)) continue;
+            list.Add(new(e, r, last.Tag.Length > 0 ? last.Tag : "?", approved, last));
+        }
+        return [.. list];
+    }
+
+    /// <summary>Actualiza un mod a la versión aprobada, con las mismas garantías que una instalación:
+    /// 1) descarga, huella y comprobación de que el paquete nuevo trae todo lo que la receta espera, antes de tocar el juego;
+    /// 2) escritura restaurable (copia de lo que se sustituye); 3) comprobación posterior: si al mod le falta algo que antes tenía,
+    /// se deshace solo y vuelve la versión anterior; 4) lo que solo tenía la versión anterior se retira (restaurable), salvo lo que
+    /// haya cambiado el usuario, que se deja. Todo queda en un mismo lote: «Deshacer» devuelve la versión anterior completa.</summary>
+    public async Task<ModUpdateResult> UpdateModAsync(LibraryGame game, string exeDir, ModUpdate update, IEnumerable<string> gameRoots,
+        IProgress<ModProgress>? progress, CancellationToken token)
+    {
+        var id = GameId(game);
+        var recipe = update.Recipe;
+        // Un mod proxy conserva su nombre de carga
+        var proxy = recipe.ProxyNames.Length == 0 ? null
+            : update.Last.Entries.Select(e => e.RelativePath).FirstOrDefault(p => recipe.ProxyNames.Contains(p, StringComparer.OrdinalIgnoreCase))
+              ?? recipe.ProxyNames.FirstOrDefault(n => File.Exists(Path.Combine(exeDir, n)));
+        var before = ModRequirements.Missing(recipe, exeDir).Select(m => m.Relative).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var installer = new ModInstaller(Http, Data, Operations);
+        var batch = await ModBatch.RunAsync(installer, Operations, Updates, id, exeDir, [new BatchRequest(recipe, proxy, Updating: true)], gameRoots, progress, token);
+        if (batch.Cancelled) return new(false, "Cancelado: no se escribió nada.", [], [], false, batch);
+        if (batch.Installed.Length == 0)
+            return new(false, batch.Failed.Select(f => f.Error).FirstOrDefault() ?? "No se pudo actualizar.", [], [], false, batch);
+
+        // Comprobación posterior: el mod debe quedar al menos tan completo como estaba
+        var worse = ModRequirements.Missing(recipe, exeDir).Select(m => m.Relative).Where(a => !before.Contains(a)).ToArray();
+        if (!ModInstaller.Installed(recipe, exeDir) || worse.Length > 0)
+        {
+            var what = string.Join(", ", worse.DefaultIfEmpty("su archivo principal"));
+            try { ModBatch.RestoreBatch(Operations, id, batch.BatchId); }
+            catch (Exception e) when (e is IOException or InvalidOperationException or UnauthorizedAccessException)
+            { return new(false, $"La versión {update.Approved} no quedó completa (falta {what}) y no se pudo volver atrás sola: {e.Message} Usa «Deshacer cambios».", [], [], false, batch); }
+            return new(false, $"La versión {update.Approved} no quedó completa (falta {what}): se volvió a la versión anterior.", [], [], true, batch);
+        }
+
+        // Lo que solo tenía la versión anterior: se retira si sigue tal como lo instaló Setup (si lo cambió el usuario, se deja)
+        var removed = new List<string>(); var kept = new List<string>();
+        {
+            var last = update.Last;
+            var nowWritten = batch.Operations.SelectMany(o => o.Entries).Select(e => e.RelativePath).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var thisBatch = batch.Operations.Select(o => o.Id).ToHashSet();
+            // Un archivo que tocó después otra operación (otro mod, una reparación) ya no es solo de la versión anterior: se deja
+            var touchedLater = Operations.All(id).Where(o => o.Completed && o.When > last.When && o.Id != last.Id && !thisBatch.Contains(o.Id)).ToArray();
+            var writes = new List<PlannedWrite>();
+            foreach (var e in last.Entries.Where(e => e.InstalledSha256 is not null && !nowWritten.Contains(e.RelativePath)))
+            {
+                if (touchedLater.Any(o => o.Touches(e.RelativePath))) { kept.Add(e.RelativePath); continue; }
+                var path = Path.Combine(exeDir, e.RelativePath);
+                if (!File.Exists(path)) continue;
+                var sha = ComponentUpdateService.Sha256(path);
+                if (sha.Equals(e.InstalledSha256, StringComparison.OrdinalIgnoreCase)) { writes.Add(new(e.RelativePath, null, sha)); removed.Add(e.RelativePath); }
+                else kept.Add(e.RelativePath);
+            }
+            if (writes.Count > 0)
+                try { Operations.Apply(id, exeDir, ModBatch.RetireKind, $"{recipe.Name}: retirada de la versión {last.Tag}", writes, $"github.com/{recipe.Repository}", update.Approved, batch.BatchId); }
+                catch (Exception e) when (e is IOException or InvalidOperationException or UnauthorizedAccessException)
+                {
+                    // La versión nueva ya está instalada y completa; solo quedan archivos sobrantes de la anterior (no estorban)
+                    return new(true, $"{recipe.Name}: {update.Installed} → {update.Approved}. No se pudieron retirar {writes.Count} archivos que ya no usa ({e.Message}); se pueden borrar a mano.", [], [.. kept, .. removed], false, batch);
+                }
+        }
+        return new(true, $"{recipe.Name}: {update.Installed} → {update.Approved}.", [.. removed], [.. kept], false, batch);
     }
 
     /// <summary>Repara la base: repone lo que falta y, solo si se pide, sustituye lo que difiere. Operación restaurable.</summary>

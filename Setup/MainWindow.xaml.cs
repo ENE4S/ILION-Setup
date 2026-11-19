@@ -48,7 +48,13 @@ public partial class MainWindow : Window
         data = Path.GetFullPath(d > 0 && d + 1 < args.Length ? args[d + 1] : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ILION.Setup"));
         Directory.CreateDirectory(data);
         App.LogFile = Path.Combine(data, "ilion-setup.log");
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/0.3.4");
+        // Idioma: español por defecto; portugués, ruso e inglés (los mismos que ILION y ILION Central)
+        Lang.Init(data);
+        LanguagePick.ItemsSource = Lang.Codes;
+        LanguagePick.SelectedIndex = Lang.Current;
+        Lang.Changed += () => { if (IsLoaded && !busy) ShowMode(); };
+        SetupEngine.SetupVersion = typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "0.4.0";
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/" + SetupEngine.SetupVersion);
         Manifests.PublicKey = Resource("clave-publica.txt").Trim();
         engine = LoadManifests();
         using (var s = Application.GetResourceStream(new Uri("pack://application:,,,/Assets/arquitecturas.json"))!.Stream) table = Gpu.Load(s);
@@ -73,8 +79,9 @@ public partial class MainWindow : Window
     {
         var folder = Path.Combine(data, "Manifiestos");
         var (b, bo) = Manifests.Choose<BaseManifest>(Resource("base-congelada.json"), Path.Combine(folder, "base-congelada.json"), m => m.Date, m => m.Format);
-        var (c, co) = Manifests.Choose<Catalog>(Resource("catalogo.json"), Path.Combine(folder, "catalogo.json"), m => m.Date, m => m.Format);
+        var (c, co) = Manifests.ChooseCatalog(Resource("catalogo-2.json"), (Path.Combine(folder, "catalogo-2.json"), "externo"), (Path.Combine(folder, "catalogo.json"), "externo"));
         baseOrigin = bo.StartsWith("externo") ? "GitHub, firmado" : bo; catalogOrigin = co.StartsWith("externo") ? "GitHub, firmado" : co;
+        Lang.Merge(c.Texts);
         return new SetupEngine(data, http, b, c);
     }
 
@@ -85,8 +92,14 @@ public partial class MainWindow : Window
         BaseInfo.Inlines.Clear();
         BaseInfo.Inlines.Add(new System.Windows.Documents.Run("Base f6f75dd  ·  "));
         BaseInfo.Inlines.Add(new System.Windows.Documents.Run($"ILION {engine.Base.Engine.Version}") { Foreground = Ui.B("B.Yellow"), FontFamily = (FontFamily)FindResource("F.Strong") });
-        BaseInfo.Inlines.Add(new System.Windows.Documents.Run($"  ·  manifiesto {Day(engine.Base.Date)}  ·  catálogo {Day(engine.Catalog.Date)}"));
+        // Cada dato en su propio texto (así se traduce cada uno)
+        foreach (var part in new[] { $"manifiesto {Day(engine.Base.Date)}", $"catálogo {Day(engine.Catalog.Date)}" })
+        {
+            BaseInfo.Inlines.Add(new System.Windows.Documents.Run("  ·  "));
+            BaseInfo.Inlines.Add(new System.Windows.Documents.Run(part));
+        }
         BaseInfo.ToolTip = $"Manifiesto de la base {engine.Base.Date} ({baseOrigin}) · catálogo {engine.Catalog.Date} ({catalogOrigin})";
+        if (newerSetup is not null) BaseInfo.Inlines.Add(NewerSetupLink());
     }
 
     /// <summary>Descarga los manifiestos firmados de GitHub y, si traen algo más nuevo, los aplica. Devuelve si cambió la versión aprobada de ILION.</summary>
@@ -111,8 +124,9 @@ public partial class MainWindow : Window
     private async Task CheckNewerMods()
     {
         using var noRedirect = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = TimeSpan.FromSeconds(10) };
-        noRedirect.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/0.3.4");
-        foreach (var repo in engine.Catalog.Mods.Where(m => m.Recipe is not null && m.Version is not null).GroupBy(m => SetupEngine.RecipeFor(m)!.Repository))
+        noRedirect.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/" + SetupEngine.SetupVersion);
+        await CheckNewerSetup(noRedirect);
+        foreach (var repo in engine.Catalog.Mods.Where(m => m.Version is not null && SetupEngine.RecipeFor(m) is not null).GroupBy(m => SetupEngine.RecipeFor(m)!.Repository))
         {
             if (repo.Key.StartsWith("ENE4S/", StringComparison.OrdinalIgnoreCase)) continue;
             var latest = await RemoteManifests.LatestTagAsync(noRedirect, repo.Key, CancellationToken.None);
@@ -176,6 +190,8 @@ public partial class MainWindow : Window
         Say($"{games.Length} juegos detectados · GPU {GpuArch.Text}.");
         ApplyLaunchRequest();
         ShowMode();
+        try { await RunCentralOrders(); }
+        catch (Exception e) when (e is not OutOfMemoryException) { LogError("Órdenes de ILION Central", e); Say("No se pudo completar lo que pidió ILION Central: " + ModBatch.Friendly(e), Level.Warn); }
         await CaptureIfRequested();
     }
 
@@ -210,10 +226,12 @@ public partial class MainWindow : Window
     private void Close_Click(object sender, RoutedEventArgs e) => Close();
     private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
     private void Mode_Checked(object sender, RoutedEventArgs e) { if (IsLoaded) ShowMode(); }
+    private void Language_Changed(object sender, SelectionChangedEventArgs e) { if (LanguagePick.SelectedIndex >= 0 && LanguagePick.SelectedIndex != Lang.Current) Lang.Set(LanguagePick.SelectedIndex); }
 
     private void Say(string text, Level level = Level.Ok)
     {
         Status.Text = text;
+        if (Lang.Current != 0) Lang.Apply(Status);
         StatusLamp.Fill = Ui.B(level switch { Level.Error => "B.Error", Level.Warn => "B.Warn", Level.Info => "B.TextDim", _ => "B.Ok" });
     }
 
@@ -234,6 +252,8 @@ public partial class MainWindow : Window
         if (ModeNew.IsChecked == true) RenderNew();
         else if (ModeUpdate.IsChecked == true) RenderUpdate();
         else RenderVerify();
+        // En otro idioma, la página se traduce al dibujarla (sin esperar al repaso periódico: nada de destellos en español)
+        if (Lang.Current != 0) { Lang.Apply(Page); Lang.Apply(Status); Lang.Apply(BaseInfo); }
         Dispatcher.BeginInvoke(WriteStatus, System.Windows.Threading.DispatcherPriority.Background);
     }
 
@@ -265,7 +285,8 @@ public partial class MainWindow : Window
     private static ComboBox Combo<T>(IEnumerable<T> items, Func<T, string> label, T? selected, Action<T> changed, double width = 520)
     {
         var list = items.ToList();
-        var combo = new ComboBox { Width = width, HorizontalAlignment = HorizontalAlignment.Left, ItemsSource = list.Select(label).ToList() };
+        // Las opciones se traducen al crearlas: WPF las dibuja desde los datos y el traductor de la página no llega a ellas
+        var combo = new ComboBox { Width = width, HorizontalAlignment = HorizontalAlignment.Left, ItemsSource = list.Select(label).Select(Lang.T).ToList() };
         var index = selected is null ? -1 : list.IndexOf(selected);
         combo.SelectedIndex = index;
         combo.SelectionChanged += (_, _) => { if (combo.SelectedIndex >= 0) changed(list[combo.SelectedIndex]); };
@@ -379,6 +400,7 @@ public partial class MainWindow : Window
 
     private void SelectGame(LibraryGame g)
     {
+        if (centralGameId is not null && g.Id != centralGameId) centralMods.Clear(); // otro juego que el pedido por Central: lo marcado ya no aplica
         game = g;
         exeDir = Info(g).ExeDir;
         RememberGame(g);
@@ -484,7 +506,8 @@ public partial class MainWindow : Window
             var e = item.Entry;
             var archOnly = item.Compat == Compat.Incompatible && item.Why?.StartsWith("No está pensado") == true;
             var check = new CheckBox { Style = Ui.S("Check"), VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(0, 2, 0, 0),
-                IsEnabled = item.Compat != Compat.Incompatible || archOnly && allowOtherArch, IsChecked = item.Preselect };
+                IsEnabled = item.Compat != Compat.Incompatible || archOnly && allowOtherArch };
+            check.IsChecked = check.IsEnabled && (item.Preselect || centralMods.Contains(e.Id)); // recomendado para la GPU o marcado desde ILION Central
             check.Checked += (_, _) => Recount(); check.Unchecked += (_, _) => Recount();
             System.Windows.Automation.AutomationProperties.SetName(check, "Seleccionar " + e.Name);
             modChecks.Add((check, item));
@@ -536,6 +559,7 @@ public partial class MainWindow : Window
     {
         if (busy || game is null || exeDir is null || engineSource is not { Problem: null } src) return;
         var chosen = modChecks.Where(c => c.Box.IsChecked == true).Select(c => c.Item).ToList();
+        centralMods.Clear(); // lo marcado desde ILION Central vale para esta instalación
         if (Requests(chosen, exeDir, proxy) is not { } requests) return;
         var notes = new List<string> { "La instalación puede tardar varios minutos. Se descargarán, verificarán y prepararán los componentes seleccionados. Mantén la aplicación abierta hasta finalizar." };
         if (!src.Approved) notes.Add($"La DLL de ILION elegida ({src.Version}) no es la aprobada para esta base: compatibilidad no verificada.");
@@ -552,6 +576,7 @@ public partial class MainWindow : Window
 
     private async Task RunNew(LibraryGame g, string dir, EngineSource src, List<BatchRequest> requests)
     {
+        if (RefuseIfOpen(g)) return;
         busy = true; writing = false; cts = new CancellationTokenSource();
         var token = cts.Token;
         var window = InstallProgress.Open(this, requests.Count + 1, () => !writing);
@@ -585,7 +610,7 @@ public partial class MainWindow : Window
     /// <summary>Instala o completa mods en un juego que ya tiene ILION (reintentos y «Completar mods»).</summary>
     private async Task RunMods(LibraryGame g, string dir, List<BatchRequest> requests)
     {
-        if (requests.Count == 0 || busy) return;
+        if (requests.Count == 0 || busy || RefuseIfOpen(g)) return;
         busy = true; writing = false; cts = new CancellationTokenSource();
         var token = cts.Token;
         var window = InstallProgress.Open(this, requests.Count, () => !writing);
@@ -637,6 +662,7 @@ public partial class MainWindow : Window
     /// <summary>Lee de GitHub el manifiesto firmado: si aprueba una versión nueva de ILION, la ofrece.</summary>
     private async Task CheckForIlion()
     {
+        if (busy) return;
         busy = true; Say("Buscando en GitHub la versión aprobada de ILION…", Level.Info);
         try
         {
@@ -653,7 +679,7 @@ public partial class MainWindow : Window
 
     private async Task UpdateNow(LibraryGame g, (string? Exe, string ExeDir, string? Api, OptiScalerInstallation Opti) info)
     {
-        if (engineSource is not { Problem: null } src) return;
+        if (engineSource is not { Problem: null } src || busy || RefuseIfOpen(g)) return;
         if (src.Remote)
         {
             busy = true; Say($"Descargando ILION {src.Version} de su publicación oficial…", Level.Info);
@@ -718,7 +744,7 @@ public partial class MainWindow : Window
         var different = verifyItems.Count(i => i.Area == "Base" && i.State == Level.Warn);
         repair.Children.Add(Key($"Reponer lo que falta ({missing})", () => RepairBase(verifyGame, info.ExeDir, false), 260));
         repair.Children.Add(Key($"Sustituir lo distinto ({different})", () => RepairBase(verifyGame, info.ExeDir, true), 260));
-        var incomplete = engine.Catalog.Mods.Select(SetupEngine.RecipeFor).OfType<InstallableMod>().Where(r => ModInstaller.Installed(r, info.ExeDir) && ModRequirements.Missing(r, info.ExeDir).Length > 0).ToList();
+        var incomplete = engine.Installable().Where(r => ModInstaller.Installed(r, info.ExeDir) && ModRequirements.Missing(r, info.ExeDir).Length > 0).ToList();
         repair.Children.Add(Key($"Completar mods ({incomplete.Count})", () => RunMods(verifyGame, info.ExeDir, [.. incomplete.Select(r => new BatchRequest(r))]), 220));
         ((Button)repair.Children[0]).IsEnabled = missing > 0; ((Button)repair.Children[1]).IsEnabled = different > 0; ((Button)repair.Children[2]).IsEnabled = incomplete.Count > 0;
         repair.Children.Add(Key(SetupEngine.Dlss4Installed(info.ExeDir) ? "DLSS 4 Modelo K (local): reinstalar…" : "DLSS 4 Modelo K (local)…", () =>
@@ -730,8 +756,10 @@ public partial class MainWindow : Window
             verifyItems = null; ShowMode(); return Task.CompletedTask;
         }, 300));
         Page.Children.Add(Section("REPARAR", repair));
+        var updates = engine.ModUpdates(verifyGame, info.ExeDir);
+        if (updates.Length > 0) Page.Children.Add(Section("ACTUALIZACIONES DE MODS", UpdatesBox(verifyGame, info.ExeDir, updates), $"{updates.Length} con una versión aprobada distinta"));
         Page.Children.Add(Section("AÑADIR MODS", AddModsBox(verifyGame, info.ExeDir, info.Api), "Los que aún no están instalados en este juego"));
-        Page.Children.Add(Section("DESHACER CAMBIOS", RestoreBox(verifyGame, info.ExeDir)));
+        Page.Children.Add(undoSection = Section("DESHACER CAMBIOS", RestoreBox(verifyGame, info.ExeDir)));
     }
 
     /// <summary>Mods del catálogo que este juego aún no tiene: se marcan y se instalan sobre la instalación de ILION existente.</summary>
@@ -787,6 +815,7 @@ public partial class MainWindow : Window
 
     private async Task RepairBase(LibraryGame g, string dir, bool replaceDifferent)
     {
+        if (busy || RefuseIfOpen(g)) return;
         if (replaceDifferent && !Confirm.Ask(this, "Sustituir lo distinto", [("Juego", g.Name)],
             "Los archivos de la base que no son los congelados se cambian por los congelados. Si los actualizaste tú a propósito, perderías ese cambio (queda una copia y se puede restaurar).", "Sustituir", danger: true)) return;
         busy = true;

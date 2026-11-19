@@ -1,0 +1,2347 @@
+{
+ "Idioma": [
+  "Idioma",
+  "Язык",
+  "Language"
+ ],
+ "Minimizar": [
+  "Minimizar",
+  "Свернуть",
+  "Minimize"
+ ],
+ "Cerrar": [
+  "Fechar",
+  "Закрыть",
+  "Close"
+ ],
+ "Detectando GPU…": [
+  "Detectando GPU…",
+  "Определение GPU…",
+  "Detecting GPU…"
+ ],
+ "Instalación nueva": [
+  "Nova instalação",
+  "Новая установка",
+  "New installation"
+ ],
+ "Actualizar ILION": [
+  "Atualizar ILION",
+  "Обновить ILION",
+  "Update ILION"
+ ],
+ "Verificar y reparar": [
+  "Verificar e reparar",
+  "Проверка и восстановление",
+  "Verify and repair"
+ ],
+ "JUEGO": [
+  "JOGO",
+  "ИГРА",
+  "GAME"
+ ],
+ "CARPETA DE INSTALACIÓN": [
+  "PASTA DE INSTALAÇÃO",
+  "ПАПКА УСТАНОВКИ",
+  "INSTALLATION FOLDER"
+ ],
+ "CORE OPTISCALER COMPATIBLE": [
+  "NÚCLEO OPTISCALER COMPATÍVEL",
+  "СОВМЕСТИМОЕ ЯДРО OPTISCALER",
+  "COMPATIBLE OPTISCALER CORE"
+ ],
+ "MOTOR ILION": [
+  "MOTOR ILION",
+  "ДВИЖОК ILION",
+  "ILION ENGINE"
+ ],
+ "MODS ADICIONALES": [
+  "MODS ADICIONAIS",
+  "ДОПОЛНИТЕЛЬНЫЕ МОДЫ",
+  "ADDITIONAL MODS"
+ ],
+ "OPCIONES AVANZADAS": [
+  "OPÇÕES AVANÇADAS",
+  "РАСШИРЕННЫЕ ПАРАМЕТРЫ",
+  "ADVANCED OPTIONS"
+ ],
+ "ACTUALIZACIONES DE MODS": [
+  "ATUALIZAÇÕES DE MODS",
+  "ОБНОВЛЕНИЯ МОДОВ",
+  "MOD UPDATES"
+ ],
+ "AÑADIR MODS": [
+  "ADICIONAR MODS",
+  "ДОБАВИТЬ МОДЫ",
+  "ADD MODS"
+ ],
+ "DESHACER CAMBIOS": [
+  "DESFAZER ALTERAÇÕES",
+  "ОТМЕНА ИЗМЕНЕНИЙ",
+  "UNDO CHANGES"
+ ],
+ "JUEGO CON ILION INSTALADO": [
+  "JOGO COM ILION INSTALADO",
+  "ИГРА С УСТАНОВЛЕННЫМ ILION",
+  "GAME WITH ILION INSTALLED"
+ ],
+ "MOTOR INSTALADO": [
+  "MOTOR INSTALADO",
+  "УСТАНОВЛЕННЫЙ ДВИЖОК",
+  "INSTALLED ENGINE"
+ ],
+ "NUEVO MOTOR ILION": [
+  "NOVO MOTOR ILION",
+  "НОВЫЙ ДВИЖОК ILION",
+  "NEW ILION ENGINE"
+ ],
+ "REPARAR": [
+  "REPARAR",
+  "ВОССТАНОВЛЕНИЕ",
+  "REPAIR"
+ ],
+ "MOTOR": [
+  "MOTOR",
+  "ДВИЖОК",
+  "ENGINE"
+ ],
+ "BASE": [
+  "BASE",
+  "БАЗА",
+  "BASE"
+ ],
+ "MODS": [
+  "MODS",
+  "МОДЫ",
+  "MODS"
+ ],
+ "NOTAS": [
+  "NOTAS",
+  "ЗАМЕТКИ",
+  "NOTES"
+ ],
+ "CONFLICTOS": [
+  "CONFLITOS",
+  "КОНФЛИКТЫ",
+  "CONFLICTS"
+ ],
+ "CONFIGURACIÓN": [
+  "CONFIGURAÇÃO",
+  "НАСТРОЙКИ",
+  "CONFIGURATION"
+ ],
+ "INTEGRADO O INSTALADO CON ILION": [
+  "INTEGRADO OU INSTALADO COM O ILION",
+  "ВСТРОЕНО ИЛИ УСТАНАВЛИВАЕТСЯ С ILION",
+  "BUILT IN OR INSTALLED WITH ILION"
+ ],
+ "DEPENDENCIAS": [
+  "DEPENDÊNCIAS",
+  "ЗАВИСИМОСТИ",
+  "DEPENDENCIES"
+ ],
+ "INSTALACIÓN LOCAL": [
+  "INSTALAÇÃO LOCAL",
+  "ЛОКАЛЬНАЯ УСТАНОВКА",
+  "LOCAL INSTALLATION"
+ ],
+ "REFERENCIAS (INSTALACIÓN MANUAL)": [
+  "REFERÊNCIAS (INSTALAÇÃO MANUAL)",
+  "ССЫЛКИ (РУЧНАЯ УСТАНОВКА)",
+  "REFERENCES (MANUAL INSTALLATION)"
+ ],
+ "(adjúntalo si lo reportas).": [
+  "(anexe-o se for relatar).",
+  "(приложите его к сообщению об ошибке).",
+  "(attach it if you report this)."
+ ],
+ ". No se instala.": [
+  ". Não é instalado.",
+  ". Не устанавливается.",
+  ". Not installed."
+ ],
+ "1 mod seleccionado": [
+  "1 mod selecionado",
+  "Выбран 1 мод",
+  "1 mod selected"
+ ],
+ "{0} mods seleccionados": [
+  "{0} mods selecionados",
+  "Выбрано модов: {0}",
+  "{0} mods selected"
+ ],
+ "Ningún mod seleccionado": [
+  "Nenhum mod selecionado",
+  "Моды не выбраны",
+  "No mods selected"
+ ],
+ "A la base le faltan {0} archivos (p. ej. {1}). Repáralos en «Verificar y reparar».": [
+  "Faltam {0} arquivos na base (p. ex. {1}). Repare-os em «Verificar e reparar».",
+  "В базе не хватает файлов: {0} (напр. {1}). Восстановите их в «Проверка и восстановление».",
+  "The base is missing {0} files (e.g. {1}). Repair them in “Verify and repair”."
+ ],
+ "Abajo, «Deshacer cambios»: elige qué deshacer.": [
+  "Abaixo, «Desfazer alterações»: escolha o que desfazer.",
+  "Ниже, «Отмена изменений»: выберите, что отменить.",
+  "Below, “Undo changes”: choose what to undo."
+ ],
+ "Abierto desde ILION Central: actualizar ILION en {0}.": [
+  "Aberto pelo ILION Central: atualizar o ILION em {0}.",
+  "Открыто из ILION Central: обновить ILION в {0}.",
+  "Opened from ILION Central: update ILION in {0}."
+ ],
+ "Abierto desde ILION Central: añadir mods a {0} (abajo, «Añadir mods»).": [
+  "Aberto pelo ILION Central: adicionar mods a {0} (abaixo, «Adicionar mods»).",
+  "Открыто из ILION Central: добавить моды в {0} (ниже, «Добавить моды»).",
+  "Opened from ILION Central: add mods to {0} (below, “Add mods”)."
+ ],
+ "Abierto desde ILION Central: instalar ILION en {0}.": [
+  "Aberto pelo ILION Central: instalar o ILION em {0}.",
+  "Открыто из ILION Central: установить ILION в {0}.",
+  "Opened from ILION Central: install ILION in {0}."
+ ],
+ "Abierto desde ILION Central: verificar {0}.": [
+  "Aberto pelo ILION Central: verificar {0}.",
+  "Открыто из ILION Central: проверить {0}.",
+  "Opened from ILION Central: verify {0}."
+ ],
+ "Activado": [
+  "Ativado",
+  "Включено",
+  "Enabled"
+ ],
+ "Desactivado": [
+  "Desativado",
+  "Выключено",
+  "Disabled"
+ ],
+ "Actualizar": [
+  "Atualizar",
+  "Обновить",
+  "Update"
+ ],
+ "Actualizar mod": [
+  "Atualizar mod",
+  "Обновить мод",
+  "Update mod"
+ ],
+ "Actualizar mods": [
+  "Atualizar mods",
+  "Обновить моды",
+  "Update mods"
+ ],
+ "Actualizar todos ({0})": [
+  "Atualizar todos ({0})",
+  "Обновить все ({0})",
+  "Update all ({0})"
+ ],
+ "Antes de escribir se guarda una copia de todo lo que se sustituya; ningún archivo del juego se sobrescribe. Todo se puede restaurar desde «Verificar y reparar».": [
+  "Antes de gravar, é guardada uma cópia de tudo o que for substituído; nenhum arquivo do jogo é sobrescrito. Tudo pode ser restaurado em «Verificar e reparar».",
+  "Перед записью сохраняется копия всего, что заменяется; файлы игры не перезаписываются. Всё можно восстановить в «Проверка и восстановление».",
+  "Before writing, a copy of everything that is replaced is saved; no game file is overwritten. Everything can be restored from “Verify and repair”."
+ ],
+ "Antes hay que deshacer un cambio posterior sobre los mismos archivos.": [
+  "Antes é preciso desfazer uma alteração posterior nos mesmos arquivos.",
+  "Сначала нужно отменить более позднее изменение тех же файлов.",
+  "A later change to the same files must be undone first."
+ ],
+ "Archivo": [
+  "Arquivo",
+  "Файл",
+  "File"
+ ],
+ "Archivos": [
+  "Arquivos",
+  "Файлы",
+  "Files"
+ ],
+ "Archivos oficiales": [
+  "Arquivos oficiais",
+  "Официальные файлы",
+  "Official files"
+ ],
+ "Archivos oficiales:": [
+  "Arquivos oficiais:",
+  "Официальные файлы:",
+  "Official files:"
+ ],
+ "Arquitectura no reconocida": [
+  "Arquitetura não reconhecida",
+  "Архитектура не распознана",
+  "Architecture not recognized"
+ ],
+ "Automático": [
+  "Automático",
+  "Автоматически",
+  "Automatic"
+ ],
+ "Añadir mods": [
+  "Adicionar mods",
+  "Добавить моды",
+  "Add mods"
+ ],
+ "Base": [
+  "Base",
+  "База",
+  "Base"
+ ],
+ "Base congelada": [
+  "Base congelada",
+  "Замороженная база",
+  "Frozen base"
+ ],
+ "Base congelada de OptiScaler": [
+  "Base congelada do OptiScaler",
+  "Замороженная база OptiScaler",
+  "Frozen OptiScaler base"
+ ],
+ "Buscando en GitHub la versión aprobada de ILION…": [
+  "Procurando no GitHub a versão aprovada do ILION…",
+  "Поиск одобренной версии ILION на GitHub…",
+  "Looking up the approved ILION version on GitHub…"
+ ],
+ "Buscar versión nueva de ILION": [
+  "Procurar nova versão do ILION",
+  "Искать новую версию ILION",
+  "Check for a new ILION version"
+ ],
+ "Cada archivo, con su origen oficial y su SHA-256. Justificación de la base:": [
+  "Cada arquivo, com sua origem oficial e seu SHA-256. Justificativa da base:",
+  "Каждый файл с официальным источником и SHA-256. Обоснование базы:",
+  "Every file, with its official source and SHA-256. Rationale for the base:"
+ ],
+ "Cada cambio de Setup se puede deshacer: vuelve lo que había justo antes de ese cambio. Si un cambio posterior tocó los mismos archivos, deshaz primero ese. Tus partidas, tu OptiScaler.ini y los archivos que cambiaste tú no se tocan.": [
+  "Cada alteração do Setup pode ser desfeita: volta o que havia logo antes dela. Se uma alteração posterior mexeu nos mesmos arquivos, desfaça essa primeiro. Seus saves, seu OptiScaler.ini e os arquivos que você alterou não são tocados.",
+  "Любое изменение Setup можно отменить: вернётся то, что было непосредственно перед ним. Если более позднее изменение затронуло те же файлы, сначала отмените его. Ваши сохранения, ваш OptiScaler.ini и изменённые вами файлы не затрагиваются.",
+  "Every Setup change can be undone: what was there right before it comes back. If a later change touched the same files, undo that one first. Your saves, your OptiScaler.ini and the files you changed yourself are not touched."
+ ],
+ "Cambiar carga {0} → {1}": [
+  "Mudar carregamento {0} → {1}",
+  "Сменить загрузку {0} → {1}",
+  "Change load {0} → {1}"
+ ],
+ "Cambiar…": [
+  "Alterar…",
+  "Изменить…",
+  "Change…"
+ ],
+ "Cambio": [
+  "Alteração",
+  "Изменение",
+  "Change"
+ ],
+ "Cambio de la DLL de ILION": [
+  "Troca da DLL do ILION",
+  "Замена DLL ILION",
+  "ILION DLL change"
+ ],
+ "Cancelada": [
+  "Cancelada",
+  "Отменена",
+  "Cancelled"
+ ],
+ "Cancelado: no se escribió nada.": [
+  "Cancelado: nada foi gravado.",
+  "Отменено: ничего не записано.",
+  "Cancelled: nothing was written."
+ ],
+ "Cancelando… no se escribirá nada en el juego.": [
+  "Cancelando… nada será gravado no jogo.",
+  "Отмена… в игру ничего не будет записано.",
+  "Cancelling… nothing will be written to the game."
+ ],
+ "Cancelar": [
+  "Cancelar",
+  "Отмена",
+  "Cancel"
+ ],
+ "Cancelar y cerrar": [
+  "Cancelar e fechar",
+  "Отменить и закрыть",
+  "Cancel and close"
+ ],
+ "Carpeta": [
+  "Pasta",
+  "Папка",
+  "Folder"
+ ],
+ "Carpeta Modelo_K de tu copia de ILION": [
+  "Pasta Modelo_K da sua cópia do ILION",
+  "Папка Modelo_K вашей копии ILION",
+  "Modelo_K folder from your ILION copy"
+ ],
+ "Carpeta Modelo_K de tu copia de ILION (ILION › Escaladores › DLSS4 › Modelo_K)": [
+  "Pasta Modelo_K da sua cópia do ILION (ILION › Escaladores › DLSS4 › Modelo_K)",
+  "Папка Modelo_K вашей копии ILION (ILION › Escaladores › DLSS4 › Modelo_K)",
+  "Modelo_K folder from your ILION copy (ILION › Escaladores › DLSS4 › Modelo_K)"
+ ],
+ "Carpeta del ejecutable del juego": [
+  "Pasta do executável do jogo",
+  "Папка исполняемого файла игры",
+  "Game executable folder"
+ ],
+ "Carpeta del paquete de ILION (la que tiene dxgi.dll)": [
+  "Pasta do pacote do ILION (a que tem dxgi.dll)",
+  "Папка пакета ILION (с dxgi.dll)",
+  "ILION package folder (the one with dxgi.dll)"
+ ],
+ "Colocando {0} archivos oficiales": [
+  "Colocando {0} arquivos oficiais",
+  "Размещение официальных файлов: {0}",
+  "Placing {0} official files"
+ ],
+ "Compatible": [
+  "Compatível",
+  "Совместим",
+  "Compatible"
+ ],
+ "Compilando": [
+  "Compilando",
+  "Сборка",
+  "Building"
+ ],
+ "Completada": [
+  "Concluída",
+  "Завершена",
+  "Completed"
+ ],
+ "Completar mods ({0})": [
+  "Completar mods ({0})",
+  "Дополнить моды ({0})",
+  "Complete mods ({0})"
+ ],
+ "Completo.": [
+  "Completo.",
+  "Полный.",
+  "Complete."
+ ],
+ "Componente {0} de {1}": [
+  "Componente {0} de {1}",
+  "Компонент {0} из {1}",
+  "Component {0} of {1}"
+ ],
+ "Comprobado {0}: el resultado está abajo.": [
+  "{0} verificado: o resultado está abaixo.",
+  "{0} проверено: результат ниже.",
+  "{0} checked: the result is below."
+ ],
+ "Comprobando los archivos de NVIDIA, Intel y AMD que necesitan los mods": [
+  "Verificando os arquivos de NVIDIA, Intel e AMD de que os mods precisam",
+  "Проверка файлов NVIDIA, Intel и AMD, нужных модам",
+  "Checking the NVIDIA, Intel and AMD files the mods need"
+ ],
+ "Comprobando qué archivos van y dónde": [
+  "Verificando quais arquivos vão e onde",
+  "Проверка, какие файлы и куда",
+  "Checking which files go where"
+ ],
+ "Comprobar y actualizar": [
+  "Verificar e atualizar",
+  "Проверить и обновить",
+  "Check and update"
+ ],
+ "Con ILION se instalan también sus variantes (FSR 4 oficial, 4.1.1B, Exact, Lossy, Lossy2; XeMFG Clásica y WMMA; OptiPatcher) y, en RDNA 3/4, el runtime NR de lmxxf. Paquete o DLL local: «Paquete…» o «DLL…».": [
+  "Com o ILION também são instaladas as suas variantes (FSR 4 oficial, 4.1.1B, Exact, Lossy, Lossy2; XeMFG Clássica e WMMA; OptiPatcher) e, em RDNA 3/4, o runtime NR de lmxxf. Pacote ou DLL local: «Pacote…» ou «DLL…».",
+  "Вместе с ILION устанавливаются его варианты (FSR 4 официальный, 4.1.1B, Exact, Lossy, Lossy2; XeMFG Классический и WMMA; OptiPatcher), а на RDNA 3/4 — среда NR от lmxxf. Локальный пакет или DLL: «Пакет…» или «DLL…».",
+  "ILION also installs its variants (official FSR 4, 4.1.1B, Exact, Lossy, Lossy2; XeMFG Classic and WMMA; OptiPatcher) and, on RDNA 3/4, the lmxxf NR runtime. Local package or DLL: “Package…” or “DLL…”."
+ ],
+ "Con aviso": [
+  "Com aviso",
+  "С предупреждением",
+  "With warning"
+ ],
+ "Configuración": [
+  "Configuração",
+  "Настройки",
+  "Configuration"
+ ],
+ "Conflictos": [
+  "Conflitos",
+  "Конфликты",
+  "Conflicts"
+ ],
+ "Conflictos:": [
+  "Conflitos:",
+  "Конфликты:",
+  "Conflicts:"
+ ],
+ "Construyendo HelixSR en tu PC con la DLL oficial de NVIDIA (varios minutos)…": [
+  "Construindo o HelixSR no seu PC com a DLL oficial da NVIDIA (vários minutos)…",
+  "Сборка HelixSR на вашем ПК с официальной DLL NVIDIA (несколько минут)…",
+  "Building HelixSR on your PC with NVIDIA's official DLL (several minutes)…"
+ ],
+ "Construyendo con el setup de su autor": [
+  "Construindo com o setup do autor",
+  "Сборка установщиком автора",
+  "Building with its author's setup"
+ ],
+ "Construyendo con el setup de su autor (varios minutos la primera vez)": [
+  "Construindo com o setup do autor (vários minutos na primeira vez)",
+  "Сборка установщиком автора (в первый раз несколько минут)",
+  "Building with its author's setup (several minutes the first time)"
+ ],
+ "Consultando la publicación oficial…": [
+  "Consultando a publicação oficial…",
+  "Запрос официального выпуска…",
+  "Querying the official release…"
+ ],
+ "Continuar": [
+  "Continuar",
+  "Продолжить",
+  "Continue"
+ ],
+ "Copiando la base y el motor al juego": [
+  "Copiando a base e o motor para o jogo",
+  "Копирование базы и движка в игру",
+  "Copying the base and engine to the game"
+ ],
+ "Copiando {0} archivos al juego": [
+  "Copiando {0} arquivos para o jogo",
+  "Копирование файлов в игру: {0}",
+  "Copying {0} files to the game"
+ ],
+ "DLL actual": [
+  "DLL atual",
+  "Текущая DLL",
+  "Current DLL"
+ ],
+ "DLL base": [
+  "DLL base",
+  "Базовая DLL",
+  "Base DLL"
+ ],
+ "DLL de ILION (dxgi.dll)": [
+  "DLL do ILION (dxgi.dll)",
+  "DLL ILION (dxgi.dll)",
+  "ILION DLL (dxgi.dll)"
+ ],
+ "DLL local:": [
+  "DLL local:",
+  "Локальная DLL:",
+  "Local DLL:"
+ ],
+ "DLL suelta: se usa la configuración oficial de OptiScaler (ILION completa sus claves al guardar) y no se añaden las carpetas propias del paquete.": [
+  "DLL avulsa: é usada a configuração oficial do OptiScaler (o ILION completa as suas chaves ao salvar) e as pastas próprias do pacote não são adicionadas.",
+  "Отдельная DLL: используется официальная конфигурация OptiScaler (ILION дополнит свои ключи при сохранении), собственные папки пакета не добавляются.",
+  "Loose DLL: OptiScaler's official configuration is used (ILION fills in its keys when saving) and the package's own folders are not added."
+ ],
+ "DLSS 4 Modelo K (instalación local)": [
+  "DLSS 4 Modelo K (instalação local)",
+  "DLSS 4 Модель K (локальная установка)",
+  "DLSS 4 Model K (local installation)"
+ ],
+ "DLSS 4 Modelo K (local): reinstalar…": [
+  "DLSS 4 Modelo K (local): reinstalar…",
+  "DLSS 4 Модель K (локально): переустановить…",
+  "DLSS 4 Model K (local): reinstall…"
+ ],
+ "DLSS 4 Modelo K (local)…": [
+  "DLSS 4 Modelo K (local)…",
+  "DLSS 4 Модель K (локально)…",
+  "DLSS 4 Model K (local)…"
+ ],
+ "DLSS 4 Modelo K desde tu copia ({0} archivos)": [
+  "DLSS 4 Modelo K da sua cópia ({0} arquivos)",
+  "DLSS 4 Модель K из вашей копии ({0} файлов)",
+  "DLSS 4 Model K from your copy ({0} files)"
+ ],
+ "DLSS 4 Modelo K se copia desde tu carpeta local (instalación local).": [
+  "O DLSS 4 Modelo K é copiado da sua pasta local (instalação local).",
+  "DLSS 4 Модель K копируется из вашей локальной папки (локальная установка).",
+  "DLSS 4 Model K is copied from your local folder (local installation)."
+ ],
+ "DLSS 4 Modelo K (d4r) · instalación local": [
+  "DLSS 4 Modelo K (d4r) · instalação local",
+  "DLSS 4 Модель K (d4r) · локальная установка",
+  "DLSS 4 Model K (d4r) · local installation"
+ ],
+ "DLSS 4 local": [
+  "DLSS 4 local",
+  "DLSS 4 локально",
+  "Local DLSS 4"
+ ],
+ "DLSS Neural Rendering de NVIDIA": [
+  "DLSS Neural Rendering da NVIDIA",
+  "DLSS Neural Rendering от NVIDIA",
+  "NVIDIA DLSS Neural Rendering"
+ ],
+ "DLSSG-XeFG usa la libxess_fg.dll de Intel (1.3.1 o 1.3.4) de su carpeta o de la de OptiScaler, y no la incluye. ILION SETUP la descarga del SDK oficial de XeSS (github.com/intel/xess).": [
+  "O DLSSG-XeFG usa a libxess_fg.dll da Intel (1.3.1 ou 1.3.4) da sua pasta ou da do OptiScaler, e não a inclui. O ILION SETUP a baixa do SDK oficial do XeSS (github.com/intel/xess).",
+  "DLSSG-XeFG использует libxess_fg.dll от Intel (1.3.1 или 1.3.4) из своей папки или папки OptiScaler и не включает её. ILION SETUP скачивает её из официального SDK XeSS (github.com/intel/xess).",
+  "DLSSG-XeFG uses Intel's libxess_fg.dll (1.3.1 or 1.3.4) from its folder or OptiScaler's, and doesn't include it. ILION SETUP downloads it from the official XeSS SDK (github.com/intel/xess)."
+ ],
+ "Descargando": [
+  "Baixando",
+  "Загрузка",
+  "Downloading"
+ ],
+ "Descargando ILION {0} de su publicación oficial": [
+  "Baixando o ILION {0} da publicação oficial",
+  "Загрузка ILION {0} из официального выпуска",
+  "Downloading ILION {0} from its official release"
+ ],
+ "Descargando ILION {0} de su publicación oficial…": [
+  "Baixando o ILION {0} da publicação oficial…",
+  "Загрузка ILION {0} из официального выпуска…",
+  "Downloading ILION {0} from its official release…"
+ ],
+ "Descargando OptiScaler {0}…": [
+  "Baixando o OptiScaler {0}…",
+  "Загрузка OptiScaler {0}…",
+  "Downloading OptiScaler {0}…"
+ ],
+ "Descargando Python embebido (python.org) y numpy (PyPI)…": [
+  "Baixando o Python embutido (python.org) e o numpy (PyPI)…",
+  "Загрузка встроенного Python (python.org) и numpy (PyPI)…",
+  "Downloading embedded Python (python.org) and numpy (PyPI)…"
+ ],
+ "Descargando el compilador de shaders de Microsoft (DXC)…": [
+  "Baixando o compilador de shaders da Microsoft (DXC)…",
+  "Загрузка компилятора шейдеров Microsoft (DXC)…",
+  "Downloading Microsoft's shader compiler (DXC)…"
+ ],
+ "Descargando el paquete oficial": [
+  "Baixando o pacote oficial",
+  "Загрузка официального пакета",
+  "Downloading the official package"
+ ],
+ "Descargando la base oficial": [
+  "Baixando a base oficial",
+  "Загрузка официальной базы",
+  "Downloading the official base"
+ ],
+ "Descargando y verificando el paquete aprobado": [
+  "Baixando e verificando o pacote aprovado",
+  "Загрузка и проверка одобренного пакета",
+  "Downloading and verifying the approved package"
+ ],
+ "Deshacer": [
+  "Desfazer",
+  "Отменить",
+  "Undo"
+ ],
+ "Deshecho: {0}.": [
+  "Desfeito: {0}.",
+  "Отменено: {0}.",
+  "Undone: {0}."
+ ],
+ "Desinstalación": [
+  "Desinstalação",
+  "Удаление",
+  "Uninstall"
+ ],
+ "Desinstalación completa": [
+  "Desinstalação completa",
+  "Полное удаление",
+  "Full uninstall"
+ ],
+ "Desinstalar": [
+  "Desinstalar",
+  "Удалить",
+  "Uninstall"
+ ],
+ "Desinstalar ILION": [
+  "Desinstalar o ILION",
+  "Удалить ILION",
+  "Uninstall ILION"
+ ],
+ "Destino": [
+  "Destino",
+  "Назначение",
+  "Destination"
+ ],
+ "Detectando la GPU, los juegos y los paquetes de ILION…": [
+  "Detectando a GPU, os jogos e os pacotes do ILION…",
+  "Определение GPU, игр и пакетов ILION…",
+  "Detecting the GPU, games and ILION packages…"
+ ],
+ "Detiene la instalación sin escribir nada en el juego.": [
+  "Interrompe a instalação sem gravar nada no jogo.",
+  "Останавливает установку, ничего не записывая в игру.",
+  "Stops the installation without writing anything to the game."
+ ],
+ "Disponible ILION {0}.": [
+  "ILION {0} disponível.",
+  "Доступен ILION {0}.",
+  "ILION {0} available."
+ ],
+ "Disponible ILION {0}. Ya está elegido como «Nuevo motor ILION»: pulsa «Comprobar y actualizar» para instalarlo en el juego.": [
+  "ILION {0} disponível. Já está escolhido como «Novo motor ILION»: clique em «Verificar e atualizar» para instalá-lo no jogo.",
+  "Доступен ILION {0}. Он уже выбран как «Новый движок ILION»: нажмите «Проверить и обновить», чтобы установить его в игру.",
+  "ILION {0} available. It's already chosen as “New ILION engine”: press “Check and update” to install it in the game."
+ ],
+ "Distinto de la base congelada (¿actualizado a mano?).": [
+  "Diferente da base congelada (atualizado manualmente?).",
+  "Отличается от замороженной базы (обновлено вручную?).",
+  "Different from the frozen base (updated by hand?)."
+ ],
+ "Dónde: {0}": [
+  "Onde: {0}",
+  "Где: {0}",
+  "Where: {0}"
+ ],
+ "Edición sin identificar": [
+  "Edição não identificada",
+  "Неопознанная редакция",
+  "Unidentified edition"
+ ],
+ "Ejecutable": [
+  "Executável",
+  "Исполняемый файл",
+  "Executable"
+ ],
+ "Ejecutable del juego": [
+  "Executável do jogo",
+  "Исполняемый файл игры",
+  "Game executable"
+ ],
+ "El juego no tiene OptiScaler instalado: usa «Instalación nueva».": [
+  "O jogo não tem o OptiScaler instalado: use «Nova instalação».",
+  "В игре не установлен OptiScaler: используйте «Новая установка».",
+  "The game doesn't have OptiScaler installed: use “New installation”."
+ ],
+ "El juego ya tiene {0}, que no funciona junto a {1}. Quítalo primero.": [
+  "O jogo já tem {0}, que não funciona junto com {1}. Remova-o primeiro.",
+  "В игре уже есть {0}, который не работает вместе с {1}. Сначала удалите его.",
+  "The game already has {0}, which doesn't work together with {1}. Remove it first."
+ ],
+ "El manifiesto no tiene una publicación oficial del motor.": [
+  "O manifesto não tem uma publicação oficial do motor.",
+  "В манифесте нет официального выпуска движка.",
+  "The manifest has no official engine release."
+ ],
+ "El mod usa la {0} de Intel de la carpeta de OptiScaler y no la incluye. ILION SETUP la descarga del SDK oficial de XeSS (github.com/intel/xess).": [
+  "O mod usa a {0} da Intel da pasta do OptiScaler e não a inclui. O ILION SETUP a baixa do SDK oficial do XeSS (github.com/intel/xess).",
+  "Мод использует {0} от Intel из папки OptiScaler и не включает её. ILION SETUP скачивает её из официального SDK XeSS (github.com/intel/xess).",
+  "The mod uses Intel's {0} from the OptiScaler folder and doesn't include it. ILION SETUP downloads it from the official XeSS SDK (github.com/intel/xess)."
+ ],
+ "El motor y su base: {0} archivos, cargado como {1}.": [
+  "O motor e sua base: {0} arquivos, carregado como {1}.",
+  "Движок и его база: {0} файлов, загружается как {1}.",
+  "The engine and its base: {0} files, loaded as {1}."
+ ],
+ "El paquete descargado no coincide con el SHA-256 publicado.": [
+  "O pacote baixado não corresponde ao SHA-256 publicado.",
+  "Загруженный пакет не совпадает с опубликованным SHA-256.",
+  "The downloaded package doesn't match the published SHA-256."
+ ],
+ "El paquete descargado no es la versión aprobada para ILION (su SHA-256 no coincide): descartado, no se instala.": [
+  "O pacote baixado não é a versão aprovada para o ILION (seu SHA-256 não confere): descartado, não é instalado.",
+  "Загруженный пакет — не одобренная для ILION версия (SHA-256 не совпадает): отброшен, не устанавливается.",
+  "The downloaded package isn't the version approved for ILION (its SHA-256 doesn't match): discarded, not installed."
+ ],
+ "El paquete está vacío.": [
+  "O pacote está vazio.",
+  "Пакет пуст.",
+  "The package is empty."
+ ],
+ "El paquete no trae el setup de su autor.": [
+  "O pacote não traz o setup do autor.",
+  "В пакете нет установщика автора.",
+  "The package doesn't include its author's setup."
+ ],
+ "El paquete no trae el setup del autor.": [
+  "O pacote não traz o setup do autor.",
+  "В пакете нет установщика автора.",
+  "The package doesn't include the author's setup."
+ ],
+ "El paquete no trae la compilación para {0}.": [
+  "O pacote não traz a compilação para {0}.",
+  "В пакете нет сборки для {0}.",
+  "The package doesn't include the build for {0}."
+ ],
+ "El paquete oficial no contiene:": [
+  "O pacote oficial não contém:",
+  "Официальный пакет не содержит:",
+  "The official package doesn't contain:"
+ ],
+ "El paquete publicado ({0}) no es la versión aprobada para ILION: no se instala.": [
+  "O pacote publicado ({0}) não é a versão aprovada para o ILION: não é instalado.",
+  "Опубликованный пакет ({0}) — не одобренная для ILION версия: не устанавливается.",
+  "The published package ({0}) isn't the version approved for ILION: not installed."
+ ],
+ "El puente AMD de Neural Rendering va dentro de ILION. Desde aquí solo se instalan los runtimes que usa (danielblnc y lmxxf).": [
+  "A ponte AMD de Neural Rendering vem dentro do ILION. Daqui só são instalados os runtimes que ela usa (danielblnc e lmxxf).",
+  "Мост AMD для Neural Rendering встроен в ILION. Здесь устанавливаются только используемые им среды (danielblnc и lmxxf).",
+  "The AMD Neural Rendering bridge is built into ILION. Only the runtimes it uses (danielblnc and lmxxf) are installed from here."
+ ],
+ "El puente Vulkan → D3D12 de XeFG de este fork está integrado en ILION (XeMFG en Vulkan).": [
+  "A ponte Vulkan → D3D12 do XeFG deste fork está integrada no ILION (XeMFG em Vulkan).",
+  "Мост Vulkan → D3D12 для XeFG из этого форка встроен в ILION (XeMFG в Vulkan).",
+  "This fork's Vulkan → D3D12 bridge for XeFG is built into ILION (XeMFG on Vulkan)."
+ ],
+ "El setup de HelixSR no construyó el Frame Generation.": [
+  "O setup do HelixSR não construiu o Frame Generation.",
+  "Установщик HelixSR не собрал Frame Generation.",
+  "HelixSR's setup didn't build Frame Generation."
+ ],
+ "El setup de HelixSR no construyó la red.": [
+  "O setup do HelixSR não construiu a rede.",
+  "Установщик HelixSR не собрал сеть.",
+  "HelixSR's setup didn't build the network."
+ ],
+ "El setup de HelixSR terminó con error ({0}). Últimas líneas:": [
+  "O setup do HelixSR terminou com erro ({0}). Últimas linhas:",
+  "Установщик HelixSR завершился с ошибкой ({0}). Последние строки:",
+  "HelixSR's setup ended with an error ({0}). Last lines:"
+ ],
+ "Elegir carpeta…": [
+  "Escolher pasta…",
+  "Выбрать папку…",
+  "Choose folder…"
+ ],
+ "Elige el juego.": [
+  "Escolha o jogo.",
+  "Выберите игру.",
+  "Choose the game."
+ ],
+ "Elige el motor de ILION.": [
+  "Escolha o motor do ILION.",
+  "Выберите движок ILION.",
+  "Choose the ILION engine."
+ ],
+ "Elige un juego con ILION instalado para actualizar su motor.": [
+  "Escolha um jogo com o ILION instalado para atualizar o motor.",
+  "Выберите игру с установленным ILION, чтобы обновить движок.",
+  "Choose a game with ILION installed to update its engine."
+ ],
+ "Elige un juego y pulsa «Verificar».": [
+  "Escolha um jogo e clique em «Verificar».",
+  "Выберите игру и нажмите «Проверить».",
+  "Choose a game and press “Verify”."
+ ],
+ "Elige un nombre de proxy de la lista.": [
+  "Escolha um nome de proxy da lista.",
+  "Выберите имя прокси из списка.",
+  "Choose a proxy name from the list."
+ ],
+ "En esa carpeta no está DLSS 4 Modelo K (falta d4r.ini).": [
+  "Essa pasta não tem o DLSS 4 Modelo K (falta d4r.ini).",
+  "В этой папке нет DLSS 4 Модель K (нет d4r.ini).",
+  "That folder doesn't have DLSS 4 Model K (d4r.ini is missing)."
+ ],
+ "En esa carpeta no hay ningún ejecutable. OptiScaler va junto al .exe del juego.": [
+  "Essa pasta não tem nenhum executável. O OptiScaler fica junto ao .exe do jogo.",
+  "В этой папке нет исполняемого файла. OptiScaler ставится рядом с .exe игры.",
+  "That folder has no executable. OptiScaler goes next to the game's .exe."
+ ],
+ "Enlace de descarga inesperado.": [
+  "Link de download inesperado.",
+  "Неожиданная ссылка для загрузки.",
+  "Unexpected download link."
+ ],
+ "Entendido": [
+  "Entendido",
+  "Понятно",
+  "Got it"
+ ],
+ "Es un addon de ReShade: necesita ReShade instalado.": [
+  "É um addon do ReShade: precisa do ReShade instalado.",
+  "Это дополнение ReShade: нужен установленный ReShade.",
+  "It's a ReShade add-on: ReShade must be installed."
+ ],
+ "Escribiría {0}, que también instala {1} con otro contenido.": [
+  "Gravaria {0}, que {1} também instala com outro conteúdo.",
+  "Записал бы {0}, который также устанавливает {1} с другим содержимым.",
+  "It would write {0}, which {1} also installs with different content."
+ ],
+ "Esta versión de Setup no trae su receta: actualiza ILION Setup.": [
+  "Esta versão do Setup não traz a receita: atualize o ILION Setup.",
+  "В этой версии Setup нет его рецепта: обновите ILION Setup.",
+  "This Setup version doesn't include its recipe: update ILION Setup."
+ ],
+ "Este Setup no los conoce: {0}.": [
+  "Este Setup não os conhece: {0}.",
+  "Этот Setup их не знает: {0}.",
+  "This Setup doesn't know them: {0}."
+ ],
+ "Este juego ya tiene OptiScaler ({0}): para cambiar solo el motor usa «Actualizar ILION».": [
+  "Este jogo já tem o OptiScaler ({0}): para trocar só o motor use «Atualizar ILION».",
+  "В этой игре уже есть OptiScaler ({0}): чтобы сменить только движок, используйте «Обновить ILION».",
+  "This game already has OptiScaler ({0}): to change only the engine use “Update ILION”."
+ ],
+ "Este juego ya tiene una instalación de ILION hecha con Setup: usa «Actualizar ILION» o «Verificar y reparar».": [
+  "Este jogo já tem uma instalação do ILION feita com o Setup: use «Atualizar ILION» ou «Verificar e reparar».",
+  "В этой игре уже есть установка ILION через Setup: используйте «Обновить ILION» или «Проверка и восстановление».",
+  "This game already has an ILION installation made with Setup: use “Update ILION” or “Verify and repair”."
+ ],
+ "Está elegido dos veces: se instala una sola.": [
+  "Foi escolhido duas vezes: só um é instalado.",
+  "Выбран дважды: устанавливается один раз.",
+  "It's chosen twice: only one is installed."
+ ],
+ "Etiqueta de publicación no válida.": [
+  "Etiqueta de publicação inválida.",
+  "Недопустимая метка выпуска.",
+  "Invalid release tag."
+ ],
+ "Experimental.": [
+  "Experimental.",
+  "Экспериментальный.",
+  "Experimental."
+ ],
+ "Extrayendo paquete verificado…": [
+  "Extraindo o pacote verificado…",
+  "Распаковка проверенного пакета…",
+  "Extracting verified package…"
+ ],
+ "Extrayendo solo los archivos de la base": [
+  "Extraindo só os arquivos da base",
+  "Распаковка только файлов базы",
+  "Extracting only the base files"
+ ],
+ "Falló al escribir y se deshizo todo el lote:": [
+  "Falhou ao gravar e todo o lote foi desfeito:",
+  "Ошибка записи, весь пакет отменён:",
+  "Writing failed and the whole batch was undone:"
+ ],
+ "Falta {0} ({1}).": [
+  "Falta {0} ({1}).",
+  "Нет {0} ({1}).",
+  "{0} is missing ({1})."
+ ],
+ "Falta {0} del propio mod: reinstálalo.": [
+  "Falta {0} do próprio mod: reinstale-o.",
+  "Нет {0} самого мода: переустановите его.",
+  "{0} from the mod itself is missing: reinstall it."
+ ],
+ "Falta.": [
+  "Falta.",
+  "Отсутствует.",
+  "Missing."
+ ],
+ "Finalizando": [
+  "Finalizando",
+  "Завершение",
+  "Finishing"
+ ],
+ "Formato de paquete no admitido.": [
+  "Formato de pacote não suportado.",
+  "Формат пакета не поддерживается.",
+  "Package format not supported."
+ ],
+ "GPU no reconocida": [
+  "GPU não reconhecida",
+  "GPU не распознана",
+  "GPU not recognized"
+ ],
+ "GitHub no publica la huella SHA-256 de este paquete: no se instala.": [
+  "O GitHub não publica o SHA-256 deste pacote: não é instalado.",
+  "GitHub не публикует SHA-256 этого пакета: не устанавливается.",
+  "GitHub doesn't publish this package's SHA-256: not installed."
+ ],
+ "GitHub, firmado": [
+  "GitHub, assinado",
+  "GitHub, подписан",
+  "GitHub, signed"
+ ],
+ "Ha ocurrido un error inesperado, pero ILION Setup sigue abierto y no se ha dejado nada a medias en el juego.": [
+  "Ocorreu um erro inesperado, mas o ILION Setup continua aberto e nada ficou pela metade no jogo.",
+  "Произошла непредвиденная ошибка, но ILION Setup открыт, и в игре ничего не осталось недоделанным.",
+  "An unexpected error occurred, but ILION Setup is still open and nothing was left half-done in the game."
+ ],
+ "El detalle queda en": [
+  "O detalhe fica em",
+  "Подробности в",
+  "Details are in"
+ ],
+ "Hay más de una DLL de OptiScaler: puede cargarse dos veces o ninguna.": [
+  "Há mais de uma DLL do OptiScaler: pode carregar duas vezes ou nenhuma.",
+  "Найдено больше одной DLL OptiScaler: может загрузиться дважды или ни разу.",
+  "There's more than one OptiScaler DLL: it may load twice or not at all."
+ ],
+ "Huella SHA-256 publicada por GitHub: coincide": [
+  "SHA-256 publicado pelo GitHub: confere",
+  "SHA-256, опубликованный GitHub: совпадает",
+  "SHA-256 published by GitHub: matches"
+ ],
+ "ILION Central marcó {0} {1} abajo (5": [
+  "O ILION Central marcou {0} {1} abaixo (5",
+  "ILION Central отметил {0} {1} ниже (5",
+  "ILION Central ticked {0} {1} below (5"
+ ],
+ "MODS ADICIONALES). Revisa y pulsa «Continuar».": [
+  "MODS ADICIONAIS). Revise e clique em «Continuar».",
+  "ДОПОЛНИТЕЛЬНЫЕ МОДЫ). Проверьте и нажмите «Продолжить».",
+  "ADDITIONAL MODS). Review and press “Continue”."
+ ],
+ "ILION Central pidió un juego que Setup no encuentra: elígelo en la lista.": [
+  "O ILION Central pediu um jogo que o Setup não encontra: escolha-o na lista.",
+  "ILION Central запросил игру, которую Setup не находит: выберите её в списке.",
+  "ILION Central asked for a game Setup can't find: pick it from the list."
+ ],
+ "ILION Setup {0} disponible": [
+  "ILION Setup {0} disponível",
+  "Доступен ILION Setup {0}",
+  "ILION Setup {0} available"
+ ],
+ "ILION actualizado en {0}: {1}.": [
+  "ILION atualizado em {0}: {1}.",
+  "ILION обновлён в {0}: {1}.",
+  "ILION updated in {0}: {1}."
+ ],
+ "ILION desinstalado ({0} archivos retirados)": [
+  "ILION desinstalado ({0} arquivos removidos)",
+  "ILION удалён (убрано файлов: {0})",
+  "ILION uninstalled ({0} files removed)"
+ ],
+ "ILION instalado en {0}.": [
+  "ILION instalado em {0}.",
+  "ILION установлен в {0}.",
+  "ILION installed in {0}."
+ ],
+ "ILION {0} (instalado el {1})": [
+  "ILION {0} (instalado em {1})",
+  "ILION {0} (установлен {1})",
+  "ILION {0} (installed on {1})"
+ ],
+ "ILION {0} es la versión aprobada más reciente.": [
+  "O ILION {0} é a versão aprovada mais recente.",
+  "ILION {0} — последняя одобренная версия.",
+  "ILION {0} is the latest approved version."
+ ],
+ "ILION {0}, la aprobada para esta base.": [
+  "ILION {0}, a aprovada para esta base.",
+  "ILION {0}, одобренный для этой базы.",
+  "ILION {0}, the one approved for this base."
+ ],
+ "ILION {0}: no es la aprobada ({1}).": [
+  "ILION {0}: não é a aprovada ({1}).",
+  "ILION {0}: не одобренная версия ({1}).",
+  "ILION {0}: not the approved one ({1})."
+ ],
+ "IMPORTANTE ({0}): DLSS Neural Rendering necesita el archivo oficial de NVIDIA, que debes tener descargado previamente. Setup no lo descarga ni lo incluye.": [
+  "IMPORTANTE ({0}): o DLSS Neural Rendering precisa do arquivo oficial da NVIDIA, que você deve ter baixado antes. O Setup não o baixa nem o inclui.",
+  "ВАЖНО ({0}): DLSS Neural Rendering нужен официальный файл NVIDIA, который вы должны скачать заранее. Setup его не скачивает и не включает.",
+  "IMPORTANT ({0}): DLSS Neural Rendering needs NVIDIA's official file, which you must have downloaded beforehand. Setup neither downloads nor includes it."
+ ],
+ "Idéntico a la base congelada.": [
+  "Idêntico à base congelada.",
+  "Совпадает с замороженной базой.",
+  "Identical to the frozen base."
+ ],
+ "Incompatible": [
+  "Incompatível",
+  "Несовместим",
+  "Incompatible"
+ ],
+ "Instalación": [
+  "Instalação",
+  "Установка",
+  "Installation"
+ ],
+ "Instalación cancelada": [
+  "Instalação cancelada",
+  "Установка отменена",
+  "Installation cancelled"
+ ],
+ "Instalación cancelada.": [
+  "Instalação cancelada.",
+  "Установка отменена.",
+  "Installation cancelled."
+ ],
+ "Instalación cancelada: no se escribió nada.": [
+  "Instalação cancelada: nada foi gravado.",
+  "Установка отменена: ничего не записано.",
+  "Installation cancelled: nothing was written."
+ ],
+ "Instalación compleja (proxy de Bink y runtimes de Intel): pendiente de receta.": [
+  "Instalação complexa (proxy do Bink e runtimes da Intel): receita pendente.",
+  "Сложная установка (прокси Bink и среды Intel): рецепт ещё не готов.",
+  "Complex installation (Bink proxy and Intel runtimes): recipe pending."
+ ],
+ "Instalación de componentes": [
+  "Instalação de componentes",
+  "Установка компонентов",
+  "Component installation"
+ ],
+ "Instalación en curso": [
+  "Instalação em andamento",
+  "Идёт установка",
+  "Installation in progress"
+ ],
+ "Instalación terminada": [
+  "Instalação concluída",
+  "Установка завершена",
+  "Installation finished"
+ ],
+ "Instalación terminada con avisos": [
+  "Instalação concluída com avisos",
+  "Установка завершена с предупреждениями",
+  "Installation finished with warnings"
+ ],
+ "Instalación terminada con avisos.": [
+  "Instalação concluída com avisos.",
+  "Установка завершена с предупреждениями.",
+  "Installation finished with warnings."
+ ],
+ "Instalado": [
+  "Instalado",
+  "Установлено",
+  "Installed"
+ ],
+ "Instalando": [
+  "Instalando",
+  "Установка",
+  "Installing"
+ ],
+ "Instalar": [
+  "Instalar",
+  "Установить",
+  "Install"
+ ],
+ "Instalar dependencias": [
+  "Instalar dependências",
+  "Установка зависимостей",
+  "Install dependencies"
+ ],
+ "Instalar mod": [
+  "Instalar mod",
+  "Установка мода",
+  "Install mod"
+ ],
+ "Instalar mods de ILION Central": [
+  "Instalar mods do ILION Central",
+  "Установка модов из ILION Central",
+  "Install mods from ILION Central"
+ ],
+ "Instalar seleccionados": [
+  "Instalar selecionados",
+  "Установить выбранные",
+  "Install selected"
+ ],
+ "Juego": [
+  "Jogo",
+  "Игра",
+  "Game"
+ ],
+ "La DLL actual no es ILION: se sustituye igualmente por la de ILION.": [
+  "A DLL atual não é do ILION: é substituída igualmente pela do ILION.",
+  "Текущая DLL — не ILION: она всё равно заменяется на DLL ILION.",
+  "The current DLL isn't ILION: it's replaced by ILION's anyway."
+ ],
+ "La DLL de ILION elegida ({0}) no es la aprobada para esta base: compatibilidad no verificada.": [
+  "A DLL do ILION escolhida ({0}) não é a aprovada para esta base: compatibilidade não verificada.",
+  "Выбранная DLL ILION ({0}) не одобрена для этой базы: совместимость не проверена.",
+  "The chosen ILION DLL ({0}) isn't the one approved for this base: compatibility not verified."
+ ],
+ "La DLL elegida (ILION {0}) no es la aprobada para esta base ({1}): compatibilidad no verificada.": [
+  "A DLL escolhida (ILION {0}) não é a aprovada para esta base ({1}): compatibilidade não verificada.",
+  "Выбранная DLL (ILION {0}) не одобрена для этой базы ({1}): совместимость не проверена.",
+  "The chosen DLL (ILION {0}) isn't the one approved for this base ({1}): compatibility not verified."
+ ],
+ "La carpeta no contiene un binario de OptiScaler x64 (OptiScaler.dll o dxgi.dll).": [
+  "A pasta não contém um binário x64 do OptiScaler (OptiScaler.dll ou dxgi.dll).",
+  "В папке нет 64-битного бинарного файла OptiScaler (OptiScaler.dll или dxgi.dll).",
+  "The folder doesn't contain an x64 OptiScaler binary (OptiScaler.dll or dxgi.dll)."
+ ],
+ "La descarga tardó demasiado. Vuelve a intentarlo.": [
+  "O download demorou demais. Tente novamente.",
+  "Загрузка заняла слишком много времени. Попробуйте ещё раз.",
+  "The download took too long. Try again."
+ ],
+ "La huella SHA-256 no coincide con la publicada: descarga descartada.": [
+  "O SHA-256 não confere com o publicado: download descartado.",
+  "SHA-256 не совпадает с опубликованным: загрузка отброшена.",
+  "The SHA-256 doesn't match the published one: download discarded."
+ ],
+ "La instalación puede tardar varios minutos. Se descargarán, verificarán y prepararán los componentes seleccionados. Mantén la aplicación abierta hasta finalizar.": [
+  "A instalação pode levar vários minutos. Os componentes selecionados serão baixados, verificados e preparados. Mantenha o aplicativo aberto até terminar.",
+  "Установка может занять несколько минут. Выбранные компоненты будут загружены, проверены и подготовлены. Не закрывайте приложение до завершения.",
+  "The installation may take several minutes. The selected components will be downloaded, verified and prepared. Keep the app open until it finishes."
+ ],
+ "La instalación sigue. Vuelve a verla con el enlace de la barra inferior.": [
+  "A instalação continua. Volte a vê-la pelo link da barra inferior.",
+  "Установка продолжается. Вернуться к ней можно по ссылке в нижней панели.",
+  "The installation continues. See it again with the link in the bottom bar."
+ ],
+ "La publicación no contiene el paquete esperado.": [
+  "A publicação não contém o pacote esperado.",
+  "Выпуск не содержит ожидаемого пакета.",
+  "The release doesn't contain the expected package."
+ ],
+ "La publicación no tiene etiqueta.": [
+  "A publicação não tem etiqueta.",
+  "У выпуска нет метки.",
+  "The release has no tag."
+ ],
+ "La publicación no trae lo que espera la receta:": [
+  "A publicação não traz o que a receita espera:",
+  "В выпуске нет того, что ожидает рецепт:",
+  "The release doesn't contain what the recipe expects:"
+ ],
+ "La versión aprobada para ILION cambió. Al actualizar se descarga y comprueba el paquete nuevo antes de tocar el juego,": [
+  "A versão aprovada para o ILION mudou. Ao atualizar, o pacote novo é baixado e verificado antes de mexer no jogo,",
+  "Одобренная для ILION версия изменилась. При обновлении новый пакет загружается и проверяется до изменения игры,",
+  "The version approved for ILION changed. Updating downloads and checks the new package before touching the game,"
+ ],
+ "se guarda copia de lo que se sustituye y, si el mod no queda completo, se vuelve solo a la versión anterior. Todo se puede deshacer.": [
+  "é guardada uma cópia do que é substituído e, se o mod não ficar completo, volta sozinho para a versão anterior. Tudo pode ser desfeito.",
+  "сохраняется копия заменяемого, а если мод окажется неполным, автоматически вернётся прежняя версия. Всё можно отменить.",
+  "a copy of what's replaced is saved and, if the mod isn't complete, the previous version comes back on its own. Everything can be undone."
+ ],
+ "La versión {0} no quedó completa (falta {1}) y no se pudo volver atrás sola: {2} Usa «Deshacer cambios».": [
+  "A versão {0} não ficou completa (falta {1}) e não foi possível voltar sozinho: {2} Use «Desfazer alterações».",
+  "Версия {0} неполная (нет {1}), и автоматический откат не удался: {2} Используйте «Отмена изменений».",
+  "Version {0} wasn't complete ({1} missing) and couldn't roll back on its own: {2} Use “Undo changes”."
+ ],
+ "La versión {0} no quedó completa (falta {1}): se volvió a la versión anterior.": [
+  "A versão {0} não ficou completa (falta {1}): voltou-se à versão anterior.",
+  "Версия {0} неполная (нет {1}): возвращена прежняя версия.",
+  "Version {0} wasn't complete ({1} missing): the previous version was restored."
+ ],
+ "Lleva DLL propietarias de NVIDIA, que no se pueden redistribuir: Setup no las descarga. Si tienes tu copia (carpeta Modelo_K), elígela y se instala con ILION. Solo AMD RDNA 3 / RDNA 4.": [
+  "Contém DLLs proprietárias da NVIDIA, que não podem ser redistribuídas: o Setup não as baixa. Se você tiver sua cópia (pasta Modelo_K), escolha-a e ela será instalada com o ILION. Só AMD RDNA 3 / RDNA 4.",
+  "Содержит проприетарные DLL NVIDIA, которые нельзя распространять: Setup их не скачивает. Если у вас есть своя копия (папка Modelo_K), выберите её — она установится вместе с ILION. Только AMD RDNA 3 / RDNA 4.",
+  "It contains proprietary NVIDIA DLLs that can't be redistributed: Setup doesn't download them. If you have your copy (Modelo_K folder), choose it and it's installed with ILION. AMD RDNA 3 / RDNA 4 only."
+ ],
+ "Lo instalado se puede restaurar desde «Verificar y reparar». Revisa lo que no se instaló:": [
+  "O que foi instalado pode ser restaurado em «Verificar e reparar». Veja o que não foi instalado:",
+  "Установленное можно восстановить в «Проверка и восстановление». Посмотрите, что не установилось:",
+  "What was installed can be restored from “Verify and repair”. Review what wasn't installed:"
+ ],
+ "Local:": [
+  "Local:",
+  "Локально:",
+  "Local:"
+ ],
+ "Los archivos de la base que no son los congelados se cambian por los congelados. Si los actualizaste tú a propósito, perderías ese cambio (queda una copia y se puede restaurar).": [
+  "Os arquivos da base que não são os congelados são trocados pelos congelados. Se você os atualizou de propósito, perderia essa mudança (fica uma cópia e pode ser restaurada).",
+  "Файлы базы, отличающиеся от замороженных, заменяются замороженными. Если вы обновили их намеренно, это изменение будет потеряно (копия сохраняется, её можно восстановить).",
+  "Base files that aren't the frozen ones are replaced by the frozen ones. If you updated them on purpose, you'd lose that change (a copy is kept and can be restored)."
+ ],
+ "Los mods de este juego ya tienen la versión aprobada.": [
+  "Os mods deste jogo já têm a versão aprovada.",
+  "Моды этой игры уже в одобренной версии.",
+  "This game's mods already have the approved version."
+ ],
+ "Los que aún no están instalados en este juego": [
+  "Os que ainda não estão instalados neste jogo",
+  "Те, что ещё не установлены в этой игре",
+  "Those not yet installed in this game"
+ ],
+ "Manifiesto de la base {0} ({1})": [
+  "Manifesto da base {0} ({1})",
+  "Манифест базы {0} ({1})",
+  "Base manifest {0} ({1})"
+ ],
+ "Marcar todos los compatibles": [
+  "Marcar todos os compatíveis",
+  "Отметить все совместимые",
+  "Tick all compatible"
+ ],
+ "Mods": [
+  "Mods",
+  "Моды",
+  "Mods"
+ ],
+ "Mods desde ILION Central": [
+  "Mods do ILION Central",
+  "Моды из ILION Central",
+  "Mods from ILION Central"
+ ],
+ "Mods elegidos en ILION Central. Se descargan y comprueban antes de tocar el juego; todo se puede deshacer.": [
+  "Mods escolhidos no ILION Central. São baixados e verificados antes de mexer no jogo; tudo pode ser desfeito.",
+  "Моды, выбранные в ILION Central. Они загружаются и проверяются до изменения игры; всё можно отменить.",
+  "Mods chosen in ILION Central. They're downloaded and checked before touching the game; everything can be undone."
+ ],
+ "Mods instalados el {0} a las {1} ({2})": [
+  "Mods instalados em {0} às {1} ({2})",
+  "Моды, установленные {0} в {1} ({2})",
+  "Mods installed on {0} at {1} ({2})"
+ ],
+ "Motor": [
+  "Motor",
+  "Движок",
+  "Engine"
+ ],
+ "Más información: integrados, instalación local, dependencias y referencias": [
+  "Mais informações: integrados, instalação local, dependências e referências",
+  "Подробнее: встроенные, локальная установка, зависимости и ссылки",
+  "More information: built-in, local installation, dependencies and references"
+ ],
+ "Método de carga": [
+  "Método de carregamento",
+  "Способ загрузки",
+  "Load method"
+ ],
+ "Método de carga no admitido.": [
+  "Método de carregamento não suportado.",
+  "Способ загрузки не поддерживается.",
+  "Load method not supported."
+ ],
+ "Necesita ILION Setup {0} o posterior.": [
+  "Precisa do ILION Setup {0} ou posterior.",
+  "Нужен ILION Setup {0} или новее.",
+  "Needs ILION Setup {0} or later."
+ ],
+ "Necesita ILION {0} o posterior (motor elegido: {1}).": [
+  "Precisa do ILION {0} ou posterior (motor escolhido: {1}).",
+  "Нужен ILION {0} или новее (выбран движок: {1}).",
+  "Needs ILION {0} or later (chosen engine: {1})."
+ ],
+ "Necesita:": [
+  "Precisa:",
+  "Требуется:",
+  "Needs:"
+ ],
+ "Ninguno": [
+  "Nenhum",
+  "Ничего",
+  "None"
+ ],
+ "Ningún juego detectado tiene OptiScaler instalado.": [
+  "Nenhum jogo detectado tem o OptiScaler instalado.",
+  "Ни в одной найденной игре не установлен OptiScaler.",
+  "No detected game has OptiScaler installed."
+ ],
+ "No compatible": [
+  "Não compatível",
+  "Несовместим",
+  "Not compatible"
+ ],
+ "No compatibles (no se instalan): {0}.": [
+  "Não compatíveis (não são instalados): {0}.",
+  "Несовместимы (не устанавливаются): {0}.",
+  "Not compatible (not installed): {0}."
+ ],
+ "No compatibles con este juego o tu GPU: {0}.": [
+  "Não compatíveis com este jogo ou sua GPU: {0}.",
+  "Несовместимы с этой игрой или вашей GPU: {0}.",
+  "Not compatible with this game or your GPU: {0}."
+ ],
+ "No contiene la DLL de ILION.": [
+  "Não contém a DLL do ILION.",
+  "Не содержит DLL ILION.",
+  "It doesn't contain the ILION DLL."
+ ],
+ "No detectada": [
+  "Não detectada",
+  "Не обнаружена",
+  "Not detected"
+ ],
+ "No es la edición ILION de OptiScaler.": [
+  "Não é a edição ILION do OptiScaler.",
+  "Это не редакция ILION для OptiScaler.",
+  "It isn't the ILION edition of OptiScaler."
+ ],
+ "No es la edición ILION.": [
+  "Não é a edição ILION.",
+  "Это не редакция ILION.",
+  "It isn't the ILION edition."
+ ],
+ "No está instalado en este juego.": [
+  "Não está instalado neste jogo.",
+  "Не установлен в этой игре.",
+  "It's not installed in this game."
+ ],
+ "No está pensado para {0} {1} (según su autor y la tabla de ILION).": [
+  "Não foi pensado para {0} {1} (segundo o autor e a tabela do ILION).",
+  "Не предназначен для {0} {1} (по словам автора и таблице ILION).",
+  "It's not meant for {0} {1} (according to its author and ILION's table)."
+ ],
+ "No existe.": [
+  "Não existe.",
+  "Не существует.",
+  "It doesn't exist."
+ ],
+ "No falta nada de la base: no hay nada que reponer.": [
+  "Não falta nada da base: não há nada a repor.",
+  "В базе всё на месте: восстанавливать нечего.",
+  "Nothing is missing from the base: nothing to restore."
+ ],
+ "No funciona junto a {0}.": [
+  "Não funciona junto com {0}.",
+  "Не работает вместе с {0}.",
+  "It doesn't work together with {0}."
+ ],
+ "No había nada que reparar": [
+  "Não havia nada a reparar",
+  "Восстанавливать было нечего",
+  "There was nothing to repair"
+ ],
+ "No hay configuración: ILION usará sus valores por defecto.": [
+  "Não há configuração: o ILION usará seus valores padrão.",
+  "Нет настроек: ILION будет использовать значения по умолчанию.",
+  "There's no configuration: ILION will use its defaults."
+ ],
+ "No hay nada que instalar.": [
+  "Não há nada a instalar.",
+  "Устанавливать нечего.",
+  "There's nothing to install."
+ ],
+ "No se encontraron juegos: usa «Otro ejecutable…».": [
+  "Nenhum jogo encontrado: use «Outro executável…».",
+  "Игры не найдены: используйте «Другой исполняемый файл…».",
+  "No games found: use “Other executable…”."
+ ],
+ "No se ha escrito nada en el juego.": [
+  "Nada foi gravado no jogo.",
+  "В игру ничего не записано.",
+  "Nothing was written to the game."
+ ],
+ "No se instala": [
+  "Não é instalado",
+  "Не устанавливается",
+  "Not installed"
+ ],
+ "No se pudo actualizar.": [
+  "Não foi possível atualizar.",
+  "Не удалось обновить.",
+  "Couldn't update."
+ ],
+ "No se pudo completar lo que pidió ILION Central:": [
+  "Não foi possível concluir o que o ILION Central pediu:",
+  "Не удалось выполнить запрос ILION Central:",
+  "Couldn't complete what ILION Central asked for:"
+ ],
+ "No se pudo conectar con GitHub. Comprueba la conexión y vuelve a intentarlo.": [
+  "Não foi possível conectar ao GitHub. Verifique a conexão e tente novamente.",
+  "Не удалось подключиться к GitHub. Проверьте подключение и повторите попытку.",
+  "Couldn't connect to GitHub. Check your connection and try again."
+ ],
+ "No se pudo deshacer:": [
+  "Não foi possível desfazer:",
+  "Не удалось отменить:",
+  "Couldn't undo:"
+ ],
+ "No se pudo instalar": [
+  "Não foi possível instalar",
+  "Не удалось установить",
+  "Couldn't install"
+ ],
+ "No se puede actualizar solo la DLL": [
+  "Não é possível atualizar só a DLL",
+  "Нельзя обновить только DLL",
+  "Can't update only the DLL"
+ ],
+ "No se reconoció la GPU: revisa la compatibilidad tú mismo.": [
+  "A GPU não foi reconhecida: verifique a compatibilidade você mesmo.",
+  "GPU не распознана: проверьте совместимость самостоятельно.",
+  "The GPU wasn't recognized: check compatibility yourself."
+ ],
+ "Nombre de carga de ILION": [
+  "Nome de carregamento do ILION",
+  "Имя загрузки ILION",
+  "ILION load name"
+ ],
+ "Notas": [
+  "Notas",
+  "Заметки",
+  "Notes"
+ ],
+ "Nueva": [
+  "Nova",
+  "Новая",
+  "New"
+ ],
+ "Ocultar": [
+  "Ocultar",
+  "Скрыть",
+  "Hide"
+ ],
+ "Ocultar detalles": [
+  "Ocultar detalhes",
+  "Скрыть подробности",
+  "Hide details"
+ ],
+ "OptiScaler ILION {0}": [
+  "OptiScaler ILION {0}",
+  "OptiScaler ILION {0}",
+  "OptiScaler ILION {0}"
+ ],
+ "OptiScaler ILION {0} como {1}": [
+  "OptiScaler ILION {0} como {1}",
+  "OptiScaler ILION {0} как {1}",
+  "OptiScaler ILION {0} as {1}"
+ ],
+ "OptiScaler ILION {0} y la base congelada ({1} archivos)": [
+  "OptiScaler ILION {0} e a base congelada ({1} arquivos)",
+  "OptiScaler ILION {0} и замороженная база ({1} файлов)",
+  "OptiScaler ILION {0} and the frozen base ({1} files)"
+ ],
+ "OptiScaler en el commit f6f75ddf (compilación oficial nightly-20261009) con FidelityFX SDK v2.4.0 y Streamline 2.14.1 de NVIDIA: la base exacta con la que funciona ILION {0}. Cada archivo se comprueba por SHA-256; si tu paquete local ya los tiene idénticos, no se descarga nada.": [
+  "OptiScaler no commit f6f75ddf (compilação oficial nightly-20261009) com FidelityFX SDK v2.4.0 e Streamline 2.14.1 da NVIDIA: a base exata com que o ILION {0} funciona. Cada arquivo é verificado por SHA-256; se o seu pacote local já os tiver idênticos, nada é baixado.",
+  "OptiScaler на коммите f6f75ddf (официальная сборка nightly-20261009) с FidelityFX SDK v2.4.0 и Streamline 2.14.1 от NVIDIA: точная база, с которой работает ILION {0}. Каждый файл проверяется по SHA-256; если в вашем локальном пакете они уже идентичны, ничего не скачивается.",
+  "OptiScaler at commit f6f75ddf (official nightly-20261009 build) with FidelityFX SDK v2.4.0 and NVIDIA Streamline 2.14.1: the exact base ILION {0} works with. Each file is checked by SHA-256; if your local package already has them identical, nothing is downloaded."
+ ],
+ "OptiScaler oficial": [
+  "OptiScaler oficial",
+  "Официальный OptiScaler",
+  "Official OptiScaler"
+ ],
+ "Otro ejecutable…": [
+  "Outro executável…",
+  "Другой исполняемый файл…",
+  "Other executable…"
+ ],
+ "Paquete local:": [
+  "Pacote local:",
+  "Локальный пакет:",
+  "Local package:"
+ ],
+ "Paquete…": [
+  "Pacote…",
+  "Пакет…",
+  "Package…"
+ ],
+ "Pensado para AMD RDNA 3 / RDNA 4: en tu GPU no está verificado.": [
+  "Pensado para AMD RDNA 3 / RDNA 4: na sua GPU não está verificado.",
+  "Предназначено для AMD RDNA 3 / RDNA 4: на вашей GPU не проверено.",
+  "Meant for AMD RDNA 3 / RDNA 4: not verified on your GPU."
+ ],
+ "Permitir mods que su autor no indica para mi arquitectura (bajo mi responsabilidad)": [
+  "Permitir mods que o autor não indica para a minha arquitetura (por minha conta e risco)",
+  "Разрешить моды, которые автор не указывает для моей архитектуры (под мою ответственность)",
+  "Allow mods their author doesn't list for my architecture (at my own risk)"
+ ],
+ "Plataforma {0}": [
+  "Plataforma {0}",
+  "Платформа {0}",
+  "Platform {0}"
+ ],
+ "Preparando": [
+  "Preparando",
+  "Подготовка",
+  "Preparing"
+ ],
+ "Preparando {0} {1}…": [
+  "Preparando {0} {1}…",
+  "Подготовка {0} {1}…",
+  "Preparing {0} {1}…"
+ ],
+ "Pulsa «Verificar» para comprobar ILION, su base y sus mods en este juego.": [
+  "Clique em «Verificar» para verificar o ILION, sua base e seus mods neste jogo.",
+  "Нажмите «Проверить», чтобы проверить ILION, его базу и моды в этой игре.",
+  "Press “Verify” to check ILION, its base and its mods in this game."
+ ],
+ "Quitar": [
+  "Remover",
+  "Убрать",
+  "Remove"
+ ],
+ "Quitar estos mods": [
+  "Remover estes mods",
+  "Убрать эти моды",
+  "Remove these mods"
+ ],
+ "Receta del catálogo no válida ({0}).": [
+  "Receita do catálogo inválida ({0}).",
+  "Недопустимый рецепт каталога ({0}).",
+  "Invalid catalog recipe ({0})."
+ ],
+ "Recomendaciones para {0} {1}": [
+  "Recomendações para {0} {1}",
+  "Рекомендации для {0} {1}",
+  "Recommendations for {0} {1}"
+ ],
+ "Recomendado": [
+  "Recomendado",
+  "Рекомендуется",
+  "Recommended"
+ ],
+ "Reintentar": [
+  "Tentar novamente",
+  "Повторить",
+  "Retry"
+ ],
+ "Reparación de la base ({0} {1})": [
+  "Reparo da base ({0} {1})",
+  "Восстановление базы ({0} {1})",
+  "Base repair ({0} {1})"
+ ],
+ "Reparar base": [
+  "Reparar base",
+  "Восстановить базу",
+  "Repair base"
+ ],
+ "Reparar base congelada ({0} archivos)": [
+  "Reparar a base congelada ({0} arquivos)",
+  "Восстановить замороженную базу ({0} файлов)",
+  "Repair frozen base ({0} files)"
+ ],
+ "Reponer lo que falta ({0})": [
+  "Repor o que falta ({0})",
+  "Восстановить недостающее ({0})",
+  "Restore what's missing ({0})"
+ ],
+ "Respuesta no válida de GitHub.": [
+  "Resposta inválida do GitHub.",
+  "Недопустимый ответ GitHub.",
+  "Invalid response from GitHub."
+ ],
+ "Reuniendo la base de OptiScaler": [
+  "Reunindo a base do OptiScaler",
+  "Сбор базы OptiScaler",
+  "Gathering the OptiScaler base"
+ ],
+ "Revisar": [
+  "Revisar",
+  "Проверить",
+  "Review"
+ ],
+ "Runtime de Neural Rendering": [
+  "Runtime de Neural Rendering",
+  "Среда Neural Rendering",
+  "Neural Rendering runtime"
+ ],
+ "Ruta no válida dentro del paquete.": [
+  "Caminho inválido dentro do pacote.",
+  "Недопустимый путь внутри пакета.",
+  "Invalid path inside the package."
+ ],
+ "Se copiará desde: {0}": [
+  "Será copiado de: {0}",
+  "Будет скопировано из: {0}",
+  "It will be copied from: {0}"
+ ],
+ "Se dejaron {0} archivos de la versión anterior que habías cambiado tú.": [
+  "Foram mantidos {0} arquivos da versão anterior que você tinha alterado.",
+  "Оставлено файлов прежней версии, которые вы изменили: {0}.",
+  "{0} files from the previous version that you had changed were kept."
+ ],
+ "Se descarga y comprueba cada paquete antes de tocar el juego. Lo que se sustituye o se retira queda guardado: «Deshacer cambios» devuelve la versión anterior.": [
+  "Cada pacote é baixado e verificado antes de mexer no jogo. O que é substituído ou removido fica guardado: «Desfazer alterações» devolve a versão anterior.",
+  "Каждый пакет загружается и проверяется до изменения игры. Заменённое или убранное сохраняется: «Отмена изменений» вернёт прежнюю версию.",
+  "Each package is downloaded and checked before touching the game. What's replaced or removed is kept: “Undo changes” brings back the previous version."
+ ],
+ "Se está preparando la instalación. Si cierras ahora se cancela sin escribir nada en el juego.": [
+  "A instalação está sendo preparada. Se fechar agora, ela é cancelada sem gravar nada no jogo.",
+  "Идёт подготовка установки. Если закрыть сейчас, она отменится без записи в игру.",
+  "The installation is being prepared. If you close now it's cancelled without writing anything to the game."
+ ],
+ "Se están copiando archivos al juego. Espera a que termine para no dejarlo a medias.": [
+  "Arquivos estão sendo copiados para o jogo. Aguarde terminar para não deixá-lo pela metade.",
+  "В игру копируются файлы. Дождитесь завершения, чтобы не оставить её в полуготовом состоянии.",
+  "Files are being copied to the game. Wait for it to finish so it isn't left half-done."
+ ],
+ "Se están copiando los archivos: no se puede cancelar a medias.": [
+  "Os arquivos estão sendo copiados: não é possível cancelar pela metade.",
+  "Файлы копируются: отменить на полпути нельзя.",
+  "The files are being copied: it can't be cancelled halfway."
+ ],
+ "Se quitan los archivos que pusieron estos mods y vuelve lo que había antes de instalarlos. ILION y los demás cambios se quedan. Si algún archivo lo cambiaste tú después, no se toca.": [
+  "São removidos os arquivos que estes mods colocaram e volta o que havia antes de instalá-los. O ILION e as demais alterações ficam. Se você alterou algum arquivo depois, ele não é tocado.",
+  "Убираются файлы, установленные этими модами, и возвращается то, что было до них. ILION и другие изменения остаются. Если вы потом изменили какой-то файл, он не трогается.",
+  "The files these mods placed are removed and what was there before comes back. ILION and the other changes stay. If you changed a file afterwards, it isn't touched."
+ ],
+ "Se retira solo lo que instaló Setup y no ha cambiado; tu OptiScaler.ini se conserva. Queda una copia por si quieres volver atrás.": [
+  "É removido só o que o Setup instalou e não mudou; seu OptiScaler.ini é mantido. Fica uma cópia caso queira voltar atrás.",
+  "Убирается только то, что установил Setup и что не изменилось; ваш OptiScaler.ini сохраняется. Остаётся копия на случай, если захотите вернуться.",
+  "Only what Setup installed and hasn't changed is removed; your OptiScaler.ini is kept. A copy remains in case you want to go back."
+ ],
+ "Seleccionar": [
+  "Selecionar",
+  "Выбрать",
+  "Select"
+ ],
+ "Setup no ha hecho cambios en este juego que se puedan deshacer.": [
+  "O Setup não fez alterações neste jogo que possam ser desfeitas.",
+  "Setup не вносил в эту игру изменений, которые можно отменить.",
+  "Setup hasn't made changes to this game that can be undone."
+ ],
+ "Si un mod no queda completo, se vuelve solo a la versión anterior. Cierra el juego antes de seguir.": [
+  "Se um mod não ficar completo, volta sozinho para a versão anterior. Feche o jogo antes de continuar.",
+  "Если мод окажется неполным, прежняя версия вернётся автоматически. Закройте игру перед продолжением.",
+  "If a mod isn't complete, the previous version comes back on its own. Close the game before continuing."
+ ],
+ "Sin generación": [
+  "Sem geração",
+  "Без генерации",
+  "No generation"
+ ],
+ "Sin verificar con ILION en juego.": [
+  "Não verificado com o ILION em jogo.",
+  "Не проверено с ILION в игре.",
+  "Not verified with ILION in-game."
+ ],
+ "Solo DirectX 12; el juego parece {0}.": [
+  "Só DirectX 12; o jogo parece {0}.",
+  "Только DirectX 12; игра, похоже, {0}.",
+  "DirectX 12 only; the game looks like {0}."
+ ],
+ "Solo se sustituye la DLL del motor; la base, los mods y la configuración se conservan. Se guarda una copia de la DLL actual (restaurable).": [
+  "Só a DLL do motor é substituída; a base, os mods e a configuração são mantidos. É guardada uma cópia da DLL atual (restaurável).",
+  "Заменяется только DLL движка; база, моды и настройки сохраняются. Копия текущей DLL сохраняется (можно восстановить).",
+  "Only the engine DLL is replaced; the base, mods and configuration are kept. A copy of the current DLL is saved (restorable)."
+ ],
+ "Streamline 2.14.1 de NVIDIA (entradas DLSS; 276 MB la primera vez)": [
+  "Streamline 2.14.1 da NVIDIA (entradas DLSS; 276 MB na primeira vez)",
+  "Streamline 2.14.1 от NVIDIA (входы DLSS; 276 МБ в первый раз)",
+  "NVIDIA Streamline 2.14.1 (DLSS inputs; 276 MB the first time)"
+ ],
+ "Su autor ya publicó {0}: aún sin aprobar para ILION (se instala la {1}).": [
+  "O autor já publicou {0}: ainda não aprovada para o ILION (é instalada a {1}).",
+  "Автор уже выпустил {0}: ещё не одобрено для ILION (устанавливается {1}).",
+  "Its author already released {0}: not yet approved for ILION ({1} is installed)."
+ ],
+ "Sustituir": [
+  "Substituir",
+  "Заменить",
+  "Replace"
+ ],
+ "Sustituir lo distinto": [
+  "Substituir o diferente",
+  "Заменить отличающееся",
+  "Replace what differs"
+ ],
+ "Sustituir lo distinto ({0})": [
+  "Substituir o diferente ({0})",
+  "Заменить отличающееся ({0})",
+  "Replace what differs ({0})"
+ ],
+ "Tienes la versión aprobada más reciente: ILION {0}.": [
+  "Você tem a versão aprovada mais recente: ILION {0}.",
+  "У вас последняя одобренная версия: ILION {0}.",
+  "You have the latest approved version: ILION {0}."
+ ],
+ "Todo correcto": [
+  "Tudo certo",
+  "Всё в порядке",
+  "All correct"
+ ],
+ "Todo se instaló y se puede restaurar desde «Verificar y reparar».": [
+  "Tudo foi instalado e pode ser restaurado em «Verificar e reparar».",
+  "Всё установлено и может быть восстановлено в «Проверка и восстановление».",
+  "Everything was installed and can be restored from “Verify and repair”."
+ ],
+ "Todos los archivos de la base son los congelados: no hay nada que sustituir.": [
+  "Todos os arquivos da base são os congelados: não há nada a substituir.",
+  "Все файлы базы совпадают с замороженными: заменять нечего.",
+  "All base files are the frozen ones: nothing to replace."
+ ],
+ "Todos los mods instalables del catálogo ya están en este juego.": [
+  "Todos os mods instaláveis do catálogo já estão neste jogo.",
+  "Все устанавливаемые моды каталога уже есть в этой игре.",
+  "All installable catalog mods are already in this game."
+ ],
+ "Todos los nombres de carga que admite ya están ocupados en la carpeta del juego.": [
+  "Todos os nomes de carregamento que ele aceita já estão ocupados na pasta do jogo.",
+  "Все допустимые имена загрузки уже заняты в папке игры.",
+  "All the load names it supports are already taken in the game folder."
+ ],
+ "Usa el mismo nombre de carga ({0}) que {1}.": [
+  "Usa o mesmo nome de carregamento ({0}) que {1}.",
+  "Использует то же имя загрузки ({0}), что и {1}.",
+  "It uses the same load name ({0}) as {1}."
+ ],
+ "Variantes": [
+  "Variantes",
+  "Варианты",
+  "Variants"
+ ],
+ "Variantes de ILION: FSR 4 (oficial, 4.1.1B, Exact, Lossy, Lossy2), XeMFG Clásica/WMMA, OptiPatcher y runtime NR de lmxxf (RDNA 3/4, 760 MB)": [
+  "Variantes do ILION: FSR 4 (oficial, 4.1.1B, Exact, Lossy, Lossy2), XeMFG Clássica/WMMA, OptiPatcher e runtime NR de lmxxf (RDNA 3/4, 760 MB)",
+  "Варианты ILION: FSR 4 (официальный, 4.1.1B, Exact, Lossy, Lossy2), XeMFG Классический/WMMA, OptiPatcher и среда NR от lmxxf (RDNA 3/4, 760 МБ)",
+  "ILION variants: FSR 4 (official, 4.1.1B, Exact, Lossy, Lossy2), XeMFG Classic/WMMA, OptiPatcher and the lmxxf NR runtime (RDNA 3/4, 760 MB)"
+ ],
+ "Varias opciones de {0}": [
+  "Várias opções de {0}",
+  "Несколько вариантов: {0}",
+  "Several {0} options"
+ ],
+ "Varios archivos de carga": [
+  "Vários arquivos de carregamento",
+  "Несколько файлов загрузки",
+  "Several load files"
+ ],
+ "Ver detalles": [
+  "Ver detalhes",
+  "Показать подробности",
+  "Show details"
+ ],
+ "Ver manifiesto": [
+  "Ver manifesto",
+  "Показать манифест",
+  "View manifest"
+ ],
+ "Verificando": [
+  "Verificando",
+  "Проверка",
+  "Verifying"
+ ],
+ "Verificar": [
+  "Verificar",
+  "Проверить",
+  "Verify"
+ ],
+ "Versión aprobada distinta: {0} → {1} (abajo, «Actualizaciones de mods»).": [
+  "Versão aprovada diferente: {0} → {1} (abaixo, «Atualizações de mods»).",
+  "Одобрена другая версия: {0} → {1} (ниже, «Обновления модов»).",
+  "A different version is approved: {0} → {1} (below, “Mod updates”)."
+ ],
+ "Versión aprobada no válida en el catálogo.": [
+  "Versão aprovada inválida no catálogo.",
+  "Недопустимая одобренная версия в каталоге.",
+  "Invalid approved version in the catalog."
+ ],
+ "Versión de ILION": [
+  "Versão do ILION",
+  "Версия ILION",
+  "ILION version"
+ ],
+ "Versión no identificada": [
+  "Versão não identificada",
+  "Версия не определена",
+  "Version not identified"
+ ],
+ "Vuelve lo que había justo antes de este cambio. Lo demás se queda como está.": [
+  "Volta o que havia logo antes desta alteração. O resto fica como está.",
+  "Вернётся то, что было непосредственно перед этим изменением. Остальное останется как есть.",
+  "What was there right before this change comes back. Everything else stays as it is."
+ ],
+ "Windows no permite escribir en la carpeta del juego (¿está abierto o es de solo lectura?).": [
+  "O Windows não permite gravar na pasta do jogo (está aberto ou é somente leitura?).",
+  "Windows не разрешает запись в папку игры (игра открыта или папка только для чтения?).",
+  "Windows doesn't allow writing to the game folder (is it open or read-only?)."
+ ],
+ "XeFG 1.3.4 de Intel": [
+  "XeFG 1.3.4 da Intel",
+  "XeFG 1.3.4 от Intel",
+  "Intel XeFG 1.3.4"
+ ],
+ "XeFG de Intel": [
+  "XeFG da Intel",
+  "XeFG от Intel",
+  "Intel XeFG"
+ ],
+ "XeLL de Intel": [
+  "XeLL da Intel",
+  "XeLL от Intel",
+  "Intel XeLL"
+ ],
+ "XeMFG XMX necesita la libxess_fg.dll 1.3.4 de Intel en su carpeta (con la 1.3.1 no funciona). Intel no la publica suelta: viene con juegos, por ejemplo Call of Duty.": [
+  "O XeMFG XMX precisa da libxess_fg.dll 1.3.4 da Intel na sua pasta (com a 1.3.1 não funciona). A Intel não a publica avulsa: vem com jogos, por exemplo Call of Duty.",
+  "XeMFG XMX нужна libxess_fg.dll 1.3.4 от Intel в его папке (с 1.3.1 не работает). Intel не публикует её отдельно: она поставляется с играми, например Call of Duty.",
+  "XeMFG XMX needs Intel's libxess_fg.dll 1.3.4 in its folder (it doesn't work with 1.3.1). Intel doesn't publish it on its own: it ships with games, for example Call of Duty."
+ ],
+ "Ya están instalados: {0}.": [
+  "Já estão instalados: {0}.",
+  "Уже установлены: {0}.",
+  "Already installed: {0}."
+ ],
+ "Ya existe {0} en la carpeta del juego.": [
+  "{0} já existe na pasta do jogo.",
+  "{0} уже есть в папке игры.",
+  "{0} already exists in the game folder."
+ ],
+ "Ya instalados (se dejan como están): {0}.": [
+  "Já instalados (ficam como estão): {0}.",
+  "Уже установлены (остаются как есть): {0}.",
+  "Already installed (left as they are): {0}."
+ ],
+ "instalación local": [
+  "instalação local",
+  "локальная установка",
+  "local installation"
+ ],
+ "la DLL aprobada para esta base (SHA-256 {0}…).": [
+  "a DLL aprovada para esta base (SHA-256 {0}…).",
+  "DLL, одобренная для этой базы (SHA-256 {0}…).",
+  "the DLL approved for this base (SHA-256 {0}…)."
+ ],
+ "no es la DLL aprobada para esta base ({0}): compatibilidad no verificada.": [
+  "não é a DLL aprovada para esta base ({0}): compatibilidade não verificada.",
+  "не одобренная для этой базы DLL ({0}): совместимость не проверена.",
+  "isn't the DLL approved for this base ({0}): compatibility not verified."
+ ],
+ "publicación oficial en GitHub (recomendado)": [
+  "publicação oficial no GitHub (recomendado)",
+  "официальный выпуск на GitHub (рекомендуется)",
+  "official release on GitHub (recommended)"
+ ],
+ "se descarga de github.com/ENE4S/Optiscaler-ILION y se comprueba por SHA-256 ({0}…).": [
+  "é baixado de github.com/ENE4S/Optiscaler-ILION e verificado por SHA-256 ({0}…).",
+  "скачивается с github.com/ENE4S/Optiscaler-ILION и проверяется по SHA-256 ({0}…).",
+  "is downloaded from github.com/ENE4S/Optiscaler-ILION and checked by SHA-256 ({0}…)."
+ ],
+ "sin conexión": [
+  "sem conexão",
+  "нет подключения",
+  "offline"
+ ],
+ "sin verificar": [
+  "não verificado",
+  "не проверено",
+  "unverified"
+ ],
+ "estable": [
+  "estável",
+  "стабильный",
+  "stable"
+ ],
+ "experimental": [
+  "experimental",
+  "экспериментальный",
+  "experimental"
+ ],
+ "su archivo principal": [
+  "seu arquivo principal",
+  "его основной файл",
+  "its main file"
+ ],
+ "ver progreso": [
+  "ver progresso",
+  "показать ход",
+  "see progress"
+ ],
+ "versión no identificada": [
+  "versão não identificada",
+  "версия не определена",
+  "unidentified version"
+ ],
+ "versión desconocida": [
+  "versão desconhecida",
+  "неизвестная версия",
+  "unknown version"
+ ],
+ "ya es la aprobada": [
+  "já é a aprovada",
+  "уже одобренная",
+  "already the approved one"
+ ],
+ "{0} archivos de la base no son los congelados (p. ej. {1}). Puede ser una actualización tuya; «Verificar y reparar» los compara.": [
+  "{0} arquivos da base não são os congelados (p. ex. {1}). Pode ser uma atualização sua; «Verificar e reparar» os compara.",
+  "Файлов базы, отличающихся от замороженных: {0} (напр. {1}). Возможно, это ваше обновление; «Проверка и восстановление» их сравнит.",
+  "{0} base files aren't the frozen ones (e.g. {1}). It may be an update of yours; “Verify and repair” compares them."
+ ],
+ "{0} archivos verificados": [
+  "{0} arquivos verificados",
+  "Проверено файлов: {0}",
+  "{0} files verified"
+ ],
+ "{0} aviso(s)": [
+  "{0} aviso(s)",
+  "Предупреждений: {0}",
+  "{0} warning(s)"
+ ],
+ "{0} con una versión aprobada distinta": [
+  "{0} com uma versão aprovada diferente",
+  "С другой одобренной версией: {0}",
+  "{0} with a different approved version"
+ ],
+ "{0} de {1} archivos idénticos a la base congelada.": [
+  "{0} de {1} arquivos idênticos à base congelada.",
+  "{0} из {1} файлов совпадают с замороженной базой.",
+  "{0} of {1} files identical to the frozen base."
+ ],
+ "{0} es la {1}; hace falta la {2} o superior ({3}).": [
+  "{0} é a {1}; é necessária a {2} ou superior ({3}).",
+  "{0} — версия {1}; нужна {2} или новее ({3}).",
+  "{0} is {1}; {2} or later is needed ({3})."
+ ],
+ "{0} está sin construir (falta el paso del setup de su autor). No se instala.": [
+  "{0} não está construído (falta o passo do setup do autor). Não é instalado.",
+  "{0} не собран (не выполнен шаг установщика автора). Не устанавливается.",
+  "{0} isn't built (its author's setup step is missing). Not installed."
+ ],
+ "{0} juegos con OptiScaler": [
+  "{0} jogos com OptiScaler",
+  "Игр с OptiScaler: {0}",
+  "{0} games with OptiScaler"
+ ],
+ "{0} juegos detectados": [
+  "{0} jogos detectados",
+  "Найдено игр: {0}",
+  "{0} games detected"
+ ],
+ "{0} no lleva la firma de {1}: no se da por buena.": [
+  "{0} não tem a assinatura de {1}: não é aceito.",
+  "{0} не подписан {1}: не принимается.",
+  "{0} isn't signed by {1}: not accepted."
+ ],
+ "{0} problema(s) por reparar": [
+  "{0} problema(s) a reparar",
+  "Проблем для исправления: {0}",
+  "{0} problem(s) to repair"
+ ],
+ "{0} se carga como {1}.": [
+  "{0} é carregado como {1}.",
+  "{0} загружается как {1}.",
+  "{0} is loaded as {1}."
+ ],
+ "{0} ya existe en la carpeta del juego: elige otro nombre.": [
+  "{0} já existe na pasta do jogo: escolha outro nome.",
+  "{0} уже есть в папке игры: выберите другое имя.",
+  "{0} already exists in the game folder: choose another name."
+ ],
+ "{0}. Conviven sin problema: ILION usa la que elijas en su menú.": [
+  "{0}. Convivem sem problema: o ILION usa a que você escolher no menu.",
+  "{0}. Они уживаются без проблем: ILION использует ту, что вы выберете в меню.",
+  "{0}. They coexist fine: ILION uses the one you choose in its menu."
+ ],
+ "{0}: la huella SHA-256 no coincide con la base congelada. Descarga descartada.": [
+  "{0}: o SHA-256 não confere com a base congelada. Download descartado.",
+  "{0}: SHA-256 не совпадает с замороженной базой. Загрузка отброшена.",
+  "{0}: the SHA-256 doesn't match the frozen base. Download discarded."
+ ],
+ "{0}: paquete local": [
+  "{0}: pacote local",
+  "{0}: локальный пакет",
+  "{0}: local package"
+ ],
+ "{0}: pueden estar instalados a la vez, pero ILION usa uno solo. Elígelo después en OptiScaler.": [
+  "{0}: podem estar instalados ao mesmo tempo, mas o ILION usa só um. Escolha-o depois no OptiScaler.",
+  "{0}: могут быть установлены одновременно, но ILION использует только один. Выберите его потом в OptiScaler.",
+  "{0}: they can be installed at the same time, but ILION uses only one. Choose it later in OptiScaler."
+ ],
+ "{0} {1} (retirada de la versión {2})": [
+  "{0} {1} (remoção da versão {2})",
+  "{0} {1} (удаление версии {2})",
+  "{0} {1} (removal of version {2})"
+ ],
+ "Órdenes de ILION Central": [
+  "Ordens do ILION Central",
+  "Команды ILION Central",
+  "ILION Central orders"
+ ],
+ "Implementación DLSS FG": [
+  "Implementação DLSS FG",
+  "Реализация DLSS FG",
+  "DLSS FG implementation"
+ ],
+ "Escaladores": [
+  "Escaladores",
+  "Масштабировщики",
+  "Upscalers"
+ ],
+ "Comprobado": [
+  "Verificado",
+  "Проверено",
+  "Checked"
+ ],
+ "Para": [
+  "Para",
+  "Для",
+  "For"
+ ],
+ "Junto al ejecutable real del juego (en Unreal, <Juego>\\Binaries\\Win64). Ningún archivo del juego se sobrescribe.": [
+  "Junto ao executável real do jogo (no Unreal, <Jogo>\\Binaries\\Win64). Nenhum arquivo do jogo é sobrescrito.",
+  "Рядом с настоящим исполняемым файлом игры (в Unreal — <Игра>\\Binaries\\Win64). Файлы игры не перезаписываются.",
+  "Next to the game's real executable (in Unreal, <Game>\\Binaries\\Win64). No game file is overwritten."
+ ],
+ "Paquete completo: del paquete se toman la DLL, su OptiScaler.ini, ILION\\ (escaladores, d4r), sus plugins (variantes XeMFG, OptiPatcher) y el runtime NR de lmxxf. Los mods se eligen abajo.": [
+  "Pacote completo: do pacote são usados a DLL, seu OptiScaler.ini, ILION\\ (escaladores, d4r), seus plugins (variantes XeMFG, OptiPatcher) e o runtime NR de lmxxf. Os mods são escolhidos abaixo.",
+  "Полный пакет: из пакета берутся DLL, его OptiScaler.ini, ILION\\ (масштабировщики, d4r), его плагины (варианты XeMFG, OptiPatcher) и среда NR от lmxxf. Моды выбираются ниже.",
+  "Full package: the DLL, its OptiScaler.ini, ILION\\ (upscalers, d4r), its plugins (XeMFG variants, OptiPatcher) and the lmxxf NR runtime are taken from the package. Mods are chosen below."
+ ],
+ "ejecutable {0}": [
+  "executável {0}",
+  "исполняемый файл {0}",
+  "executable {0}"
+ ],
+ "API {0}": [
+  "API {0}",
+  "API {0}",
+  "API {0}"
+ ],
+ "no determinada": [
+  "não determinada",
+  "не определена",
+  "not determined"
+ ],
+ "no identificado": [
+  "não identificado",
+  "не определён",
+  "not identified"
+ ],
+ "manifiesto {0}": [
+  "manifesto {0}",
+  "манифест {0}",
+  "manifest {0}"
+ ],
+ "catálogo {0}": [
+  "catálogo {0}",
+  "каталог {0}",
+  "catalog {0}"
+ ],
+ "Runtime NR de danielblnc": [
+  "Runtime NR de danielblnc",
+  "Среда NR от danielblnc",
+  "danielblnc NR runtime"
+ ],
+ "Runtime NR de lmxxf": [
+  "Runtime NR de lmxxf",
+  "Среда NR от lmxxf",
+  "lmxxf NR runtime"
+ ],
+ "Necesita": [
+  "Precisa",
+  "Требуется",
+  "Needs"
+ ],
+ "XeFG con el modelo XMX portado, hasta ×6, como reemplazo de DLSS FG.": [
+  "XeFG com o modelo XMX portado, até ×6, como substituto do DLSS FG.",
+  "XeFG с портированной моделью XMX, до ×6, как замена DLSS FG.",
+  "XeFG with the ported XMX model, up to ×6, as a DLSS FG replacement."
+ ],
+ "libxess_fg 1.3.4 de Intel en su carpeta (Setup la busca firmada en tus juegos; si no, avisa).": [
+  "libxess_fg 1.3.4 da Intel na sua pasta (o Setup a procura assinada nos seus jogos; se não achar, avisa).",
+  "libxess_fg 1.3.4 от Intel в его папке (Setup ищет подписанную копию в ваших играх; если не найдёт — предупредит).",
+  "Intel's libxess_fg 1.3.4 in its folder (Setup looks for a signed copy in your games; if there isn't one, it warns you)."
+ ],
+ "Una sola implementación de DLSS FG activa; con XMX no se cargan las variantes XeMFG.": [
+  "Só uma implementação de DLSS FG ativa; com XMX as variantes XeMFG não são carregadas.",
+  "Активна только одна реализация DLSS FG; с XMX варианты XeMFG не загружаются.",
+  "Only one DLSS FG implementation active; with XMX the XeMFG variants aren't loaded."
+ ],
+ "El original de DLSS FG → Intel XeFG, hasta ×6. Necesita ILION 1.4.1.2.": [
+  "O original de DLSS FG → Intel XeFG, até ×6. Precisa do ILION 1.4.1.2.",
+  "Оригинальный DLSS FG → Intel XeFG, до ×6. Нужен ILION 1.4.1.2.",
+  "The original DLSS FG → Intel XeFG, up to ×6. Needs ILION 1.4.1.2."
+ ],
+ "libxess_fg 1.3.1 o 1.3.4 (la 1.3.1 ya va en la base).": [
+  "libxess_fg 1.3.1 ou 1.3.4 (a 1.3.1 já vem na base).",
+  "libxess_fg 1.3.1 или 1.3.4 (1.3.1 уже есть в базе).",
+  "libxess_fg 1.3.1 or 1.3.4 (1.3.1 already comes with the base)."
+ ],
+ "Una sola implementación de DLSS FG activa.": [
+  "Só uma implementação de DLSS FG ativa.",
+  "Активна только одна реализация DLSS FG.",
+  "Only one DLSS FG implementation active."
+ ],
+ "La DLL de DLSS Enabler que usa ILION: FG y MFG (×3 probado) en GPU sin DLSS FG nativo.": [
+  "A DLL do DLSS Enabler que o ILION usa: FG e MFG (×3 testado) em GPUs sem DLSS FG nativo.",
+  "DLL DLSS Enabler, которую использует ILION: FG и MFG (проверено ×3) на GPU без родного DLSS FG.",
+  "The DLSS Enabler DLL ILION uses: FG and MFG (×3 tested) on GPUs without native DLSS FG."
+ ],
+ "FidelityFX de la base.": [
+  "FidelityFX da base.",
+  "FidelityFX из базы.",
+  "FidelityFX from the base."
+ ],
+ "Variante XeMFG para la salida XeFG de ILION, hasta ×6. Se elige en Plugins › XeMfgVariant.": [
+  "Variante XeMFG para a saída XeFG do ILION, até ×6. É escolhida em Plugins › XeMfgVariant.",
+  "Вариант XeMFG для вывода XeFG в ILION, до ×6. Выбирается в Plugins › XeMfgVariant.",
+  "XeMFG variant for ILION's XeFG output, up to ×6. Chosen in Plugins › XeMfgVariant."
+ ],
+ "libxess_fg y libxell de Intel en OptiScaler (van en la base).": [
+  "libxess_fg e libxell da Intel no OptiScaler (vêm na base).",
+  "libxess_fg и libxell от Intel в OptiScaler (есть в базе).",
+  "Intel's libxess_fg and libxell in OptiScaler (they come with the base)."
+ ],
+ "Variante nueva, aparte de la 1.7.0. Su autor la pide con su propio OptiScaler: sin probar con ILION.": [
+  "Variante nova, separada da 1.7.0. O autor a pede com o próprio OptiScaler: não testada com o ILION.",
+  "Новый вариант, отдельно от 1.7.0. Автор рассчитывает на свой OptiScaler: с ILION не проверен.",
+  "New variant, separate from 1.7.0. Its author expects their own OptiScaler: not tested with ILION."
+ ],
+ "Las de MFG-Unlocker.": [
+  "As do MFG-Unlocker.",
+  "Те же, что у MFG-Unlocker.",
+  "The same as MFG-Unlocker."
+ ],
+ "Generación de fotogramas neuronal (beta), hasta ×6, como reemplazo de DLSS FG. No es el Neural Rendering de escalado.": [
+  "Geração de quadros neural (beta), até ×6, como substituto do DLSS FG. Não é o Neural Rendering de escalonamento.",
+  "Нейросетевая генерация кадров (бета), до ×6, как замена DLSS FG. Это не Neural Rendering для масштабирования.",
+  "Neural frame generation (beta), up to ×6, as a DLSS FG replacement. It isn't the upscaling Neural Rendering."
+ ],
+ "Ninguna externa. ILION 1.4.1.1 o posterior.": [
+  "Nenhuma externa. ILION 1.4.1.1 ou posterior.",
+  "Внешних нет. ILION 1.4.1.1 или новее.",
+  "No external ones. ILION 1.4.1.1 or later."
+ ],
+ "Escalado con la red de DLSS como shaders normales, para GPU sin FSR 4. Se construye en tu PC con el setup de su autor.": [
+  "Escalonamento com a rede do DLSS como shaders normais, para GPUs sem FSR 4. É construído no seu PC com o setup do autor.",
+  "Масштабирование сетью DLSS в виде обычных шейдеров для GPU без FSR 4. Собирается на вашем ПК установщиком автора.",
+  "Upscaling with the DLSS network as regular shaders, for GPUs without FSR 4. It's built on your PC with its author's setup."
+ ],
+ "DLL de DLSS 310.7.0 de NVIDIA (la descarga el setup de HelixSR) y unos minutos de compilación la primera vez.": [
+  "DLL do DLSS 310.7.0 da NVIDIA (baixada pelo setup do HelixSR) e alguns minutos de compilação na primeira vez.",
+  "DLL DLSS 310.7.0 от NVIDIA (её скачивает установщик HelixSR) и несколько минут сборки в первый раз.",
+  "NVIDIA's DLSS 310.7.0 DLL (HelixSR's setup downloads it) and a few minutes of building the first time."
+ ],
+ "Ninguno.": [
+  "Nenhum.",
+  "Нет.",
+  "None."
+ ],
+ "Ninguna.": [
+  "Nenhuma.",
+  "Нет.",
+  "None."
+ ],
+ "FSR 4 Lite sobre el motor de HelixSR, para GPU sin FSR 4. Descarga grande (266 MB); solo se instala una DLL.": [
+  "FSR 4 Lite sobre o motor do HelixSR, para GPUs sem FSR 4. Download grande (266 MB); só uma DLL é instalada.",
+  "FSR 4 Lite на движке HelixSR для GPU без FSR 4. Большая загрузка (266 МБ); устанавливается только одна DLL.",
+  "FSR 4 Lite on HelixSR's engine, for GPUs without FSR 4. Large download (266 MB); only one DLL is installed."
+ ],
+ "Frame Generation de NVIDIA reconstruida con shaders normales. Solo AMD. Se construye en tu PC (varios minutos).": [
+  "Frame Generation da NVIDIA reconstruída com shaders normais. Só AMD. É construído no seu PC (vários minutos).",
+  "Frame Generation от NVIDIA, воссозданный на обычных шейдерах. Только AMD. Собирается на вашем ПК (несколько минут).",
+  "NVIDIA Frame Generation rebuilt with regular shaders. AMD only. It's built on your PC (several minutes)."
+ ],
+ "DLL de NVIDIA que descarga el setup de HelixSR.": [
+  "DLLs da NVIDIA que o setup do HelixSR baixa.",
+  "DLL NVIDIA, которые скачивает установщик HelixSR.",
+  "NVIDIA DLLs that HelixSR's setup downloads."
+ ],
+ "Runtime 0.6.0 de Neural Rendering para el puente AMD de ILION (idéntico al del paquete de ILION). 176 MB. IMPORTANTE: necesita el archivo oficial de DLSS Neural Rendering de NVIDIA, que debes tener descargado previamente (Setup no lo descarga).": [
+  "Runtime 0.6.0 de Neural Rendering para a ponte AMD do ILION (idêntico ao do pacote do ILION). 176 MB. IMPORTANTE: precisa do arquivo oficial do DLSS Neural Rendering da NVIDIA, que você deve ter baixado antes (o Setup não o baixa).",
+  "Среда Neural Rendering 0.6.0 для моста AMD в ILION (такая же, как в пакете ILION). 176 МБ. ВАЖНО: нужен официальный файл DLSS Neural Rendering от NVIDIA, скачанный заранее (Setup его не скачивает).",
+  "Neural Rendering runtime 0.6.0 for ILION's AMD bridge (identical to the one in the ILION package). 176 MB. IMPORTANT: it needs NVIDIA's official DLSS Neural Rendering file, which you must have downloaded beforehand (Setup doesn't download it)."
+ ],
+ "nvngx_dlssnr.dll solo si el registro de ILION la pide (aviso).": [
+  "nvngx_dlssnr.dll só se o registro do ILION a pedir (aviso).",
+  "nvngx_dlssnr.dll — только если её запросит журнал ILION (предупреждение).",
+  "nvngx_dlssnr.dll only if ILION's log asks for it (warning)."
+ ],
+ "Ninguno: convive con el runtime de lmxxf.": [
+  "Nenhum: convive com o runtime de lmxxf.",
+  "Нет: уживается со средой lmxxf.",
+  "None: it coexists with the lmxxf runtime."
+ ],
+ "DLSS Frame Generation de NVIDIA hasta ×6 en RTX 20 y 30. Se carga con su propio proxy.": [
+  "DLSS Frame Generation da NVIDIA até ×6 em RTX 20 e 30. É carregado com seu próprio proxy.",
+  "DLSS Frame Generation от NVIDIA до ×6 на RTX 20 и 30. Загружается через собственный прокси.",
+  "NVIDIA DLSS Frame Generation up to ×6 on RTX 20 and 30. It loads with its own proxy."
+ ],
+ "Driver NVIDIA R580 o superior.": [
+  "Driver NVIDIA R580 ou superior.",
+  "Драйвер NVIDIA R580 или новее.",
+  "NVIDIA driver R580 or later."
+ ],
+ "ILION usa su propia compilación del runtime NR (LmxxfNrRuntime, de lmxxf, MIT). Se descarga con ILION en RDNA 3/4 (760 MB) desde la publicación ilion-componentes-1. Necesita el archivo oficial de DLSS NR de NVIDIA, que debes tener descargado previamente.": [
+  "O ILION usa sua própria compilação do runtime NR (LmxxfNrRuntime, de lmxxf, MIT). É baixado com o ILION em RDNA 3/4 (760 MB) da publicação ilion-componentes-1. Precisa do arquivo oficial do DLSS NR da NVIDIA, que você deve ter baixado antes.",
+  "ILION использует собственную сборку среды NR (LmxxfNrRuntime от lmxxf, MIT). Скачивается вместе с ILION на RDNA 3/4 (760 МБ) из выпуска ilion-componentes-1. Нужен официальный файл DLSS NR от NVIDIA, скачанный заранее.",
+  "ILION uses its own build of the NR runtime (LmxxfNrRuntime, by lmxxf, MIT). It's downloaded with ILION on RDNA 3/4 (760 MB) from the ilion-componentes-1 release. It needs NVIDIA's official DLSS NR file, which you must have downloaded beforehand."
+ ],
+ "Dentro de la DLL de ILION; solo necesita uno de los runtimes NR.": [
+  "Dentro da DLL do ILION; só precisa de um dos runtimes NR.",
+  "Внутри DLL ILION; нужна только одна из сред NR.",
+  "Inside the ILION DLL; it only needs one of the NR runtimes."
+ ],
+ "DLSS 4 Modelo K en AMD RDNA 3 / RDNA 4. Lleva DLL propietarias de NVIDIA: única instalación local (Opciones avanzadas o «Verificar y reparar»), desde tu propia copia de la carpeta Modelo_K.": [
+  "DLSS 4 Modelo K em AMD RDNA 3 / RDNA 4. Contém DLLs proprietárias da NVIDIA: única instalação local (Opções avançadas ou «Verificar e reparar»), a partir da sua própria cópia da pasta Modelo_K.",
+  "DLSS 4 Модель K на AMD RDNA 3 / RDNA 4. Содержит проприетарные DLL NVIDIA: только локальная установка (Расширенные параметры или «Проверка и восстановление») из вашей копии папки Modelo_K.",
+  "DLSS 4 Model K on AMD RDNA 3 / RDNA 4. It contains proprietary NVIDIA DLLs: local installation only (Advanced options or “Verify and repair”), from your own copy of the Modelo_K folder."
+ ],
+ "Integrado en la DLL de ILION: no necesita archivo aparte.": [
+  "Integrado na DLL do ILION: não precisa de arquivo separado.",
+  "Встроен в DLL ILION: отдельный файл не нужен.",
+  "Built into the ILION DLL: no separate file needed."
+ ],
+ "Integrado en ILION (XeMFG en juegos Vulkan).": [
+  "Integrado no ILION (XeMFG em jogos Vulkan).",
+  "Встроен в ILION (XeMFG в играх на Vulkan).",
+  "Built into ILION (XeMFG in Vulkan games)."
+ ],
+ "La necesita XeMFG XMX. Intel no la publica suelta: Setup la busca firmada en tus juegos o en el paquete local.": [
+  "O XeMFG XMX precisa dela. A Intel não a publica avulsa: o Setup a procura assinada nos seus jogos ou no pacote local.",
+  "Нужна XeMFG XMX. Intel не публикует её отдельно: Setup ищет подписанную копию в ваших играх или в локальном пакете.",
+  "XeMFG XMX needs it. Intel doesn't publish it on its own: Setup looks for a signed copy in your games or the local package."
+ ],
+ "Solo si el registro de ILION la pide. NVIDIA no la publica suelta; Setup no la descarga.": [
+  "Só se o registro do ILION a pedir. A NVIDIA não a publica avulsa; o Setup não a baixa.",
+  "Только если её запросит журнал ILION. NVIDIA не публикует её отдельно; Setup её не скачивает.",
+  "Only if ILION's log asks for it. NVIDIA doesn't publish it on its own; Setup doesn't download it."
+ ],
+ "Variantes XeMFG Clásica y WMMA (y OptiPatcher oficial v0.42): se instalan con ILION; se eligen en Plugins › XeMfgVariant.": [
+  "Variantes XeMFG Clássica e WMMA (e o OptiPatcher oficial v0.42): são instaladas com o ILION; são escolhidas em Plugins › XeMfgVariant.",
+  "Варианты XeMFG Классический и WMMA (и официальный OptiPatcher v0.42): устанавливаются с ILION; выбираются в Plugins › XeMfgVariant.",
+  "XeMFG Classic and WMMA variants (and official OptiPatcher v0.42): installed with ILION; chosen in Plugins › XeMfgVariant."
+ ],
+ "Se instalan con ILION: FSR 4.1.1 oficial (FidelityFX SDK 2.3.0), Exact, Lossy y Lossy2 (zgauthier2000) y 4.1.1B (comunidad de OptiScaler). Se eligen en el menú de ILION (Escalado › Variante).": [
+  "São instaladas com o ILION: FSR 4.1.1 oficial (FidelityFX SDK 2.3.0), Exact, Lossy e Lossy2 (zgauthier2000) e 4.1.1B (comunidade do OptiScaler). São escolhidas no menu do ILION (Escalonamento › Variante).",
+  "Устанавливаются с ILION: официальный FSR 4.1.1 (FidelityFX SDK 2.3.0), Exact, Lossy и Lossy2 (zgauthier2000) и 4.1.1B (сообщество OptiScaler). Выбираются в меню ILION (Масштабирование › Вариант).",
+  "Installed with ILION: official FSR 4.1.1 (FidelityFX SDK 2.3.0), Exact, Lossy and Lossy2 (zgauthier2000) and 4.1.1B (OptiScaler community). Chosen in ILION's menu (Upscaling › Variant)."
+ ],
+ "MFG, XeFG y Neural Rendering en RTX 20/30/40. Instalación compleja: sin receta.": [
+  "MFG, XeFG e Neural Rendering em RTX 20/30/40. Instalação complexa: sem receita.",
+  "MFG, XeFG и Neural Rendering на RTX 20/30/40. Сложная установка: рецепта нет.",
+  "MFG, XeFG and Neural Rendering on RTX 20/30/40. Complex installation: no recipe."
+ ],
+ "Addon de ReShade para DLSS MFG en RTX. Incompatible con MFG-Unlocker.": [
+  "Addon do ReShade para DLSS MFG em RTX. Incompatível com o MFG-Unlocker.",
+  "Дополнение ReShade для DLSS MFG на RTX. Несовместимо с MFG-Unlocker.",
+  "ReShade add-on for DLSS MFG on RTX. Incompatible with MFG-Unlocker."
+ ],
+ "FSR 4 en GPU que no son AMD.": [
+  "FSR 4 em GPUs que não são AMD.",
+  "FSR 4 на GPU не от AMD.",
+  "FSR 4 on non-AMD GPUs."
+ ],
+ "Va en la base congelada (OptiScaler\\dlssg_to_fsr3_amd_is_better.dll).": [
+  "Vem na base congelada (OptiScaler\\dlssg_to_fsr3_amd_is_better.dll).",
+  "Входит в замороженную базу (OptiScaler\\dlssg_to_fsr3_amd_is_better.dll).",
+  "It comes with the frozen base (OptiScaler\\dlssg_to_fsr3_amd_is_better.dll)."
+ ],
+ "paquete local": [
+  "pacote local",
+  "локальный пакет",
+  "local package"
+ ],
+ "manual": [
+  "manual",
+  "вручную",
+  "manual"
+ ],
+ "aviso": [
+  "aviso",
+  "предупреждение",
+  "warning"
+ ],
+ "▸  Más información: integrados, instalación local, dependencias y referencias": [
+  "▸  Mais informações: integrados, instalação local, dependências e referências",
+  "▸  Подробнее: встроенные, локальная установка, зависимости и ссылки",
+  "▸  More information: built-in, local installation, dependencies and references"
+ ],
+ "▾  Más información: integrados, instalación local, dependencias y referencias": [
+  "▾  Mais informações: integrados, instalação local, dependências e referências",
+  "▾  Подробнее: встроенные, локальная установка, зависимости и ссылки",
+  "▾  More information: built-in, local installation, dependencies and references"
+ ],
+ "D3D12Core (Agility SDK) para [FSR] FsrAgilitySDKUpgrade": [
+  "D3D12Core (Agility SDK) para [FSR] FsrAgilitySDKUpgrade",
+  "D3D12Core (Agility SDK) для [FSR] FsrAgilitySDKUpgrade",
+  "D3D12Core (Agility SDK) for [FSR] FsrAgilitySDKUpgrade"
+ ],
+ "XeFG de Intel para XeMFG XMX": [
+  "XeFG da Intel para XeMFG XMX",
+  "XeFG от Intel для XeMFG XMX",
+  "Intel XeFG for XeMFG XMX"
+ ],
+ "XeMFG XMX usa su propia libxess_fg.dll de Intel en su carpeta (1.3.1 o 1.3.4). ILION SETUP coloca una copia firmada: la 1.3.4 si está en tus juegos o, si no, la 1.3.1 oficial de Intel.": [
+  "O XeMFG XMX usa sua própria libxess_fg.dll da Intel na sua pasta (1.3.1 ou 1.3.4). O ILION SETUP coloca uma cópia assinada: a 1.3.4 se estiver nos seus jogos ou, se não, a 1.3.1 oficial da Intel.",
+  "XeMFG XMX использует собственную libxess_fg.dll от Intel в своей папке (1.3.1 или 1.3.4). ILION SETUP кладёт подписанную копию: 1.3.4, если она есть в ваших играх, иначе официальную 1.3.1 от Intel.",
+  "XeMFG XMX uses its own Intel libxess_fg.dll in its folder (1.3.1 or 1.3.4). ILION SETUP places a signed copy: 1.3.4 if one of your games has it, otherwise Intel's official 1.3.1."
+ ],
+ "En ILION: Frame Generation › Implementación DLSS FG = XeMFG XMX (ruta NVNGX). Usa su propia libxess_fg de Intel (1.3.1 o 1.3.4) en su carpeta; ILION SETUP la coloca.": [
+  "No ILION: Frame Generation › Implementação DLSS FG = XeMFG XMX (rota NVNGX). Usa sua própria libxess_fg da Intel (1.3.1 ou 1.3.4) na sua pasta; o ILION SETUP a coloca.",
+  "В ILION: Frame Generation › Реализация DLSS FG = XeMFG XMX (путь NVNGX). Использует собственную libxess_fg от Intel (1.3.1 или 1.3.4) в своей папке; ILION SETUP её кладёт.",
+  "In ILION: Frame Generation › DLSS FG implementation = XeMFG XMX (NVNGX route). It uses its own Intel libxess_fg (1.3.1 or 1.3.4) in its folder; ILION SETUP places it."
+ ],
+ "Su propia libxess_fg de Intel (1.3.1 o 1.3.4) en su carpeta; Setup la coloca.": [
+  "Sua própria libxess_fg da Intel (1.3.1 ou 1.3.4) na sua pasta; o Setup a coloca.",
+  "Собственная libxess_fg от Intel (1.3.1 или 1.3.4) в своей папке; Setup её кладёт.",
+  "Its own Intel libxess_fg (1.3.1 or 1.3.4) in its folder; Setup places it."
+ ],
+ "libxess_fg de Intel para XeMFG XMX": [
+  "libxess_fg da Intel para XeMFG XMX",
+  "libxess_fg от Intel для XeMFG XMX",
+  "Intel libxess_fg for XeMFG XMX"
+ ],
+ "Copia propia de XeMFG XMX (1.3.1 o 1.3.4). Setup usa una 1.3.4 firmada de tus juegos o, si no, la 1.3.1 oficial de Intel.": [
+  "Cópia própria do XeMFG XMX (1.3.1 ou 1.3.4). O Setup usa uma 1.3.4 assinada dos seus jogos ou, se não, a 1.3.1 oficial da Intel.",
+  "Собственная копия XeMFG XMX (1.3.1 или 1.3.4). Setup берёт подписанную 1.3.4 из ваших игр или, если её нет, официальную 1.3.1 от Intel.",
+  "XeMFG XMX's own copy (1.3.1 or 1.3.4). Setup uses a signed 1.3.4 from your games or, otherwise, Intel's official 1.3.1."
+ ],
+ "github.com/intel/xess (1.3.1) o juegos que traen la 1.3.4": [
+  "github.com/intel/xess (1.3.1) ou jogos que trazem a 1.3.4",
+  "github.com/intel/xess (1.3.1) или игры с 1.3.4",
+  "github.com/intel/xess (1.3.1) or games that ship 1.3.4"
+ ],
+ "Sustituye DLSS FG por XeFG con el modelo XMX portado, hasta ×6, en cualquier GPU. Solo DX12; usa su propia libxess_fg de Intel (1.3.1 o 1.3.4), que Setup coloca.": [
+  "Substitui o DLSS FG pelo XeFG com o modelo XMX portado, até ×6, em qualquer GPU. Só DX12; usa sua própria libxess_fg da Intel (1.3.1 ou 1.3.4), que o Setup coloca.",
+  "Заменяет DLSS FG на XeFG с портированной моделью XMX, до ×6, на любой GPU. Только DX12; использует собственную libxess_fg от Intel (1.3.1 или 1.3.4), которую кладёт Setup.",
+  "Replaces DLSS FG with XeFG using the ported XMX model, up to ×6, on any GPU. DX12 only; it uses its own Intel libxess_fg (1.3.1 or 1.3.4), which Setup places."
+ ],
+ "{0} es la {1}; hace falta una anterior a la {2} ({3}).": [
+  "{0} é a {1}; é preciso uma anterior à {2} ({3}).",
+  "{0} — версия {1}; нужна версия ниже {2} ({3}).",
+  "{0} is {1}; it needs a version below {2} ({3})."
+ ],
+ "{0} {1} · copia firmada por {2} de {3} del propio juego": [
+  "{0} {1} · cópia assinada pela {2} de {3} do próprio jogo",
+  "{0} {1} · подписанная {2} копия из {3} самой игры",
+  "{0} {1} · copy signed by {2} from the game's own {3}"
+ ]
+}

@@ -51,7 +51,7 @@ public static class ExecutableDiscovery
         if (machine == Machine.Unknown && game.Executable is null)
             return new ExecutableEvidence(null, "Desconocida", "Sin ejecutable verificable", []);
 
-        var apis = ApiDetection.Inspect(path);
+        var apis = ApiDetection.InspectGame(path);
         if (knownCyberpunk && game.Executable is null && machine == Machine.Amd64 && !apis.Any(api => api.Name == "DirectX 12"))
             apis = [.. apis, new ApiEvidence("DirectX 12", EvidenceLevel.Probable, "Requisito oficial de CD PROJEKT RED; API activa no observada")];
         return new ExecutableEvidence(path, machine switch

@@ -36,6 +36,8 @@ public sealed record InstallableMod(string Repository, string Name, string Asset
     public string? Tag { get; init; }
     /// <summary>Repositorio de la tarjeta del catálogo cuando los archivos salen de otro (p. ej. el Enabler de Artur sale del paquete de ILION).</summary>
     public string? Catalog { get; init; }
+    /// <summary>Receta descrita por datos en el catálogo firmado (no integrada en Setup): no puede escribir encima de ILION ni de su base.</summary>
+    public bool FromCatalogData { get; init; }
     /// <summary>Arquitecturas para las que sirve esta receta (ids de ILION, «rtx», marca o vacío = todas).</summary>
     public string[] Archs { get; init; } = [];
     /// <summary>Nombre corto para el botón cuando una tarjeta tiene varias recetas.</summary>
@@ -99,16 +101,21 @@ public sealed record ModPlanItem(string Relative, string Source);
 public sealed class ModInstaller(HttpClient http, string dataDirectory, OperationEngine operations)
 {
     // ---- Archivos oficiales que necesitan los mods (regla de las recetas) ----
-    /// <summary>XeFG 1.3.4 de Intel para XeMFG XMX (con la 1.3.1 no funciona; ILION lo avisa en GPU AMD). Intel no la publica suelta en su
-    /// GitHub (intel/xess llega a la 1.3.1.78): se distribuye con juegos (Call of Duty trae la 1.3.4.95, MD5 C4500E1A…, la misma del paquete
-    /// del usuario). CENTRAL busca una copia firmada por Intel en los juegos del PC; si no hay, avisa.</summary>
-    public static readonly ModDependency XeFg134 = new(@"OptiScaler\custom\XeMFG XMX\dlssg\libxess_fg.dll", "XeFG 1.3.4 de Intel", "Intel",
-        "XeMFG XMX necesita la libxess_fg.dll 1.3.4 de Intel en su carpeta (con la 1.3.1 no funciona). Intel no la publica suelta: viene con juegos, por ejemplo Call of Duty. " +
-        "Cópiala desde un juego que la traiga a OptiScaler\\custom\\XeMFG XMX\\dlssg (OptiScaler › Cargar DLL).")
+    /// <summary>XeFG de Intel para XeMFG XMX, en su propia carpeta. Prueba de laboratorio 2026-11-18 (RX 7900 XTX, XMX build-10, sin juego):
+    /// su contexto XeFG arranca con la 1.3.1.78 oficial (compartida o propia) y con la 1.3.4.95. El fallo antiguo en AMD («Failed to create
+    /// heap») venía de ILION 1.4.0, que cargaba a la vez una variante XeMFG que parcheaba la misma 1.3.1 compartida; ILION 1.4.1 ya no lo hace
+    /// y, si la carpeta de XMX trae libxess_fg, la usa para XMX. Con copia propia nadie más la toca. Orden: una 1.3.4 firmada en los juegos del
+    /// PC (la probada en juego), la 1.3.1 de OptiScaler del propio juego, o la 1.3.1 del SDK oficial de Intel (v3.0.2, fijada). Nunca 1.4 o más.</summary>
+    public static readonly ModDependency XmxXeFg = new(@"OptiScaler\custom\XeMFG XMX\dlssg\libxess_fg.dll", "XeFG de Intel para XeMFG XMX", "Intel",
+        "XeMFG XMX usa su propia libxess_fg.dll de Intel en su carpeta (1.3.1 o 1.3.4). ILION SETUP coloca una copia firmada: la 1.3.4 si está en tus juegos o, si no, la 1.3.1 oficial de Intel.")
     {
-        MinVersion = "1.3.4", Signer = "Intel Corporation", SearchGames = true,
-        Link = "https://github.com/realdody/dlssg-to-xefg-xmx",
+        MinVersion = "1.3.1", BelowVersion = "1.4", Signer = "Intel Corporation", SearchGames = true, PreferGames = true,
+        CopyFrom = [@"OptiScaler\libxess_fg.dll"], Official = ComponentRecipe.For("libxess_fg.dll"), OfficialTag = "v3.0.2",
+        Link = "https://github.com/intel/xess/releases",
     };
+
+    /// <summary>Nombre anterior (las recetas por datos lo piden como «xefg-1.3.4-xmx»).</summary>
+    public static ModDependency XeFg134 => XmxXeFg;
 
     /// <summary>Runtime oficial de Intel en la carpeta de OptiScaler (lo usan los plugins XeMFG). Sale del SDK de XeSS de Intel en GitHub.</summary>
     public static ModDependency IntelRuntime(string file, string what, string? min) => new($@"OptiScaler\{file}", what, "Intel",
@@ -134,8 +141,8 @@ public sealed class ModInstaller(HttpClient http, string dataDirectory, Operatio
         {
             Required = [@"OptiScaler\custom\XeMFG XMX\dlssg\dlssg_to_xefg_intel_is_better.dll"],
             Marker = @"OptiScaler\custom\XeMFG XMX\dlssg\dlssg_to_xefg_intel_is_better.dll",
-            Note = "En ILION: Frame Generation › Implementación DLSS FG = XeMFG XMX (ruta NVNGX). Necesita libxess_fg 1.3.4 de Intel en su carpeta.",
-            Dependencies = [XeFg134], Slot = "Implementación DLSS FG",
+            Note = "En ILION: Frame Generation › Implementación DLSS FG = XeMFG XMX (ruta NVNGX). Usa su propia libxess_fg de Intel (1.3.1 o 1.3.4) en su carpeta; ILION SETUP la coloca.",
+            Dependencies = [XmxXeFg], Slot = "Implementación DLSS FG",
         },
         // DLSSG-XeFG de FakeMichau: ILION 1.4.1.2 lo carga de OptiScaler\custom\DLSSG-XeFG\dlssg (Nvngx_FakeMichau.cpp, ProviderPath).
         // El ZIP oficial trae la DLL en la raíz. Usa la libxess_fg de su carpeta o la de OptiScaler (README: XeFG 1.3.1 o 1.3.4)
@@ -327,7 +334,7 @@ public sealed class ModInstaller(HttpClient http, string dataDirectory, Operatio
         {
         var api = mod.Tag is null ? $"https://api.github.com/repos/{mod.Repository}/releases/latest" : $"https://api.github.com/repos/{mod.Repository}/releases/tags/{mod.Tag}";
         using var request = new HttpRequestMessage(HttpMethod.Get, api);
-        request.Headers.UserAgent.ParseAdd("ILION-Setup/0.2");
+        request.Headers.UserAgent.ParseAdd("ILION-Setup/" + Ilion.Setup.SetupEngine.SetupVersion);
         using var response = await http.SendAsync(request, token);
         response.EnsureSuccessStatusCode();
         var release = JsonNode.Parse(await response.Content.ReadAsStringAsync(token)) as JsonObject ?? throw new InvalidDataException("Respuesta no válida de GitHub.");
@@ -435,8 +442,11 @@ public sealed class ModInstaller(HttpClient http, string dataDirectory, Operatio
         return new(tag, extracted, files);
     }
 
+    /// <summary>Archivos de ILION y de su base congelada (los fija ILION Setup al cargar el manifiesto): una receta por datos no los toca.</summary>
+    public static HashSet<string> ProtectedFiles { get; } = new(StringComparer.OrdinalIgnoreCase) { "OptiScaler.ini" };
+
     /// <summary>Lo que se va a escribir según la receta. Valida que estén los archivos obligatorios y que el proxy elegido sea válido y esté libre.</summary>
-    public static ModPlanItem[] Plan(InstallableMod mod, ModDownload download, string exeDir, string? proxy)
+    public static ModPlanItem[] Plan(InstallableMod mod, ModDownload download, string exeDir, string? proxy, bool updating = false)
     {
         var items = new List<ModPlanItem>();
         foreach (var f in download.Files)
@@ -444,11 +454,13 @@ public sealed class ModInstaller(HttpClient http, string dataDirectory, Operatio
         if (mod.ProxyNames.Length > 0)
         {
             if (proxy is null || !mod.ProxyNames.Contains(proxy, StringComparer.OrdinalIgnoreCase)) throw new InvalidDataException("Elige un nombre de proxy de la lista.");
-            if (File.Exists(Path.Combine(exeDir, proxy))) throw new InvalidDataException($"{proxy} ya existe en la carpeta del juego: elige otro nombre.");
+            if (!updating && File.Exists(Path.Combine(exeDir, proxy))) throw new InvalidDataException($"{proxy} ya existe en la carpeta del juego: elige otro nombre.");
             var source = Path.Combine(download.Folder, mod.ProxySource!(proxy).Replace('/', Path.DirectorySeparatorChar));
             if (!File.Exists(source)) throw new InvalidDataException($"El paquete no trae la compilación para {proxy}.");
             items.Add(new(proxy, source));
         }
+        if (mod.FromCatalogData && items.FirstOrDefault(i => ProtectedFiles.Contains(i.Relative)) is { } clash)
+            throw new InvalidDataException($"La receta escribiría {clash.Relative}, que es de ILION o de su base: no se instala.");
         var missing = mod.Required.Select(r => r.Replace("{tag}", download.Tag)).Where(r => !items.Any(i => i.Relative.Equals(r, StringComparison.OrdinalIgnoreCase))).ToArray();
         if (missing.Length > 0) throw new InvalidDataException("La publicación no trae lo que espera la receta: " + string.Join(", ", missing) + ". No se instala.");
         if (mod.BuiltMinSize > 0 && items.FirstOrDefault(i => i.Relative.Equals(mod.Marker, StringComparison.OrdinalIgnoreCase)) is { } marker && new FileInfo(marker.Source).Length < mod.BuiltMinSize)
@@ -459,9 +471,9 @@ public sealed class ModInstaller(HttpClient http, string dataDirectory, Operatio
     }
 
     /// <summary>Copia los archivos en la carpeta del ejecutable como una operación restaurable.</summary>
-    public OperationManifest Install(string gameId, string exeDir, InstallableMod mod, ModDownload download, string? proxy = null, IEnumerable<ModPlanItem>? official = null, string? batch = null)
+    public OperationManifest Install(string gameId, string exeDir, InstallableMod mod, ModDownload download, string? proxy = null, IEnumerable<ModPlanItem>? official = null, string? batch = null, bool updating = false)
     {
-        var writes = Plan(mod, download, exeDir, proxy).Concat(official ?? []).DistinctBy(i => i.Relative, StringComparer.OrdinalIgnoreCase).Select(i =>
+        var writes = Plan(mod, download, exeDir, proxy, updating).Concat(official ?? []).DistinctBy(i => i.Relative, StringComparer.OrdinalIgnoreCase).Select(i =>
         {
             var current = Path.Combine(exeDir, i.Relative);
             return new PlannedWrite(i.Relative, i.Source, File.Exists(current) ? ComponentUpdateService.Sha256(current) : null);

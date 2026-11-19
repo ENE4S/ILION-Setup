@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>ILION.Setup</AssemblyName>
     <RootNamespace>Ilion.Setup.App</RootNamespace>
-    <Version>0.3.4</Version>
+    <Version>0.4.2</Version>
     <ApplicationIcon>Assets\sputnik.ico</ApplicationIcon>
     <Product>ILION Setup</Product>
     <Platforms>x64</Platforms>
@@ -15,6 +15,8 @@
   <ItemGroup>
     <Resource Include="Assets\RussoOne-Regular.ttf" />
     <Resource Include="Assets\catalogo.json" />
+    <Resource Include="Assets\catalogo-2.json" />
+    <Resource Include="Assets\idiomas.json" />
     <Resource Include="Assets\arquitecturas.json" />
     <Resource Include="..\Manifiestos\base-congelada.json" Link="Assets\base-congelada.json" />
     <Resource Include="Assets\clave-publica.txt" />

@@ -202,7 +202,7 @@ Check(result.Engine is not null && result.Error is null, "Instalación nueva: ba
 Check(ComponentUpdateService.Sha256(Path.Combine(exeDir, "dxgi.dll")) == baseManifest.Engine.Sha256, "dxgi.dll del juego = DLL aprobada");
 Check(engine.Frozen.Verify(exeDir, new HashSet<string> { "streamline" }).All(c => c.State == BaseState.Ok), "Base del juego idéntica a la congelada (incluida Streamline)");
 Check(result.Mods is { } mr && mr.Installed.Length == 4 && mr.Failed.Length == 0, "Mods del lote instalados: " + string.Join(", ", result.Mods?.Installed ?? []));
-Check(picks.All(p => ModRequirements.Missing(p.Mod, exeDir).Length == 0), "Todos completos (XMX con su libxess_fg 1.3.4 tomada firmada del paquete local)");
+Check(picks.All(p => ModRequirements.Missing(p.Mod, exeDir).Length == 0), "Todos completos (XMX con su propia libxess_fg: prefiere la 1.3.4 firmada del paquete local)");
 Check(File.Exists(Path.Combine(exeDir, "ILION", "Escaladores", "HelixSR", "helix1.9", "helixsr_upscaler.dll")) && File.Exists(Path.Combine(exeDir, "LmxxfNrRuntime.dll"))
       && Directory.Exists(Path.Combine(exeDir, "ILION", "Escaladores", "DLSS4")) && File.Exists(Path.Combine(exeDir, "OptiScaler", "plugins", "XeMFG", "Clasica", "XeFGUnlock.asi")),
     "Del paquete: ILION\\ (d4r en RDNA 3), runtime NR de lmxxf y variantes XeMFG");
@@ -304,12 +304,12 @@ if (!noNetwork)
     if (Directory.Exists(remoteDir)) Directory.Delete(remoteDir, true);
     var remoteNotes = await RemoteManifests.RefreshAsync(http, remoteDir, default);
     var fromGitHub = Manifests.Choose<BaseManifest>(baseJson, Path.Combine(remoteDir, "base-congelada.json"), m => m.Date, m => m.Format).Manifest;
-    Check(remoteNotes.All(n => n.Contains("firmado")) && File.Exists(Path.Combine(remoteDir, "catalogo.json.firma")) && fromGitHub.Engine.Sha256 == baseManifest.Engine.Sha256,
+    Check(remoteNotes.All(n => n.Contains("firmado") || n.StartsWith("catalogo-2.json: aún no publicado")) && File.Exists(Path.Combine(remoteDir, "catalogo.json.firma")) && fromGitHub.Engine.Sha256 == baseManifest.Engine.Sha256,
         "Manifiestos firmados de GitHub (rama setup-manifiestos): descargados, firma válida, ILION " + fromGitHub.Engine.Version);
     var tamperedDir = Path.Combine(lab, "ManifiestosAlterados");
     if (Directory.Exists(tamperedDir)) Directory.Delete(tamperedDir, true);
     var tamperedNotes = await RemoteManifests.RefreshAsync(new HttpClient(new Tamper(http)), tamperedDir, default);
-    Check(tamperedNotes.All(n => n.Contains("firma no es válida")) && !File.Exists(Path.Combine(tamperedDir, "base-congelada.json")),
+    Check(tamperedNotes.Where(n => !n.StartsWith("catalogo-2.json: aún no publicado")).All(n => n.Contains("firma no es válida")) && !File.Exists(Path.Combine(tamperedDir, "base-congelada.json")),
         "Manifiesto de GitHub alterado por el camino: firma no válida, no se guarda ni se usa");
     using var noRedirect = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false });
     var latest = await RemoteManifests.LatestTagAsync(noRedirect, "dashdogy/MFG-Unlocker", default);
@@ -331,6 +331,155 @@ if (File.Exists(privateKey))
     File.WriteAllText(ext, JsonSerializer.Serialize(catalog with { Date = "2099-01-01", Format = 9 }));
     File.WriteAllText(ext + ".firma", Manifests.Sign(File.ReadAllBytes(ext), File.ReadAllText(privateKey)));
     Check(Manifests.Choose<Catalog>(catalogJson, ext, c => c.Date, c => c.Format).Origin.Contains("más nueva de Setup"), "Manifiesto de un formato que esta versión no entiende: se ignora");
+}
+
+// ---------------------------------------------------------------- 10. ILION Setup 0.4: catálogo 2, recetas por datos, actualizaciones y API
+// Un catálogo con una receta que este Setup no trae no lo tumba (en la 0.3.x lo cerraba): la entrada queda informativa y explica por qué
+var unknown = catalog with { Mods = [.. catalog.Mods, catalog.Mods.Single(m => m.Id == "xmx") with { Id = "futuro", Name = "Mod del futuro", Recipe = "Receta que no existe" }] };
+var tolerant = new SetupEngine(Path.Combine(lab, "DatosV04"), http, baseManifest, unknown);
+var futureItem = tolerant.Resolve(rdna3, "DirectX 12", "1.4.1.2 beta").Single(i => i.Entry.Id == "futuro");
+Check(SetupEngine.RecipeFor(unknown.Mods[^1]) is null && futureItem.Recipe is null && futureItem.Why?.Contains("actualiza ILION Setup") == true,
+    "Catálogo con una receta desconocida: Setup arranca y la muestra como no instalable, con el motivo");
+var needsNewer = catalog.Mods.Single(m => m.Id == "xmx") with { Id = "x2", MinSetup = "9.0" };
+Check(SetupEngine.RecipeFor(needsNewer) is null && SetupEngine.Unusable(needsNewer)!.Contains("9.0"), "Entrada con «setupMinimo» más alto que este Setup: no se ofrece y lo dice");
+
+// Receta por datos: la misma de Apex ANR que trae Setup, descrita en el catálogo 2
+var anrEntry = catalog.Mods.Single(m => m.Id == "anr");
+var anrData = new RecipeData("apex-compute/ANR", [new("Apex Neural Rendering FG/**", @"OptiScaler\custom\Apex Neural Rendering FG")],
+    [@"OptiScaler\custom\Apex Neural Rendering FG\dlssg\nvngx_dlssg.dll", @"OptiScaler\custom\Apex Neural Rendering FG\dlssg\path_table.json"],
+    @"OptiScaler\custom\Apex Neural Rendering FG\dlssg\nvngx_dlssg.dll", KeepIfPresent: [@"OptiScaler\custom\Apex Neural Rendering FG\dlssg\nr_fg.ini"],
+    MinIlion: "1.4.1.1", Slot: "Implementación DLSS FG", Dx12Only: true);
+var anrByData = anrEntry with { Recipe = null, Definition = anrData };
+Check(SetupEngine.Unusable(anrByData) is null && SetupEngine.RecipeFor(anrByData) is { } dataRecipe && dataRecipe.Tag == anrEntry.Version && dataRecipe.ApprovedSha256 == anrEntry.Sha256,
+    "Receta por datos válida: se acepta con la versión y la huella aprobadas");
+string? Bad(RecipeData d) => Recipes.Validate(anrEntry, d);
+Check(Bad(anrData with { Files = [new("x.dll", @"..\fuera.dll")] }) is not null && Bad(anrData with { Files = [new("x.exe", "x.exe")] }) is not null
+      && Bad(anrData with { Files = [new("x.dll", "dxgi.dll")] }) is not null && Recipes.Validate(anrEntry with { Sha256 = null }, anrData) is not null
+      && Bad(anrData with { Marker = "otro.dll" }) is not null && Bad(anrData with { Dependencies = ["no-existe"] }) is not null,
+    "Recetas por datos peligrosas o incompletas se rechazan: fuera de la carpeta, ejecutables, archivos de ILION, sin huella, marcador ajeno, dependencia desconocida");
+
+// API: DirectX 12 por el Agility SDK aunque el ejecutable no lo importe; en Unity no se adivina
+var apiRoot = Path.Combine(lab, "JuegoApi");
+if (Directory.Exists(apiRoot)) Directory.Delete(apiRoot, true);
+Directory.CreateDirectory(Path.Combine(apiRoot, "D3D12"));
+var apiExe = Path.Combine(apiRoot, "JuegoApi.exe");
+File.Copy(Path.Combine(reference, "OptiScaler", "plugins", "OptiPatcher.asi"), apiExe);
+File.WriteAllText(Path.Combine(apiRoot, "D3D12", "D3D12Core.dll"), "prueba");
+var unityRoot = Path.Combine(lab, "JuegoUnity");
+if (Directory.Exists(unityRoot)) Directory.Delete(unityRoot, true);
+Directory.CreateDirectory(Path.Combine(unityRoot, "JuegoUnity_Data"));
+var unityExe = Path.Combine(unityRoot, "JuegoUnity.exe");
+File.WriteAllBytes(unityExe, [.. File.ReadAllBytes(apiExe), .. System.Text.Encoding.ASCII.GetBytes("d3d12.dll")]);
+Check(ApiDetection.InspectGame(apiExe).Any(a => a.Name == "DirectX 12") && !ApiDetection.InspectGame(unityExe).Any(a => a.Name == "DirectX 12"),
+    "API: DirectX 12 por el Agility SDK junto al ejecutable; en un juego Unity no se deduce de un texto del ejecutable");
+
+if (!noNetwork)
+{
+    // Actualizar un mod: Apex ANR FG-V.B15 (aprobada) → FG-V.B19 (encaja con la receta: comprobado con Setup.Tools comparar)
+    var upData = Path.Combine(lab, "DatosActualizar");
+    if (Directory.Exists(upData)) Directory.Delete(upData, true);
+    var upRoot = Path.Combine(lab, "JuegoActualizar");
+    if (Directory.Exists(upRoot)) { foreach (var f in Directory.EnumerateFiles(upRoot, "*", SearchOption.AllDirectories)) File.SetAttributes(f, FileAttributes.Normal); Directory.Delete(upRoot, true); }
+    var upDir = Directory.CreateDirectory(Path.Combine(upRoot, "bin")).FullName;
+    var upExe = Path.Combine(upDir, "JuegoActualizar.exe");
+    File.Copy(Path.Combine(reference, "OptiScaler", "plugins", "OptiPatcher.asi"), upExe);
+    var upManual = new ManualSource(Path.Combine(upData, "manual.json")); upManual.Add(upExe);
+    var upGame = upManual.Scan().Games.Single(x => x.Executable == upExe);
+    var oldEngine = new SetupEngine(upData, http, baseManifest, catalog);
+    var anrOld = SetupEngine.RecipeFor(anrEntry)!;
+    var first = await ModBatch.RunAsync(new ModInstaller(http, upData, oldEngine.Operations), oldEngine.Operations, oldEngine.Updates, SetupEngine.GameId(upGame), upDir, [new BatchRequest(anrOld)], [], null, default);
+    var dlssg = Path.Combine(upDir, @"OptiScaler\custom\Apex Neural Rendering FG\dlssg\nvngx_dlssg.dll");
+    var shaB15 = File.Exists(dlssg) ? ComponentUpdateService.Sha256(dlssg) : "";
+    File.WriteAllText(Path.Combine(upDir, @"OptiScaler\custom\Apex Neural Rendering FG\dlssg\nr_fg.ini"), "ajuste del usuario");
+    var cleanB15 = Snap(upRoot);
+    var b19 = catalog with { Mods = [.. catalog.Mods.Select(m => m.Id == "anr" ? m with { Version = "FG-V.B19", Sha256 = "70107373e0f9744875fcbb7f46133432202ce7f132fdfff14259b8a85fba3f13", Asset = "anr-fg-V.B19-addon.zip" } : m)] };
+    var newEngine = new SetupEngine(upData, http, baseManifest, b19);
+    var pending = newEngine.ModUpdates(upGame, upDir);
+    Check(first.Installed.Length == 1 && oldEngine.ModUpdates(upGame, upDir).Length == 0 && pending.Length == 1 && pending[0].Installed == "FG-V.B15" && pending[0].Approved == "FG-V.B19",
+        "Actualizaciones: con la versión aprobada no hay aviso; al aprobarse otra, el juego la ofrece (FG-V.B15 → FG-V.B19)");
+    var up = await newEngine.UpdateModAsync(upGame, upDir, pending[0], [], null, default);
+    Check(up.Ok && ComponentUpdateService.Sha256(dlssg) != shaB15 && newEngine.ModUpdates(upGame, upDir).Length == 0
+          && File.ReadAllText(Path.Combine(upDir, @"OptiScaler\custom\Apex Neural Rendering FG\dlssg\nr_fg.ini")) == "ajuste del usuario",
+        $"Actualizar: {up.Message} Sin aviso pendiente y el nr_fg.ini del usuario se conserva");
+    ModBatch.RestoreBatch(newEngine.Operations, SetupEngine.GameId(upGame), up.Batch!.BatchId);
+    Check(Snap(upRoot).SequenceEqual(cleanB15) && newEngine.ModUpdates(upGame, upDir).Length == 1, "Deshacer la actualización: vuelve la versión anterior byte a byte");
+    var wrong = b19 with { Mods = [.. b19.Mods.Select(m => m.Id == "anr" ? m with { Sha256 = new string('0', 64) } : m)] };
+    var wrongEngine = new SetupEngine(upData, http, baseManifest, wrong);
+    var failedUp = await wrongEngine.UpdateModAsync(upGame, upDir, wrongEngine.ModUpdates(upGame, upDir).Single(), [], null, default);
+    Check(!failedUp.Ok && Snap(upRoot).SequenceEqual(cleanB15), "Actualización con un paquete que no es el aprobado: no se instala y el juego queda igual");
+    // Dos actualizaciones seguidas del mismo mod (FG-V.B15 → FG-V.B18 → FG-V.B19): la segunda parte de la primera, y deshacer la
+    // segunda devuelve exactamente la intermedia
+    Catalog WithAnr(string tag, string sha) => catalog with { Mods = [.. catalog.Mods.Select(m => m.Id == "anr" ? m with { Version = tag, Sha256 = sha, Asset = $"anr-fg-V.{tag[5..]}-addon.zip" } : m)] };
+    var e18 = new SetupEngine(upData, http, baseManifest, WithAnr("FG-V.B18", "6dfce1ce2240f6ce8d820a7eb66b4d7d349655e9238c30df820297d70b9963f3"));
+    var up18 = await e18.UpdateModAsync(upGame, upDir, e18.ModUpdates(upGame, upDir).Single(), [], null, default);
+    var clean18 = Snap(upRoot);
+    var e19 = new SetupEngine(upData, http, baseManifest, b19);
+    var second = e19.ModUpdates(upGame, upDir);
+    var up19 = second.Length == 1 ? await e19.UpdateModAsync(upGame, upDir, second[0], [], null, default) : null;
+    var afterBoth = e19.ModUpdates(upGame, upDir).Length;
+    if (up19?.Batch is { } b2) ModBatch.RestoreBatch(e19.Operations, SetupEngine.GameId(upGame), b2.BatchId);
+    Check(up18.Ok && second.Length == 1 && second[0].Installed == "FG-V.B18" && up19 is { Ok: true } && afterBoth == 0 && Snap(upRoot).SequenceEqual(clean18),
+        "Dos actualizaciones seguidas (B15 → B18 → B19): la segunda parte de la versión intermedia y deshacerla devuelve la B18 byte a byte");
+    // La receta por datos produce exactamente el mismo plan que la integrada
+    var dl = await new ModInstaller(http, upData, oldEngine.Operations).DownloadAsync(anrOld, default);
+    var planBuiltIn = ModInstaller.Plan(anrOld, dl, upDir, null, updating: true).Select(i => i.Relative).Order().ToArray();
+    var planData = ModInstaller.Plan(SetupEngine.RecipeFor(anrByData)!, dl, upDir, null, updating: true).Select(i => i.Relative).Order().ToArray();
+    Check(planBuiltIn.Length > 0 && planBuiltIn.SequenceEqual(planData, StringComparer.OrdinalIgnoreCase), $"Receta por datos = receta integrada: mismo plan de {planData.Length} archivos");
+    // Una receta por datos nunca escribe encima de ILION ni de su base congelada (aunque pase la validación de rutas)
+    var intruder = anrByData with { Definition = anrData with { Files = [new("Apex Neural Rendering FG/dlssg/nvngx_dlssg.dll", @"OptiScaler\libxess.dll")],
+        Required = [@"OptiScaler\libxess.dll"], Marker = @"OptiScaler\libxess.dll", KeepIfPresent = [] } };
+    var refused = false;
+    try { ModInstaller.Plan(SetupEngine.RecipeFor(intruder)!, dl, upDir, null, updating: true); }
+    catch (InvalidDataException e) when (e.Message.Contains("de ILION o de su base")) { refused = true; }
+    Check(SetupEngine.Unusable(intruder) is null && refused, "Receta por datos que escribiría un archivo de la base de ILION (OptiScaler\\libxess.dll): se rechaza antes de escribir");
+}
+
+// Catálogo: el más nuevo entre el integrado (formato 2) y los externos firmados (formato 1 de la 0.3.x y formato 2)
+if (File.Exists(privateKey))
+{
+    var folder2 = Path.Combine(lab, "Manifiestos2");
+    Directory.CreateDirectory(folder2);
+    var pem = File.ReadAllText(privateKey);
+    void Signed(string name, Catalog c) { var f = Path.Combine(folder2, name); File.WriteAllText(f, JsonSerializer.Serialize(c)); File.WriteAllText(f + ".firma", Manifests.Sign(File.ReadAllBytes(f), pem)); }
+    var embedded2 = JsonSerializer.Serialize(catalog with { Format = 2 });
+    Signed("catalogo.json", catalog with { Date = "2099-01-02" });
+    Signed("catalogo-2.json", catalog with { Format = 2, Date = "2099-01-01" });
+    var pick1 = Manifests.ChooseCatalog(embedded2, (Path.Combine(folder2, "catalogo-2.json"), "externo"), (Path.Combine(folder2, "catalogo.json"), "externo"));
+    Signed("catalogo-2.json", catalog with { Format = 2, Date = "2099-01-03" });
+    var pick2 = Manifests.ChooseCatalog(embedded2, (Path.Combine(folder2, "catalogo-2.json"), "externo"), (Path.Combine(folder2, "catalogo.json"), "externo"));
+    File.AppendAllText(Path.Combine(folder2, "catalogo-2.json"), " ");
+    var pick3 = Manifests.ChooseCatalog(embedded2, (Path.Combine(folder2, "catalogo-2.json"), "externo"), (Path.Combine(folder2, "catalogo.json"), "externo"));
+    Check(pick1.Catalog.Date == "2099-01-02" && pick2.Catalog is { Date: "2099-01-03", Format: 2 } && pick3.Catalog.Date == "2099-01-02",
+        "Catálogo: gana el más nuevo firmado (formato 1 o 2); uno alterado se ignora");
+}
+// XeMFG XMX: su propia libxess_fg de Intel (1.3.1 o 1.3.4, nunca 1.4 o más). Sin 1.3.4 en el PC usa la 1.3.1 de OptiScaler del propio
+// juego; sin ninguna, la 1.3.1 del SDK oficial de Intel (v3.0.2). Prueba de laboratorio previa: XMX build-10 arranca con las dos en AMD
+{
+    var dep = ModInstaller.XmxXeFg;
+    var v131 = Path.Combine(reference, "OptiScaler", "libxess_fg.dll");
+    var v134 = Path.Combine(reference, "OptiScaler", "custom", "XeMFG XMX", "dlssg", "libxess_fg.dll");
+    Check(ModRequirements.Problem(dep, v131) is null && ModRequirements.Problem(dep, v134) is null, "XMX acepta su libxess_fg 1.3.1 oficial y la 1.3.4");
+    Check(ModRequirements.Problem(dep with { BelowVersion = "1.3.2" }, v134) is { } why && why.Contains("anterior a la 1.3.2"), "Una versión por encima del techo no se da por buena");
+    var xRoot = Path.Combine(lab, "JuegoXmx");
+    if (Directory.Exists(xRoot)) Directory.Delete(xRoot, true);
+    var xDir = Path.Combine(xRoot, "bin");
+    Directory.CreateDirectory(Path.Combine(xDir, "OptiScaler"));
+    File.Copy(v131, Path.Combine(xDir, "OptiScaler", "libxess_fg.dll"));
+    var xmxMod = ModInstaller.Known.Single(m => m.Name == "XeMFG XMX");
+    var own = await DependencyResolver.PlanAsync(xmxMod, xDir, null, [], default);
+    Check(own.Pending.Length == 0 && own.Items.Length == 1 && own.Items[0].Relative == dep.Relative
+          && Path.GetFullPath(own.Items[0].Source) == Path.GetFullPath(Path.Combine(xDir, "OptiScaler", "libxess_fg.dll")),
+        "XMX sin 1.3.4 en el PC: usa la 1.3.1 de OptiScaler del propio juego, sin descargar");
+    var games = await DependencyResolver.PlanAsync(xmxMod, xDir, null, [reference], default);
+    Check(games.Items.Length == 1 && ComponentUpdateService.VersionOf(games.Items[0].Source).StartsWith("1.3.4"), "XMX con una 1.3.4 firmada en el PC: la prefiere");
+    if (!noNetwork)
+    {
+        File.Delete(Path.Combine(xDir, "OptiScaler", "libxess_fg.dll"));
+        var official = await DependencyResolver.PlanAsync(xmxMod, xDir, engine.Updates, [], default);
+        Check(official.Pending.Length == 0 && official.Items.Length == 1 && ComponentUpdateService.Sha256(official.Items[0].Source) == ComponentUpdateService.Sha256(v131),
+            "XMX sin ninguna copia: descarga la 1.3.1 del SDK oficial de Intel v3.0.2 (idéntica a la de ILION) · " + string.Join(" | ", official.Sources));
+    }
+    Directory.Delete(xRoot, true);
 }
 Check(Snap(reference).SequenceEqual(referenceBefore), "El paquete de referencia no se modificó");
 Console.WriteLine(fails == 0 ? $"ILION SETUP: {count}/{count} CORRECTO" : $"ILION SETUP: {fails} FALLOS de {count}");

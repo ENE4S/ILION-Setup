@@ -386,6 +386,10 @@ public sealed class ManualSource(string settingsFile) : IGameSource
     }
 }
 
+/// <summary>API gráfica de un juego. Las importaciones normales del ejecutable no bastan: muchos juegos DirectX 12 (Unreal Engine y otros)
+/// cargan d3d12.dll de forma diferida o en tiempo de ejecución y solo importan d3d11.dll de forma estática, así que salían como DirectX 11.
+/// Inspect (barato, para elegir el ejecutable) mira las importaciones estáticas y las diferidas; InspectGame añade lo que hay junto al
+/// ejecutable (Agility SDK de DirectX 12, FidelityFX para DX12 o Vulkan) y, si aún no hay DX12, busca «d3d12.dll» dentro del ejecutable.</summary>
 public static class ApiDetection
 {
     private static readonly Dictionary<string, string> Imports = new(StringComparer.OrdinalIgnoreCase)
@@ -400,24 +404,102 @@ public static class ApiDetection
         {
             using var stream = new FileStream(executable, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
             using var pe = new PEReader(stream);
-            var imports = pe.PEHeaders.PEHeader?.ImportTableDirectory ?? default;
-            if (imports.RelativeVirtualAddress == 0 || imports.Size < 20) return [];
-            var table = pe.GetSectionData(imports.RelativeVirtualAddress);
-            var count = Math.Min(Math.Min(imports.Size, table.Length) / 20, 4096);
-            var evidence = new HashSet<string>(StringComparer.Ordinal);
-            for (var index = 0; index < count; index++)
+            var evidence = new Dictionary<string, string>(StringComparer.Ordinal);
+            void Add(string dll, string source) { if (Imports.TryGetValue(dll, out var api)) evidence.TryAdd(api, source); }
+            string? Name(int rva)
             {
-                var descriptor = table.GetContent(index * 20, 20).AsSpan();
-                var nameRva = BinaryPrimitives.ReadInt32LittleEndian(descriptor[12..]);
-                if (nameRva == 0) break;
-                var names = pe.GetSectionData(nameRva);
+                if (rva <= 0) return null;
+                var names = pe.GetSectionData(rva);
+                if (names.Length == 0) return null;
                 var raw = names.GetContent(0, Math.Min(names.Length, 256)).AsSpan();
                 var end = raw.IndexOf((byte)0);
-                if (end > 0 && Imports.TryGetValue(Encoding.ASCII.GetString(raw[..end]), out var api)) evidence.Add(api);
+                return end > 0 ? Encoding.ASCII.GetString(raw[..end]) : null;
             }
-            return evidence.Order().Select(api => new ApiEvidence(api, EvidenceLevel.Probable, "Importación estática PE")).ToArray();
+            // Importaciones estáticas (descriptores de 20 bytes; el nombre en el desplazamiento 12)
+            var imports = pe.PEHeaders.PEHeader?.ImportTableDirectory ?? default;
+            if (imports.RelativeVirtualAddress != 0 && imports.Size >= 20)
+            {
+                var table = pe.GetSectionData(imports.RelativeVirtualAddress);
+                var count = Math.Min(Math.Min(imports.Size, table.Length) / 20, 4096);
+                for (var index = 0; index < count; index++)
+                {
+                    var descriptor = table.GetContent(index * 20, 20).AsSpan();
+                    var nameRva = BinaryPrimitives.ReadInt32LittleEndian(descriptor[12..]);
+                    if (nameRva == 0) break;
+                    if (Name(nameRva) is { } dll) Add(dll, "Importación estática PE");
+                }
+            }
+            // Importaciones diferidas (descriptores de 32 bytes; el nombre en el desplazamiento 4; bit 0 de los atributos = RVA)
+            var delayed = pe.PEHeaders.PEHeader?.DelayImportTableDirectory ?? default;
+            if (delayed.RelativeVirtualAddress != 0 && delayed.Size >= 32)
+            {
+                var table = pe.GetSectionData(delayed.RelativeVirtualAddress);
+                var count = Math.Min(Math.Min(delayed.Size, table.Length) / 32, 4096);
+                var imageBase = (long)(pe.PEHeaders.PEHeader?.ImageBase ?? 0);
+                for (var index = 0; index < count; index++)
+                {
+                    var descriptor = table.GetContent(index * 32, 32).AsSpan();
+                    var attributes = BinaryPrimitives.ReadInt32LittleEndian(descriptor);
+                    var name = BinaryPrimitives.ReadInt32LittleEndian(descriptor[4..]);
+                    if (name == 0) break;
+                    var rva = (attributes & 1) != 0 ? name : (int)(name - imageBase);
+                    if (Name(rva) is { } dll) Add(dll, "Importación diferida PE");
+                }
+            }
+            return [.. evidence.OrderBy(e => e.Key).Select(e => new ApiEvidence(e.Key, EvidenceLevel.Probable, e.Value))];
         }
-        catch (Exception error) when (LibraryDiscovery.IsReadError(error) || error is BadImageFormatException)
+        catch (Exception error) when (LibraryDiscovery.IsReadError(error) || error is BadImageFormatException || error is ArgumentOutOfRangeException)
         { return []; }
+    }
+
+    /// <summary>API del juego con todas las pistas (una vez por juego). Si hay pistas de DirectX 12 y de DirectX 11, aparecen las dos:
+    /// quien la usa elige DirectX 12 (el juego puede arrancar en cualquiera de los dos modos).</summary>
+    public static ApiEvidence[] InspectGame(string? executable)
+    {
+        if (executable is null) return [];
+        var list = Inspect(executable).ToList();
+        void Add(string api, string source) { if (!list.Any(e => e.Name == api)) list.Add(new(api, EvidenceLevel.Probable, source)); }
+        try
+        {
+            var dir = Path.GetDirectoryName(executable)!;
+            if (File.Exists(Path.Combine(dir, "D3D12", "D3D12Core.dll"))) Add("DirectX 12", "Agility SDK de DirectX 12 junto al juego");
+            foreach (var file in Directory.EnumerateFiles(dir, "*.dll", new EnumerationOptions { IgnoreInaccessible = true }).Select(Path.GetFileName).OfType<string>())
+            {
+                var f = file.ToLowerInvariant();
+                if (f.StartsWith("amd_fidelityfx") || f.StartsWith("ffx_"))
+                {
+                    if (f.Contains("_dx12")) Add("DirectX 12", $"{file} (FidelityFX para DirectX 12) junto al juego");
+                    else if (f.Contains("_vk")) Add("Vulkan", $"{file} (FidelityFX para Vulkan) junto al juego");
+                    else if (f.Contains("_dx11")) Add("DirectX 11", $"{file} (FidelityFX para DirectX 11) junto al juego");
+                }
+            }
+            // Unity lleva todas las API en UnityPlayer.dll y elige al arrancar: su ejecutable no dice cuál usa el juego
+            var unity = File.Exists(Path.Combine(dir, "UnityPlayer.dll")) || Directory.Exists(Path.Combine(dir, Path.GetFileNameWithoutExtension(executable) + "_Data"));
+            if (!unity && !list.Any(e => e.Name == "DirectX 12") && Mentions(executable, "d3d12.dll")) Add("DirectX 12", "El ejecutable carga d3d12.dll en tiempo de ejecución");
+            if (!unity && !list.Any(e => e.Name is "Vulkan" or "DirectX 12") && Mentions(executable, "vulkan-1.dll")) Add("Vulkan", "El ejecutable carga vulkan-1.dll en tiempo de ejecución");
+        }
+        catch (Exception error) when (LibraryDiscovery.IsReadError(error)) { }
+        return [.. list.OrderBy(e => e.Name)];
+    }
+
+    /// <summary>¿El ejecutable contiene ese nombre (ASCII o UTF-16, sin distinguir mayúsculas)? Lectura por bloques, hasta 1 GB.</summary>
+    private static bool Mentions(string executable, string text)
+    {
+        var ascii = Encoding.ASCII.GetBytes(text.ToLowerInvariant());
+        var wide = Encoding.Unicode.GetBytes(text.ToLowerInvariant());
+        using var stream = new FileStream(executable, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, 1 << 16);
+        if (stream.Length > 1L << 30) return false;
+        var buffer = new byte[(1 << 22) + wide.Length];
+        var keep = 0;
+        int read;
+        while ((read = stream.Read(buffer, keep, buffer.Length - keep)) > 0)
+        {
+            var span = buffer.AsSpan(0, keep + read);
+            for (var i = 0; i < span.Length; i++) if (span[i] is >= (byte)'A' and <= (byte)'Z') span[i] = (byte)(span[i] + 32);
+            if (span.IndexOf(ascii) >= 0 || span.IndexOf(wide) >= 0) return true;
+            keep = Math.Min(wide.Length, span.Length);
+            span[^keep..].CopyTo(buffer);
+        }
+        return false;
     }
 }
