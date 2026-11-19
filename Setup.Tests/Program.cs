@@ -135,6 +135,12 @@ var table = Gpu.Load(archStream);
 var detected = Gpu.Detect(table, Gpu.Installed());
 Console.WriteLine($"   GPU de este equipo: {detected.Name} → {detected.Arch?.Id ?? "no reconocida"}");
 Check(detected.Arch is not null, "Detección de la GPU de este equipo");
+// Una tarjeta retirada sigue en el registro: solo cuentan las activas (caso real: RX 9070 que salía como 6700 XT)
+var regEntries = new[] { ("AMD Radeon RX 6700 XT", @"pci\ven_1002&dev_73df&rev_c1"), ("AMD Radeon RX 9070", @"pci\ven_1002&dev_7550&rev_c0"), ("Honor Virtual Display Device", @"IndirectDSP\VirtualDisplayDriver") };
+var onlyActive = Gpu.OnlyActive(regEntries, [(0x1002u, 0x7550u)]);
+Check(onlyActive.SequenceEqual(["AMD Radeon RX 9070"]) && Gpu.Detect(table, onlyActive).Arch?.Id == "rdna4" && Gpu.Detect(table, regEntries.Select(r => r.Item1)).Arch?.Id == "rdna2",
+    "GPU: una tarjeta retirada que sigue en el registro ya no tapa a la activa (RX 9070, no 6700 XT)");
+Check(Gpu.OnlyActive(regEntries, []).Length == 0 && Gpu.ActiveDeviceIds().Any(a => a.Vendor is 0x1002 or 0x10DE or 0x8086), $"GPU: Windows da los adaptadores activos ({string.Join(", ", Gpu.ActiveDeviceIds().Select(a => $"{a.Vendor:X4}:{a.Device:X4}"))}); sin ninguno se usa el registro");
 var engine = new SetupEngine(dataDir, noNetwork ? offline : http, baseManifest, catalog);
 var rdna3 = table.Arquitecturas.Single(a => a.Id == "rdna3"); var rtx30 = table.Arquitecturas.Single(a => a.Id == "rtx30");
 var r3 = engine.Resolve(rdna3, "DirectX 12", "1.4.1.2 beta");

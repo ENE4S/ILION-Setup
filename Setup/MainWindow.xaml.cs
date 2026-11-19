@@ -54,6 +54,8 @@ public partial class MainWindow : Window
         LanguagePick.SelectedIndex = Lang.Current;
         Lang.Changed += () => { if (IsLoaded && !busy) ShowMode(); };
         SetupEngine.SetupVersion = typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "0.4.0";
+        Title = "ILION SETUP " + SetupEngine.SetupVersion;
+        SetupVersionLabel.Text = "v" + SetupEngine.SetupVersion;
         http.DefaultRequestHeaders.UserAgent.ParseAdd("ILION-Setup/" + SetupEngine.SetupVersion);
         Manifests.PublicKey = Resource("clave-publica.txt").Trim();
         engine = LoadManifests();

@@ -1,5 +1,6 @@
 // ILION Setup — GPU del equipo y su arquitectura (mismos identificadores que ILION y Central: IlionCommunity kArchs).
 // Clasificación tomada de ILION CENTRAL-01 (Desktop/Architecture.cs), sin dependencias de su interfaz.
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -34,11 +35,31 @@ public static class Gpu
         return null;
     }
 
-    /// <summary>Gráficas instaladas según el registro de Windows (clase Display).</summary>
+    /// <summary>Gráficas del equipo: las que Windows tiene activas ahora. El registro (clase Display) guarda también las tarjetas
+    /// retiradas (un RX 9070 que sustituyó a un 6700 XT dejaba el 6700 XT el primero de la lista), así que de él solo se toman
+    /// los nombres de las que D3DKMT da como activas. Si Windows no contesta (máquina virtual, Escritorio remoto, Windows
+    /// antiguo), se usa la lista del registro como hasta la 0.4.2.</summary>
     [SupportedOSPlatform("windows")]
     public static string[] Installed()
     {
-        var names = new List<string>();
+        var registry = RegistryAdapters();
+        var active = ActiveDeviceIds();
+        var names = OnlyActive(registry, active);
+        return names.Length > 0 ? names : [.. registry.Select(r => r.Name).Distinct()];
+    }
+
+    /// <summary>De las entradas del registro (nombre, MatchingDeviceId), las que corresponden a un adaptador activo
+    /// (fabricante, dispositivo). Vacío si no hay adaptadores activos que casen.</summary>
+    public static string[] OnlyActive(IEnumerable<(string Name, string MatchingId)> registry, IEnumerable<(uint Vendor, uint Device)> active)
+    {
+        var ids = active.Select(a => $"VEN_{a.Vendor:X4}&DEV_{a.Device:X4}").ToHashSet(StringComparer.OrdinalIgnoreCase);
+        return [.. registry.Where(r => ids.Any(id => r.MatchingId.Contains(id, StringComparison.OrdinalIgnoreCase))).Select(r => r.Name).Distinct()];
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static List<(string Name, string MatchingId)> RegistryAdapters()
+    {
+        var list = new List<(string, string)>();
         try
         {
             using var cls = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}");
@@ -46,11 +67,53 @@ public static class Gpu
             {
                 if (!Regex.IsMatch(sub, @"^\d{4}$")) continue;
                 using var k = cls!.OpenSubKey(sub);
-                if (k?.GetValue("DriverDesc") is string d && d.Length > 0 && !names.Contains(d)) names.Add(d);
+                if (k?.GetValue("DriverDesc") is string d && d.Length > 0) list.Add((d, k.GetValue("MatchingDeviceId") as string ?? ""));
             }
         }
         catch (Exception e) when (e is System.Security.SecurityException or UnauthorizedAccessException or IOException) { }
-        return [.. names];
+        return list;
+    }
+
+    // ---- Adaptadores activos (gdi32, D3DKMT: lo mismo que usa ILION 1.4.1.3)
+    [StructLayout(LayoutKind.Sequential)] private struct EnumAdapters2 { public uint NumAdapters; public IntPtr Adapters; }
+    [StructLayout(LayoutKind.Sequential)] private struct AdapterInfo { public uint Handle; public uint LuidLow; public int LuidHigh; public uint Sources; public int Precise; }
+    [StructLayout(LayoutKind.Sequential)] private struct QueryAdapterInfo { public uint Handle; public int Type; public IntPtr Data; public uint Size; }
+    [StructLayout(LayoutKind.Sequential)] private struct QueryDeviceIds { public uint PhysicalIndex, Vendor, Device, SubVendor, SubSystem, Revision, BusType; }
+    [StructLayout(LayoutKind.Sequential)] private struct CloseAdapter { public uint Handle; }
+    [DllImport("gdi32.dll")] private static extern int D3DKMTEnumAdapters2(ref EnumAdapters2 data);
+    [DllImport("gdi32.dll")] private static extern int D3DKMTQueryAdapterInfo(ref QueryAdapterInfo data);
+    [DllImport("gdi32.dll")] private static extern int D3DKMTCloseAdapter(ref CloseAdapter data);
+    private const int PhysicalAdapterDeviceIds = 31; // KMTQAITYPE_PHYSICALADAPTERDEVICEIDS
+
+    [SupportedOSPlatform("windows")]
+    public static List<(uint Vendor, uint Device)> ActiveDeviceIds()
+    {
+        var found = new List<(uint, uint)>();
+        try
+        {
+            var e = new EnumAdapters2();
+            if (D3DKMTEnumAdapters2(ref e) != 0 || e.NumAdapters == 0 || e.NumAdapters > 64) return found;
+            var size = Marshal.SizeOf<AdapterInfo>();
+            var buffer = Marshal.AllocHGlobal(size * (int)e.NumAdapters);
+            var ids = Marshal.AllocHGlobal(Marshal.SizeOf<QueryDeviceIds>());
+            try
+            {
+                e.Adapters = buffer;
+                if (D3DKMTEnumAdapters2(ref e) != 0) return found;
+                for (var i = 0; i < e.NumAdapters; i++)
+                {
+                    var info = Marshal.PtrToStructure<AdapterInfo>(buffer + i * size);
+                    Marshal.StructureToPtr(new QueryDeviceIds(), ids, false);
+                    var q = new QueryAdapterInfo { Handle = info.Handle, Type = PhysicalAdapterDeviceIds, Data = ids, Size = (uint)Marshal.SizeOf<QueryDeviceIds>() };
+                    if (D3DKMTQueryAdapterInfo(ref q) == 0 && Marshal.PtrToStructure<QueryDeviceIds>(ids) is { Vendor: not 0 } d) found.Add((d.Vendor, d.Device));
+                    var c = new CloseAdapter { Handle = info.Handle };
+                    D3DKMTCloseAdapter(ref c);
+                }
+            }
+            finally { Marshal.FreeHGlobal(buffer); Marshal.FreeHGlobal(ids); }
+        }
+        catch (Exception e) when (e is DllNotFoundException or EntryPointNotFoundException) { }
+        return found;
     }
 
     /// <summary>La principal: una dedicada reconocida antes que una integrada.</summary>

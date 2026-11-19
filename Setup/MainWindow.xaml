@@ -18,24 +18,36 @@
 
             <!-- Barra de título en óxido, como SPUTNIK -->
             <Border Grid.Row="0" Background="{StaticResource B.Rust}">
-                <DockPanel LastChildFill="False">
-                    <ContentControl x:Name="Emblem" DockPanel.Dock="Left" Margin="14,0,0,0" VerticalAlignment="Center" Focusable="False"/>
-                    <TextBlock DockPanel.Dock="Left" Text="ILION SETUP" Style="{StaticResource T.Brand}" FontSize="30" Margin="6,0,0,0" VerticalAlignment="Center"/>
-                    <Button DockPanel.Dock="Right" Style="{StaticResource Btn.Caption}" Click="Close_Click" Margin="0,0,10,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Cerrar">
-                        <Path Data="M 0,0 L 12,12 M 12,0 L 0,12" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="2.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" Width="12" Height="12"/>
-                    </Button>
-                    <Button DockPanel.Dock="Right" Style="{StaticResource Btn.Caption}" Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Minimizar">
-                        <Path Data="M 0,6 L 12,6" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="2.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" Width="12" Height="12"/>
-                    </Button>
-                    <ComboBox x:Name="LanguagePick" DockPanel.Dock="Right" Width="70" Height="30" FontSize="12.5" Margin="0,0,14,0" VerticalAlignment="Center"
-                              WindowChrome.IsHitTestVisibleInChrome="True" SelectionChanged="Language_Changed" ToolTip="Idioma"/>
-                    <Border DockPanel.Dock="Right" Background="#33000000" Padding="14,6" Margin="0,0,16,0" VerticalAlignment="Center">
-                        <StackPanel>
-                            <TextBlock x:Name="GpuName" Style="{StaticResource T.Label}" FontSize="13" Text="Detectando GPU…" Foreground="{StaticResource B.Yellow}"/>
-                            <TextBlock x:Name="GpuArch" Style="{StaticResource T.Note}" FontSize="12" Foreground="{StaticResource B.Text}" Opacity="0.75"/>
-                        </StackPanel>
-                    </Border>
-                </DockPanel>
+                <!-- Izquierda: emblema y marca · centro: versión (en el hueco libre, nunca encima de los lados) · derecha: GPU, idioma y botones -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <ContentControl x:Name="Emblem" Margin="14,0,0,0" VerticalAlignment="Center" Focusable="False"/>
+                        <TextBlock Text="ILION SETUP" Style="{StaticResource T.Brand}" FontSize="30" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock x:Name="SetupVersionLabel" Grid.Column="1" Style="{StaticResource T.Label}" FontSize="15" Foreground="{StaticResource B.Yellow}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16,0" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"/>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <Border Background="#33000000" Padding="14,6" Margin="0,0,16,0" VerticalAlignment="Center">
+                            <StackPanel>
+                                <TextBlock x:Name="GpuName" Style="{StaticResource T.Label}" FontSize="13" Text="Detectando GPU…" Foreground="{StaticResource B.Yellow}"/>
+                                <TextBlock x:Name="GpuArch" Style="{StaticResource T.Note}" FontSize="12" Foreground="{StaticResource B.Text}" Opacity="0.75"/>
+                            </StackPanel>
+                        </Border>
+                        <ComboBox x:Name="LanguagePick" Width="70" Height="30" FontSize="12.5" Margin="0,0,14,0" VerticalAlignment="Center"
+                                  WindowChrome.IsHitTestVisibleInChrome="True" SelectionChanged="Language_Changed" ToolTip="Idioma"/>
+                        <Button Style="{StaticResource Btn.Caption}" Click="Minimize_Click" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Minimizar">
+                            <Path Data="M 0,6 L 12,6" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="2.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" Width="12" Height="12"/>
+                        </Button>
+                        <Button Style="{StaticResource Btn.Caption}" Click="Close_Click" Margin="0,0,10,0" WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Cerrar">
+                            <Path Data="M 0,0 L 12,12 M 12,0 L 0,12" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="2.4" StrokeStartLineCap="Square" StrokeEndLineCap="Square" Width="12" Height="12"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </Border>
 
             <!-- Tres modos -->
