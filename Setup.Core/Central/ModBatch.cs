@@ -206,6 +206,7 @@ public static class ModBatch
         {
             if (operations.CanRestore(op) is { } why) throw new InvalidOperationException($"{op.Label}: {why}");
             operations.Restore(op);
+            PruneEmptyFolders(op);
             done.Add(op.Label);
         }
         return [.. done];
@@ -219,15 +220,52 @@ public static class ModBatch
             && m.Dependencies.Any(d => dependencies.Touches(d.Relative) || d.AlsoAccept.Any(dependencies.Touches))).Select(m => m.Name)];
     }
 
-    /// <summary>Restaura un mod suelto y, si nadie más los usa, los archivos oficiales que se pusieron para él en su mismo lote.</summary>
+    /// <summary>Restaura un mod suelto y, si nadie más los usa, los archivos oficiales que se pusieron para él en su mismo lote.
+    /// Después retira las carpetas que quedaron vacías al quitar sus archivos (nunca las de ILION u OptiScaler).</summary>
     public static string[] RestoreMod(OperationEngine operations, string gameId, string exeDir, OperationManifest modOp, InstallableMod mod)
     {
         if (operations.CanRestore(modOp) is { } why) throw new InvalidOperationException(why);
         operations.Restore(modOp);
         var done = new List<string> { modOp.Label };
+        var restored = new List<OperationManifest> { modOp };
         if (modOp.Batch is { } batch)
             foreach (var deps in Batch(operations, gameId, batch).Where(o => o.Kind == DependencyKind))
-                if (StillNeeded(deps, exeDir, [mod]).Length == 0 && operations.CanRestore(deps) is null) { operations.Restore(deps); done.Add(deps.Label); }
+                if (StillNeeded(deps, exeDir, [mod]).Length == 0 && operations.CanRestore(deps) is null) { operations.Restore(deps); done.Add(deps.Label); restored.Add(deps); }
+        foreach (var op in restored) PruneEmptyFolders(op);
         return [.. done];
+    }
+
+    /// <summary>La instalación de Setup que puso este mod en el juego: la más reciente que escribió su archivo marcador. Null si Setup no lo instaló
+    /// (vino con el paquete de ILION o lo puso el usuario). Por el marcador y no por el nombre: «MFG-Unlocker» no confunde sus versiones.</summary>
+    public static OperationManifest? InstallOf(OperationEngine operations, string gameId, InstallableMod mod) =>
+        mod.Marker.Length == 0 || mod.Marker.Contains("{any}") ? null
+        : operations.All(gameId).Where(o => o.Completed && o.Kind == Kind && o.Touches(mod.Marker)).OrderByDescending(o => o.When).FirstOrDefault();
+
+    /// <summary>Carpetas de ILION y OptiScaler que nunca se retiran, aunque queden vacías.</summary>
+    private static readonly HashSet<string> KeptFolders = new(StringComparer.OrdinalIgnoreCase)
+        { "OptiScaler", @"OptiScaler\plugins", @"OptiScaler\custom", @"OptiScaler\plugins\XeMFG", "ILION", @"ILION\Escaladores", @"ILION\Escaladores\FSR4" };
+
+    /// <summary>Tras restaurar una operación: retira las carpetas que contenían archivos nuevos de esa operación y han quedado vacías,
+    /// de la más profunda hacia arriba. Solo carpetas sin nada dentro y bajo la carpeta del juego. Devuelve las retiradas.</summary>
+    public static string[] PruneEmptyFolders(OperationManifest op)
+    {
+        var root = Path.GetFullPath(op.GameRoot).TrimEnd('\\') + "\\";
+        var removed = new List<string>();
+        var folders = op.Entries.Where(e => e.OriginalSha256 is null).Select(e => Path.GetDirectoryName(e.RelativePath.Replace('/', '\\')) ?? "")
+            .Where(d => d.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).OrderByDescending(d => d.Count(c => c == '\\'));
+        foreach (var start in folders)
+            for (var rel = start; rel.Length > 0 && !KeptFolders.Contains(rel); rel = Path.GetDirectoryName(rel) ?? "")
+            {
+                var full = Path.GetFullPath(Path.Combine(root, rel));
+                if (!full.StartsWith(root, StringComparison.OrdinalIgnoreCase) || !Directory.Exists(full)) break;
+                try
+                {
+                    if (Directory.EnumerateFileSystemEntries(full).Any()) break;
+                    Directory.Delete(full);
+                    removed.Add(rel);
+                }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException) { break; }
+            }
+        return [.. removed];
     }
 }

@@ -15,7 +15,7 @@ void Check(bool ok, string what) { count++; Console.WriteLine($"[{(ok ? "OK" : "
 string[] Snap(string d) => Directory.Exists(d) ? [.. Directory.EnumerateFiles(d, "*", SearchOption.AllDirectories).Select(f => Path.GetRelativePath(d, f) + "|" + ComponentUpdateService.Sha256(f)).Order()] : [];
 
 var baseJson = File.ReadAllText(Path.Combine(fuente, "Manifiestos", "base-congelada.json"));
-var catalogJson = File.ReadAllText(Path.Combine(fuente, "Setup", "Assets", "catalogo.json"));
+var catalogJson = File.ReadAllText(Path.Combine(fuente, "Setup", "Assets", "catalogo-2.json"));
 var baseManifest = Manifests.Parse<BaseManifest>(baseJson);
 var catalog = Manifests.Parse<Catalog>(catalogJson);
 Manifests.PublicKey = File.ReadAllText(Path.Combine(fuente, "Setup", "Assets", "clave-publica.txt")).Trim();
@@ -56,6 +56,16 @@ if (Array.IndexOf(args, "--reparar") is var ri and > 0)
     return 0;
 }
 
+// Diagnóstico: Setup.Tests <lab> <paquete> --firmas <carpeta> → descarga los manifiestos publicados en GitHub y dice si su firma es válida
+if (Array.IndexOf(args, "--firmas") is var fi and > 0)
+{
+    using var fhttp = new HttpClient();
+    foreach (var note in await RemoteManifests.RefreshAsync(fhttp, Path.GetFullPath(args[fi + 1]), default)) Console.WriteLine("FIRMA: " + note);
+    var fb = Manifests.Choose<BaseManifest>(baseJson, Path.Combine(Path.GetFullPath(args[fi + 1]), "base-congelada.json"), m => m.Date, m => m.Format);
+    Console.WriteLine($"Base elegida: {fb.Origin} · ILION {fb.Manifest.Engine.Version}");
+    return 0;
+}
+
 // Diagnóstico: Setup.Tests <lab> <paquete> --lote <carpeta-de-datos> id1,id2,…  → instala esos mods en un juego del laboratorio e imprime cada fallo
 if (Array.IndexOf(args, "--lote") is var li and > 0)
 {
@@ -78,6 +88,23 @@ if (Array.IndexOf(args, "--lote") is var li and > 0)
     foreach (var ok in r.Mods?.Installed ?? []) Console.WriteLine($"INSTALADO: {ok}");
     foreach (var (mod, why) in r.Mods?.Failed ?? []) Console.WriteLine($"FALLO: {mod}: {why}");
     foreach (var p in r.Mods?.Pending ?? []) Console.WriteLine($"PENDIENTE: {p}");
+    // --quitar: cada mod instalado se quita solo («Mods instalados › Quitar»): no deben quedar sus archivos ni carpetas vacías
+    if (args.Contains("--quitar"))
+    {
+        var gid = SetupEngine.GameId(loteGame);
+        foreach (var req in reqs)
+        {
+            var op = ModBatch.InstallOf(loteEngine.Operations, gid, req.Mod);
+            if (op is null) { Console.WriteLine($"QUITAR {req.Mod.Name}: sin registro de instalación"); continue; }
+            var done = ModBatch.RestoreMod(loteEngine.Operations, gid, loteDir, op, req.Mod);
+            var left = op.Entries.Where(e => e.OriginalSha256 is null && File.Exists(Path.Combine(loteDir, e.RelativePath))).Select(e => e.RelativePath).ToArray();
+            var emptyDirs = op.Entries.Select(e => Path.GetDirectoryName(Path.Combine(loteDir, e.RelativePath))!).Distinct()
+                .Where(d => Directory.Exists(d) && !Directory.EnumerateFileSystemEntries(d).Any()).ToArray();
+            Console.WriteLine($"QUITAR {req.Mod.Name}: {string.Join(", ", done)} · archivos que quedan {left.Length} · carpetas vacías {emptyDirs.Length} · sigue detectado {ModInstaller.Installed(req.Mod, loteDir)}");
+            foreach (var d in emptyDirs) Console.WriteLine($"   vacía: {Path.GetRelativePath(loteDir, d)}");
+        }
+        Console.WriteLine($"ILION sigue: {File.Exists(Path.Combine(loteDir, "dxgi.dll"))} · plugins: {Directory.Exists(Path.Combine(loteDir, "OptiScaler", "plugins"))}");
+    }
     return 0;
 }
 

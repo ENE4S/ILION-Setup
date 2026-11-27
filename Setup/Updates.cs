@@ -30,8 +30,80 @@ public partial class MainWindow
         await Dispatcher.InvokeAsync(() =>
         {
             BaseInfo.Inlines.Add(NewerSetupLink());
+            ShowNewerSetupBadge();
             Log($"Hay una versión más nueva de ILION Setup: {newerSetup} (esta es {SetupEngine.SetupVersion}).");
         });
+    }
+
+    /// <summary>La placa de la barra de título: «Setup x.y.z disponible», junto a la versión; un clic abre la página de descarga.</summary>
+    private void ShowNewerSetupBadge()
+    {
+        if (newerSetup is null) return;
+        NewerSetupText.Text = Lang.T($"Setup {newerSetup} disponible") + "  ›";
+        NewerSetupBadge.ToolTip = Lang.T("Descarga la versión nueva de ILION Setup (un solo archivo, sin instalación).");
+        NewerSetupBadge.Visibility = Visibility.Visible;
+        if (NewerSetupBadge.Tag is null)
+        {
+            NewerSetupBadge.Tag = true;
+            NewerSetupBadge.MouseLeftButtonUp += (_, _) =>
+            {
+                try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($"https://github.com/{SetupRepository}/releases/latest") { UseShellExecute = true }); }
+                catch (System.ComponentModel.Win32Exception) { }
+            };
+        }
+    }
+
+    // ---------------------------------------------------------------- ILION más nuevo
+    // Versión de ILION de cada DLL instalada, leída una vez por archivo (ruta, tamaño y fecha): la placa se dibuja en cada página
+    private readonly Dictionary<string, (long Size, DateTime When, string? Version)> engineVersions = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Versión de ILION del juego si es más antigua que la aprobada (null si está al día, no es ILION o no se identifica).</summary>
+    private string? OutdatedIlion(LibraryGame g)
+    {
+        if (Info(g).Opti.Binary is not { } bin || !File.Exists(bin)) return null;
+        var file = new FileInfo(bin);
+        if (!engineVersions.TryGetValue(bin, out var known) || known.Size != file.Length || known.When != file.LastWriteTimeUtc)
+        {
+            var version = OptiScalerInstaller.EditionOf(bin) == OptiEdition.Ilion ? OptiScalerInstaller.PublicVersion(bin) : null;
+            engineVersions[bin] = known = (file.Length, file.LastWriteTimeUtc, version);
+        }
+        return known.Version is { } v && VersionUtil.Compare(v, engine.Base.Engine.Version) < 0 ? v : null;
+    }
+
+    /// <summary>Placa arriba de la página cuando hay una versión de ILION aprobada más nueva que la de algún juego: cuáles y qué pulsar.
+    /// Null si todo está al día. En «Actualizar ILION» con ese juego elegido, la indicación va en la propia página.</summary>
+    private Border? UpdateBanner()
+    {
+        var outdated = games.Where(g => OutdatedIlion(g) is not null).ToArray();
+        var modUpdates = games.Where(g => Info(g).Opti.Binary is not null).Sum(g => { try { return engine.ModUpdates(g, Info(g).ExeDir).Length; } catch (IOException) { return 0; } });
+        if (outdated.Length == 0 && modUpdates == 0) return null;
+        var box = new DockPanel();
+        var text = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+        if (outdated.Length > 0)
+        {
+            var head = Ui.Text($"ILION {engine.Base.Engine.Version} disponible", "T.Label"); head.Foreground = Ui.B("B.Yellow"); head.FontSize = 15;
+            text.Children.Add(head);
+            var names = string.Join(", ", outdated.Take(4).Select(g => g.Name)) + (outdated.Length > 4 ? $" (+{outdated.Length - 4})" : "");
+            text.Children.Add(Note($"Para {names}: en «Actualizar ILION», elige el juego y pulsa «Comprobar y actualizar».", null, 12.5));
+        }
+        if (modUpdates > 0)
+            text.Children.Add(Note(modUpdates == 1 ? "1 mod con una versión nueva aprobada: «Verificar y reparar» › «Actualizaciones de mods»."
+                : $"{modUpdates} mods con una versión nueva aprobada: «Verificar y reparar» › «Actualizaciones de mods».", null, 12.5));
+        if (outdated.Length > 0 && ModeUpdate.IsChecked != true)
+        {
+            var go = Key("Ir a Actualizar ILION", () =>
+            {
+                updateGame = outdated.Contains(updateGame) ? updateGame : outdated[0];
+                ModeUpdate.IsChecked = true; // Mode_Checked redibuja la página
+                return Task.CompletedTask;
+            }, 210, primary: true);
+            go.Margin = new Thickness(12, 0, 0, 0); go.VerticalAlignment = VerticalAlignment.Center;
+            DockPanel.SetDock(go, Dock.Right); box.Children.Add(go);
+        }
+        var bar = new Border { Style = Ui.S("AccentBar"), Background = Ui.B("B.Yellow"), Margin = new Thickness(0, 0, 12, 0) };
+        DockPanel.SetDock(bar, Dock.Left); box.Children.Add(bar);
+        box.Children.Add(text);
+        return new Border { Style = Ui.S("Panel"), BorderBrush = Ui.B("B.Yellow"), Margin = new Thickness(0, 0, 0, 10), Child = box };
     }
 
     private Hyperlink NewerSetupLink()

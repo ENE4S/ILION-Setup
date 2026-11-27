@@ -29,8 +29,15 @@
                         <ContentControl x:Name="Emblem" Margin="14,0,0,0" VerticalAlignment="Center" Focusable="False"/>
                         <TextBlock Text="ILION SETUP" Style="{StaticResource T.Brand}" FontSize="30" Margin="6,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <TextBlock x:Name="SetupVersionLabel" Grid.Column="1" Style="{StaticResource T.Label}" FontSize="15" Foreground="{StaticResource B.Yellow}"
-                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16,0" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16,0">
+                        <TextBlock x:Name="SetupVersionLabel" Style="{StaticResource T.Label}" FontSize="15" Foreground="{StaticResource B.Yellow}"
+                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"/>
+                        <!-- Setup más nuevo publicado: una placa discreta junto a la versión, como la de la GPU; abre la descarga -->
+                        <Border x:Name="NewerSetupBadge" Visibility="Collapsed" Background="#33000000" BorderBrush="{StaticResource B.Yellow}" BorderThickness="1.5"
+                                Padding="10,3" Margin="12,0,0,0" VerticalAlignment="Center" Cursor="Hand" WindowChrome.IsHitTestVisibleInChrome="True">
+                            <TextBlock x:Name="NewerSetupText" Style="{StaticResource T.Label}" FontSize="13" Foreground="{StaticResource B.Yellow}"/>
+                        </Border>
+                    </StackPanel>
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                         <Border Background="#33000000" Padding="14,6" Margin="0,0,16,0" VerticalAlignment="Center">
                             <StackPanel>

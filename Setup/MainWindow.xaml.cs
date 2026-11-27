@@ -186,6 +186,17 @@ public partial class MainWindow : Window
         engineCandidates = [.. engineCandidates.Distinct(StringComparer.OrdinalIgnoreCase)];
         engineSource = engine.RemoteEngine; // la publicación oficial de GitHub; un paquete o DLL local es opción avanzada
         await manifests;
+        // Laboratorio: «--paquete <carpeta>» elige ese paquete local de ILION como motor (sin publicarlo en GitHub)
+        // Sin la opción: el paquete junto al ejecutable cuya dxgi.dll es la aprobada por el manifiesto (así basta con abrir el .exe)
+        var pk = Array.IndexOf(args, "--paquete");
+        var labPackage = pk > 0 && pk + 1 < args.Length && Directory.Exists(args[pk + 1]) ? args[pk + 1]
+            : Directory.EnumerateDirectories(AppContext.BaseDirectory).FirstOrDefault(d => File.Exists(Path.Combine(d, "dxgi.dll"))
+                && ComponentUpdateService.Sha256(Path.Combine(d, "dxgi.dll")).Equals(engine.Base.Engine.Sha256, StringComparison.OrdinalIgnoreCase));
+        if (labPackage is not null)
+        {
+            engineSource = engine.InspectEngine(Path.GetFullPath(labPackage));
+            if (engineSource.Problem is null && engineSource.PackageFolder is { } lab) { packages.Remember(lab); engineCandidates = [lab, .. engineCandidates.Where(c => c != lab)]; }
+        }
         if (LastGame(games) is { } last) SelectGame(last);
         Work(false);
         _ = CheckNewerMods().ContinueWith(_ => Dispatcher.Invoke(() => { if (newerTags.Count > 0 && ModeNew.IsChecked == true && !busy) ShowMode(); }));
@@ -251,6 +262,9 @@ public partial class MainWindow : Window
     private void ShowMode()
     {
         Page.Children.Clear();
+        // Versión nueva de ILION aprobada para algún juego (o mods con versión nueva): arriba, visible en los tres modos
+        if (!busy && games.Length > 0 && UpdateBanner() is { } banner) Page.Children.Add(banner);
+        ShowNewerSetupBadge();
         if (ModeNew.IsChecked == true) RenderNew();
         else if (ModeUpdate.IsChecked == true) RenderUpdate();
         else RenderVerify();
@@ -336,9 +350,9 @@ public partial class MainWindow : Window
         // 3 · Core OptiScaler
         var b = engine.Base;
         var coreBox = new StackPanel();
-        coreBox.Children.Add(Note($"OptiScaler en el commit f6f75ddf (compilación oficial nightly-20261009) con FidelityFX SDK v2.4.0 y Streamline 2.14.1 de NVIDIA: la base exacta con la que funciona ILION {b.Engine.Version}. Cada archivo se comprueba por SHA-256; si tu paquete local ya los tiene idénticos, no se descarga nada.", null, 13));
+        coreBox.Children.Add(Note($"OptiScaler en el commit f6f75ddf (compilación oficial nightly-20261009) con FidelityFX SDK v2.4.0 y Streamline 2.14.16 de NVIDIA: la base exacta con la que funciona ILION {b.Engine.Version}. Cada archivo se comprueba por SHA-256; si tu paquete local ya los tiene idénticos, no se descarga nada.", null, 13));
         var opts = new WrapPanel { Margin = new Thickness(0, 8, 0, 0) };
-        var sl = new CheckBox { Style = Ui.S("Check"), Content = "Streamline 2.14.1 de NVIDIA (entradas DLSS; 276 MB la primera vez)", IsChecked = withStreamline, Margin = new Thickness(0, 0, 20, 0) };
+        var sl = new CheckBox { Style = Ui.S("Check"), Content = "Streamline 2.14.16 de NVIDIA (entradas DLSS; 276 MB la primera vez)", IsChecked = withStreamline, Margin = new Thickness(0, 0, 20, 0) };
         sl.Checked += (_, _) => withStreamline = true; sl.Unchecked += (_, _) => withStreamline = false;
         opts.Children.Add(sl);
         opts.Children.Add(Key("Ver manifiesto", () => { ShowManifest(); return Task.CompletedTask; }, 150));
@@ -570,7 +584,7 @@ public partial class MainWindow : Window
         if (NrWarning([.. requests.Select(r => r.Mod.Name), .. withVariants && gpu?.Arch?.Id is "rdna3" or "rdna4" ? ["runtime NR de lmxxf"] : Array.Empty<string>()]) is { } nr) notes.Add(nr);
         if (dlss4Folder is not null) notes.Add("DLSS 4 Modelo K se copia desde tu carpeta local (instalación local).");
         notes.Add("Antes de escribir se guarda una copia de todo lo que se sustituya; ningún archivo del juego se sobrescribe. Todo se puede restaurar desde «Verificar y reparar».");
-        var lines = new List<(string, string)> { ("Juego", game.Name), ("Carpeta", exeDir), ("Base", $"OptiScaler f6f75dd (+ FidelityFX 2.4.0{(withStreamline ? ", Streamline 2.14.1" : "")})"),
+        var lines = new List<(string, string)> { ("Juego", game.Name), ("Carpeta", exeDir), ("Base", $"OptiScaler f6f75dd (+ FidelityFX 2.4.0{(withStreamline ? ", Streamline 2.14.16" : "")})"),
             ("Motor", $"OptiScaler ILION {src.Version} como {proxy}" + (src.Remote ? " (GitHub oficial)" : "")), ("Variantes", withVariants ? "FSR 4, XeMFG, OptiPatcher" + (gpu?.Arch?.Id is "rdna3" or "rdna4" ? ", runtime NR lmxxf" : "") : "no"), ("DLSS 4 local", dlss4Folder is null ? "no" : "sí"), ("Mods", requests.Count == 0 ? "ninguno" : string.Join(", ", requests.Select(r => r.Mod.Name))) };
         if (!Confirm.Ask(this, "Instalación nueva", [.. lines], string.Join("\n\n", notes), "Instalar")) { Say("Instalación cancelada.", Level.Info); return; }
         await RunNew(game, exeDir, src, requests);
@@ -654,6 +668,11 @@ public partial class MainWindow : Window
         var edition = OptiScalerInstaller.EditionOf(bin);
         var sha = ComponentUpdateService.Sha256(bin);
         cur.Children.Add(Note($"{Path.GetFileName(bin)} · {OptiScalerInstaller.Title(bin, edition)} · SHA-256 {sha[..12]}…" + (sha == engine.Base.Engine.Sha256 ? " · ya es la aprobada" : ""), sha == engine.Base.Engine.Sha256 ? Level.Ok : null));
+        if (OutdatedIlion(updateGame) is { } old)
+        {
+            var hint = Note($"Disponible ILION {engine.Base.Engine.Version} (tienes la {old}): pulsa «Comprobar y actualizar».", Level.Warn, 13);
+            hint.Margin = new Thickness(0, 6, 0, 0); cur.Children.Add(hint);
+        }
         Page.Children.Add(Section("MOTOR INSTALADO", cur));
         Page.Children.Add(Section("NUEVO MOTOR ILION", EngineBox(() => ShowMode())));
         var go = Key("Comprobar y actualizar", () => UpdateNow(updateGame, info), 260, primary: true);
@@ -760,8 +779,54 @@ public partial class MainWindow : Window
         Page.Children.Add(Section("REPARAR", repair));
         var updates = engine.ModUpdates(verifyGame, info.ExeDir);
         if (updates.Length > 0) Page.Children.Add(Section("ACTUALIZACIONES DE MODS", UpdatesBox(verifyGame, info.ExeDir, updates), $"{updates.Length} con una versión aprobada distinta"));
+        Page.Children.Add(Section("MODS INSTALADOS", InstalledModsBox(verifyGame, info.ExeDir), "Quitar uno solo, con sus carpetas"));
         Page.Children.Add(Section("AÑADIR MODS", AddModsBox(verifyGame, info.ExeDir, info.Api), "Los que aún no están instalados en este juego"));
         Page.Children.Add(undoSection = Section("DESHACER CAMBIOS", RestoreBox(verifyGame, info.ExeDir)));
+    }
+
+    /// <summary>Mods del catálogo presentes en este juego, cada uno con «Quitar»: se deshace solo su instalación (sus archivos y las
+    /// carpetas que quedan vacías; los archivos oficiales que se pusieron para él, si ningún otro mod los usa). ILION y los demás mods se quedan.
+    /// Lo que Setup no instaló no se quita desde aquí: puede venir con el paquete de ILION o haberlo puesto el usuario.</summary>
+    private StackPanel InstalledModsBox(LibraryGame g, string dir)
+    {
+        var box = new StackPanel();
+        var id = SetupEngine.GameId(g);
+        var mods = engine.Installable().Where(r => ModInstaller.Installed(r, dir)).ToArray();
+        if (mods.Length == 0) { box.Children.Add(Note("Ningún mod del catálogo está instalado en este juego.", null, 12.5)); return box; }
+        var intro = Note("«Quitar» retira los archivos y las carpetas que puso ese mod y devuelve lo que había antes de instalarlo. ILION y los demás mods se quedan; los archivos que cambiaste tú no se tocan.", null, 12.5);
+        intro.Margin = new Thickness(0, 0, 0, 12); box.Children.Add(intro);
+        foreach (var mod in mods)
+        {
+            var op = ModBatch.InstallOf(engine.Operations, id, mod);
+            var blocked = op is null ? "No lo instaló Setup (viene con el paquete de ILION o lo pusiste tú): no se quita desde aquí."
+                : engine.Operations.CanRestore(op) is null ? null : "Antes hay que deshacer un cambio posterior sobre los mismos archivos («Deshacer cambios»).";
+            var row = new DockPanel { Margin = new Thickness(0, 0, 0, 10) };
+            var key = Key("Quitar", async () =>
+            {
+                if (op is null || busy || RefuseIfOpen(g)) return;
+                if (!Confirm.Ask(this, "Quitar mod", [("Juego", g.Name), ("Mod", mod.Name)],
+                    "Se retiran sus archivos y las carpetas que queden vacías, y vuelve lo que había antes de instalarlo. ILION y los demás mods se quedan. Queda una copia: se puede volver a instalar desde «Añadir mods».", "Quitar", danger: true)) return;
+                try
+                {
+                    busy = true;
+                    var done = await Task.Run(() => ModBatch.RestoreMod(engine.Operations, id, dir, op, mod));
+                    Log($"Quitar mod en {g.Name}: {string.Join(", ", done)}");
+                    Say($"Quitado: {mod.Name}.");
+                }
+                catch (Exception e) when (e is not OutOfMemoryException) { LogError("Quitar mod", e); Confirm.Info(this, "Quitar mod", ModBatch.Friendly(e), error: true); }
+                finally { busy = false; }
+                lock (gameInfo) gameInfo.Remove(id); verifyItems = null; ShowMode();
+            }, 130);
+            key.IsEnabled = blocked is null && !busy; key.VerticalAlignment = VerticalAlignment.Top; key.Style = Ui.S("Btn.Danger");
+            DockPanel.SetDock(key, Dock.Right); row.Children.Add(key);
+            var text = new StackPanel { Margin = new Thickness(0, 0, 12, 0) };
+            var head = Ui.Text(op is { Tag.Length: > 0 } ? $"{mod.Name}  ·  {op.Tag}" : mod.Name, "T.Label"); head.TextWrapping = TextWrapping.Wrap; text.Children.Add(head);
+            if (op is not null) text.Children.Add(Note($"Instalado el {op.When:dd/MM/yyyy} a las {op.When:HH:mm} · {mod.Describe}", null, 12));
+            if (blocked is not null) text.Children.Add(Note(blocked, op is null ? null : Level.Warn, 12));
+            row.Children.Add(text);
+            box.Children.Add(row);
+        }
+        return box;
     }
 
     /// <summary>Mods del catálogo que este juego aún no tiene: se marcan y se instalan sobre la instalación de ILION existente.</summary>

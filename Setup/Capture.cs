@@ -21,6 +21,9 @@ public partial class MainWindow
         { SelectGame(g); updateGame = verifyGame = g; }
         var pi = Array.IndexOf(args, "--paquete");
         if (pi > 0 && pi + 1 < args.Length) engineSource = engine.InspectEngine(args[pi + 1]);
+        // --setup-nuevo x.y.z: muestra la placa de «Setup disponible» como si GitHub tuviera esa versión (solo para ver el diseño)
+        var si = Array.IndexOf(args, "--setup-nuevo");
+        if (si > 0 && si + 1 < args.Length) { newerSetup = args[si + 1]; ShowNewerSetupBadge(); }
         ModeNew.IsChecked = true; ShowMode();
         await Snap(this, Path.Combine(folder, "1-instalacion-nueva.png"));
         Scroll.ScrollToEnd(); await Snap(this, Path.Combine(folder, "1b-instalacion-nueva-final.png"));

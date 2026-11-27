@@ -2343,5 +2343,110 @@
   "{0} {1} · cópia assinada pela {2} de {3} do próprio jogo",
   "{0} {1} · подписанная {2} копия из {3} самой игры",
   "{0} {1} · copy signed by {2} from the game's own {3}"
+ ],
+ "MODS INSTALADOS": [
+  "MODS INSTALADOS",
+  "УСТАНОВЛЕННЫЕ МОДЫ",
+  "INSTALLED MODS"
+ ],
+ "Quitar uno solo, con sus carpetas": [
+  "Remover um só, com as suas pastas",
+  "Удалить один, вместе с его папками",
+  "Remove just one, with its folders"
+ ],
+ "Ningún mod del catálogo está instalado en este juego.": [
+  "Nenhum mod do catálogo está instalado neste jogo.",
+  "Ни один мод из каталога не установлен в этой игре.",
+  "No catalogue mod is installed in this game."
+ ],
+ "«Quitar» retira los archivos y las carpetas que puso ese mod y devuelve lo que había antes de instalarlo. ILION y los demás mods se quedan; los archivos que cambiaste tú no se tocan.": [
+  "«Remover» retira os arquivos e as pastas que esse mod colocou e devolve o que havia antes de instalá-lo. O ILION e os outros mods ficam; os arquivos que você alterou não são tocados.",
+  "«Удалить» убирает файлы и папки, которые добавил этот мод, и возвращает то, что было до его установки. ILION и другие моды остаются; изменённые вами файлы не трогаются.",
+  "«Remove» takes away the files and folders that mod added and brings back what was there before it was installed. ILION and the other mods stay; files you changed are not touched."
+ ],
+ "Quitar mod": [
+  "Remover mod",
+  "Удалить мод",
+  "Remove mod"
+ ],
+ "Mod": [
+  "Mod",
+  "Мод",
+  "Mod"
+ ],
+ "No lo instaló Setup (viene con el paquete de ILION o lo pusiste tú): no se quita desde aquí.": [
+  "Não foi instalado pelo Setup (vem com o pacote do ILION ou foi você que o colocou): não se remove daqui.",
+  "Его установил не Setup (он входит в пакет ILION или вы добавили его сами): отсюда он не удаляется.",
+  "Setup didn't install it (it comes with the ILION package or you added it): it isn't removed from here."
+ ],
+ "Antes hay que deshacer un cambio posterior sobre los mismos archivos («Deshacer cambios»).": [
+  "Antes é preciso desfazer uma alteração posterior sobre os mesmos arquivos («Desfazer alterações»).",
+  "Сначала нужно отменить более позднее изменение этих же файлов («Отменить изменения»).",
+  "A later change to the same files must be undone first («Undo changes»)."
+ ],
+ "Se retiran sus archivos y las carpetas que queden vacías, y vuelve lo que había antes de instalarlo. ILION y los demás mods se quedan. Queda una copia: se puede volver a instalar desde «Añadir mods».": [
+  "Os seus arquivos e as pastas que ficarem vazias são retirados, e volta o que havia antes de instalá-lo. O ILION e os outros mods ficam. Fica uma cópia: pode ser instalado de novo em «Adicionar mods».",
+  "Его файлы и опустевшие папки удаляются, и возвращается то, что было до установки. ILION и другие моды остаются. Остаётся копия: его можно снова установить в «Добавить моды».",
+  "Its files and the folders left empty are removed, and what was there before it was installed comes back. ILION and the other mods stay. A copy is kept: it can be installed again from «Add mods»."
+ ],
+ "Quitado: {0}.": [
+  "Removido: {0}.",
+  "Удалено: {0}.",
+  "Removed: {0}."
+ ],
+ "Instalado el {0} a las {1} · {2}": [
+  "Instalado em {0} às {1} · {2}",
+  "Установлен {0} в {1} · {2}",
+  "Installed on {0} at {1} · {2}"
+ ],
+ "OptiScaler en el commit f6f75ddf (compilación oficial nightly-20261009) con FidelityFX SDK v2.4.0 y Streamline 2.14.16 de NVIDIA: la base exacta con la que funciona ILION {0}. Cada archivo se comprueba por SHA-256; si tu paquete local ya los tiene idénticos, no se descarga nada.": [
+  "OptiScaler no commit f6f75ddf (compilação oficial nightly-20261009) com FidelityFX SDK v2.4.0 e Streamline 2.14.16 da NVIDIA: a base exata com que o ILION {0} funciona. Cada arquivo é verificado por SHA-256; se o seu pacote local já os tiver idênticos, nada é baixado.",
+  "OptiScaler на коммите f6f75ddf (официальная сборка nightly-20261009) с FidelityFX SDK v2.4.0 и Streamline 2.14.16 от NVIDIA: точная база, с которой работает ILION {0}. Каждый файл проверяется по SHA-256; если в вашем локальном пакете они уже идентичны, ничего не скачивается.",
+  "OptiScaler at commit f6f75ddf (official nightly-20261009 build) with FidelityFX SDK v2.4.0 and NVIDIA Streamline 2.14.16: the exact base ILION {0} works with. Each file is checked by SHA-256; if your local package already has them identical, nothing is downloaded."
+ ],
+ "Streamline 2.14.16 de NVIDIA (entradas DLSS; 276 MB la primera vez)": [
+  "Streamline 2.14.16 da NVIDIA (entradas DLSS; 276 MB na primeira vez)",
+  "Streamline 2.14.16 от NVIDIA (входы DLSS; 276 МБ в первый раз)",
+  "NVIDIA Streamline 2.14.16 (DLSS inputs; 276 MB the first time)"
+ ],
+ "Setup {0} disponible": [
+  "Setup {0} disponível",
+  "Setup {0} доступен",
+  "Setup {0} available"
+ ],
+ "Descarga la versión nueva de ILION Setup (un solo archivo, sin instalación).": [
+  "Baixa a nova versão do ILION Setup (um só arquivo, sem instalação).",
+  "Скачать новую версию ILION Setup (один файл, без установки).",
+  "Download the new ILION Setup (a single file, no installation)."
+ ],
+ "ILION {0} disponible": [
+  "ILION {0} disponível",
+  "ILION {0} доступен",
+  "ILION {0} available"
+ ],
+ "Para {0}: en «Actualizar ILION», elige el juego y pulsa «Comprobar y actualizar».": [
+  "Para {0}: em «Atualizar ILION», escolha o jogo e clique em «Verificar e atualizar».",
+  "Для {0}: в «Обновить ILION» выберите игру и нажмите «Проверить и обновить».",
+  "For {0}: in «Update ILION», pick the game and press «Check and update»."
+ ],
+ "1 mod con una versión nueva aprobada: «Verificar y reparar» › «Actualizaciones de mods».": [
+  "1 mod com uma nova versão aprovada: «Verificar e reparar» › «Atualizações de mods».",
+  "1 мод с новой одобренной версией: «Проверка и восстановление» › «Обновления модов».",
+  "1 mod with a new approved version: «Verify and repair» › «Mod updates»."
+ ],
+ "{0} mods con una versión nueva aprobada: «Verificar y reparar» › «Actualizaciones de mods».": [
+  "{0} mods com uma nova versão aprovada: «Verificar e reparar» › «Atualizações de mods».",
+  "Модов с новой одобренной версией: {0}. «Проверка и восстановление» › «Обновления модов».",
+  "{0} mods with a new approved version: «Verify and repair» › «Mod updates»."
+ ],
+ "Ir a Actualizar ILION": [
+  "Ir para Atualizar ILION",
+  "Перейти к обновлению ILION",
+  "Go to Update ILION"
+ ],
+ "Disponible ILION {0} (tienes la {1}): pulsa «Comprobar y actualizar».": [
+  "Disponível ILION {0} (você tem a {1}): clique em «Verificar e atualizar».",
+  "Доступен ILION {0} (у вас {1}): нажмите «Проверить и обновить».",
+  "ILION {0} available (you have {1}): press «Check and update»."
  ]
 }
